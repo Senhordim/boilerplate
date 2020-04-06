@@ -570,7 +570,7 @@ class Command(BaseCommand):
             content = content.replace("$ModelClass$", app.model_name)
             content = content.replace(
                 "$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
-            content = content.replace("$project$", self.flutter_project)
+            content = content.replace("$project$", self.flutter_project.lower())
 
             with open(__indexpage_file, 'w') as page:
                 page.write(content)
@@ -1369,10 +1369,11 @@ class Command(BaseCommand):
 
     def call_methods(self, options):
         # Criando o Projeto
-        import pdb; pdb.set_trace()
         self.__init_flutter()
 
-        import pdb; pdb.set_trace()
+        # Invocando o método para criar a app de configuração
+        self.__build_settings_controller()
+
         # Gerando o arquivo utils
         self.__create_utils()
 
@@ -1439,9 +1440,6 @@ class Command(BaseCommand):
             self.__message("Não foram informadas as APPS a serem mapeadas")
             return
         else:
-            # Invocando o método para criar a app de configuração
-            self.__build_settings_controller()
-
             # Percorrendo as Apps
             for __app in FLUTTER_APPS:
                 self.current_app_model = AppModel(self.flutter_project, __app)
