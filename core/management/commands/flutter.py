@@ -155,7 +155,7 @@ class AppModel:
         def get_path_controller_file(self):
             """Método responsável por retornar o caminho para o arquivo controller.dart
             da app
-            
+
             Returns:
                 String -- Caminho do arquivo controller.dart
             """
@@ -233,7 +233,7 @@ class Command(BaseCommand):
         # Concatenando o nome do projeto Django com o prefixo flutter
         self.flutter_project = '{}'.format(self.project)
         self.flutter_dir = "{}/Flutter/{}".format(
-            "/".join(os.getcwd().split("/")[:-2]), self.project)
+            "/".join(os.getcwd().split("/")[:-2]), self.project.lower())
         self.utils_dir = "{}/lib/utils".format(self.flutter_dir)
         self.ui_dir = "{}/lib/user_interface".format(self.flutter_dir)
         self.config_file = "{}/lib/utils/config.dart".format(self.flutter_dir)
@@ -242,7 +242,8 @@ class Command(BaseCommand):
             self.path_core, "management/commands/snippets/flutter")
 
         # Criando o path da APP de configuração
-        self.app_configuration = "{}/lib/apps/configuracao".format(self.flutter_dir)
+        self.app_configuration = "{}/lib/apps/configuracao".format(
+            self.flutter_dir)
         self.app_configuration_page_file = f"{self.app_configuration}/index.page.dart"
         self.app_configuration_controller_file = f"{self.app_configuration}/controller.dart"
 
@@ -475,7 +476,7 @@ class Command(BaseCommand):
     def __check_file_is_locked(self, path):
         """ Método para verificar se o arquivo está travado
         evitando assim que seja parseado novamente
-        
+
         Arguments:
             path {str} -- Caminho absoluto para o arquivo a ser analisado
 
@@ -497,15 +498,18 @@ class Command(BaseCommand):
     """
 
     def __init_flutter(self):
-        # Verifica se o projeto já foi criado
-        if not self.__check_dir(self.flutter_dir):
-            # Se não foi criado, cria o projeto flutter
-            self.__message("Criando o projeto flutter.")
-            __command = "flutter create --androidx {}".format(self.flutter_dir)
-            os.system(__command)
-            self.__message("Projeto criado com sucesso.")
-        else:
-            self.__message(f"Diretório {self.flutter_dir} já existe")
+        try:
+            # Verifica se o projeto já foi criado
+            if not self.__check_dir(self.flutter_dir):
+                # Se não foi criado, cria o projeto flutter
+                self.__message("Criando o projeto flutter.")
+                __command = "flutter create --androidx {}".format(self.flutter_dir)
+                os.system(__command)
+                self.__message("Projeto criado com sucesso.")
+            else:
+                self.__message(f"Diretório {self.flutter_dir} já existe")
+        except Exception as error:
+            self.__message(f"Erro ao executar o init do Flutter: {e}")
 
     """
     #################################################################
@@ -529,7 +533,7 @@ class Command(BaseCommand):
                 for model in __current_app.models:
                     __model = model[1]
                     __imports_pages += "import 'apps/{}/{}/pages/list.dart';\n".format(
-                         __app, __model.lower()
+                        __app, __model.lower()
                     )
                     __list_pages += "Itens(title: '{}', icon: FontAwesomeIcons.folderOpen, uri: {}ListPage()),\n".format(
                         model[0]._meta.verbose_name, __model
@@ -546,7 +550,6 @@ class Command(BaseCommand):
             self.__message(
                 f"Ocorreu um erro no Mapping All Application: {error}")
             return None, None
-
 
     def __indexpage_parser(self, app):
         """Método para criar a página index do Model
@@ -577,7 +580,6 @@ class Command(BaseCommand):
                 traceback.format_exc().splitlines()))
             self.__message(
                 f"Ocorreu um erro ao gerar a página da Index {error}")
-
 
     def __listpage_parser(self, app):
         """Método para criar a página de listagem do Model
@@ -709,7 +711,6 @@ class Command(BaseCommand):
             self.__message(
                 f"Ocorreu um erro ao gerar a página da Create {error}")
 
-
     def __detailpage_parser(self, app):
         """Método para criar a página de detalhamento do Model
 
@@ -754,7 +755,7 @@ class Command(BaseCommand):
         try:
             # Recuperando o arquivo data do model
             __data_file = app.get_path_data_file()
-            
+
             # Recuperando o snippet
             content = self.__get_snippet(f"{self.snippet_dir}/data.txt")
 
@@ -821,13 +822,13 @@ class Command(BaseCommand):
 
     def __controller_parser(self, app):
         """Método responsável por criar o arquivo controller do Model
-        
+
         Arguments:
             app {AppModel} -- Instância da classe AppModel
         """
         try:
             if app.model is None:
-                return 
+                return
 
             __controller_file = app.get_path_controller_file()
 
@@ -864,13 +865,13 @@ class Command(BaseCommand):
         try:
             if app.model is None:
                 return
-            
+
             # Recuperando o arquivo Service
             __service_file = app.get_path_service_file()
 
             # Verificando se o arquivo está travado para parser
             if self.__check_file_is_locked(__service_file):
-                return 
+                return
 
             content = self.__get_snippet(f"{self.snippet_dir}/service.txt")
 
@@ -915,7 +916,7 @@ class Command(BaseCommand):
 
             # Verificando se o arquivo está travado para parser
             if self.__check_file_is_locked(__model_file):
-                return 
+                return
 
             # Recuperando o model
             for field in iter(app.model._meta.fields):
@@ -998,13 +999,14 @@ class Command(BaseCommand):
     Área para gerar os códigos do MobX
     #################################################################
     """
+
     def __build_mobx(self):
         """
         Método para executar o comando de geração dos códigos do MobX
         """
         try:
-            # Executando o comando 
-            # flutter pub run build_runner build 
+            # Executando o comando
+            # flutter pub run build_runner build
             # no diretório do projeto Flutter
                     # Verifica se o projeto já foi criado
             if self.__check_dir(self.flutter_dir):
@@ -1026,8 +1028,10 @@ class Command(BaseCommand):
             if not self.__check_dir(self.app_configuration):
                 os.makedirs(self.app_configuration)
 
-                _content_page = self.__get_snippet(f"{self.snippet_dir}/settings_page.txt")
-                _content_controller = self.__get_snippet(f"{self.snippet_dir}/settings_controller.txt")
+                _content_page = self.__get_snippet(
+                    f"{self.snippet_dir}/settings_page.txt")
+                _content_controller = self.__get_snippet(
+                    f"{self.snippet_dir}/settings_controller.txt")
 
                 # Abrindo o arquivo da página para escrever
                 with open(self.app_configuration_page_file, 'w') as arquivo:
@@ -1041,7 +1045,6 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(
                 traceback.format_exc().splitlines()))
             self.__message(f"Erro ao realizar o parser do model: {error}")
-
 
     """
     #################################################################
@@ -1153,9 +1156,10 @@ class Command(BaseCommand):
                             f"{self.snippet_dir}/ui_{arquivo}.txt")
                         with open(arquivo_dart, "w") as arq:
                             arq.write(snippet)
-            
+
         except Exception as error:
-            self.__message(f"Erro ao criar a estrutura de arquivos da UI {error}")
+            self.__message(
+                f"Erro ao criar a estrutura de arquivos da UI {error}")
 
     def __create_source_from_model(self):
         """Método para criar as apps quando a App e Model forem informados
@@ -1326,7 +1330,7 @@ class Command(BaseCommand):
 
             # Verificando se o arquivo está travado para parser
             if self.__check_file_is_locked(path_maindart):
-                return 
+                return
 
             # Pegando os imports das pages e dos controller
             __import_pages, __import_controllers, __register_controller, __pages = self.__mapping_all_application()
@@ -1343,7 +1347,8 @@ class Command(BaseCommand):
             snippet = snippet.replace(
                 '$RegisterControllers$', __register_controller)
             snippet = snippet.replace('$ImportPages$', __import_pages)
-            snippet = snippet.replace('$ImportController$', __import_controllers)
+            snippet = snippet.replace(
+                '$ImportController$', __import_controllers)
             snippet = snippet.replace('$ListPages$', __pages)
 
             # Alterando o conteúdo do arquivo main.dart original
@@ -1364,8 +1369,10 @@ class Command(BaseCommand):
 
     def call_methods(self, options):
         # Criando o Projeto
+        import pdb; pdb.set_trace()
         self.__init_flutter()
 
+        import pdb; pdb.set_trace()
         # Gerando o arquivo utils
         self.__create_utils()
 
