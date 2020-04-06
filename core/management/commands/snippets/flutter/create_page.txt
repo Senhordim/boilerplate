@@ -1,0 +1,158 @@
+/// View/Page para criação/inserção de um $ModelClass$
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart';
+
+import '../model.dart';
+import '../controller.dart';
+import '../../../../utils/util.dart';
+import '../../../../utils/config.dart';
+import '../../../../user_interface/font.dart';
+import '../../../../user_interface/widget.dart';
+
+class $ModelClass$AddPage extends StatefulWidget {
+  final $ModelClass$Model $Model$;
+
+  $ModelClass$AddPage({this.$Model$});
+
+  @override
+  _$ModelClass$AddPageState createState() => _$ModelClass$AddPageState();
+}
+
+class _$ModelClass$AddPageState extends State<$ModelClass$AddPage> {
+  // Instânciando uma chave para controle do estado do Scaffold
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // Instânciando o controller via get_it
+  $ModelClass$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClass$Controller>();
+
+  // Criando os controladores do Form
+  final _form$ModelClass$ = GlobalKey<FormState>();
+  
+  // Criando os controladores dos inputs do formulário.  
+  $Atributes$
+
+  $ModelClass$Model _$Model$ = $ModelClass$Model();
+
+  bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+ 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: customAppBarTitle(
+          context, 
+          '${Config.app_title}',
+        ),
+      ),
+      body: _createBody(context),
+    );
+  }
+
+  Widget _createBody(context) {
+    if (_loading == true) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: new BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height
+          ),
+          child: Container(
+          child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                // Configurando para que a Coluna oculpe a largura máxima da tela
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12.0, top: 12.0),
+                    child: customTitlePage(context, 
+                      'Cadastrar $ModelClass$',
+                    ),
+                  ),
+                  _createForm(context),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 24.0),
+                    child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: customRaisedButton(
+                          label: 'Salvar',
+                          context: context,
+                          onPress: () {
+                            if (_form$ModelClass$.currentState.validate()) {
+                              setState(() {
+                                  // Recuperando os dados do formulário e atribuindo à instância da classe
+$AttributesData$
+                                  _post();
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
+  Widget _createForm(context){
+    return Form(
+      key: _form$ModelClass$,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          $Form$
+        ],
+      ),
+    );
+  }
+
+  void _clearForm(){
+    // Método para limpar os dados do fomulário após enviar os dados
+    $ClearData$
+  }
+
+  void _post() async {
+    // Método para enviar a requisição de inserção de dados para a API
+    try{
+      // TODO: Implementar o método de envio dos dados para o controller que envia para o service
+    }catch (e){
+
+    }
+  }
+
+  /// Método para mostrar/ocultar a barra de mensagem para o usuário
+  ///    Params:
+  ///      message -> String contendo a mensagem a ser mostrada.
+  ///      error -> bool para determinar se a mensagem é de erro ou não.
+  _showMessage(String message, {bool error}) {
+    setState(() {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: error == true ? Colors.red : Colors.blue,
+        ),
+      );
+    });
+  }
+}

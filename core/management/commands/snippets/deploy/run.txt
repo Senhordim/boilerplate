@@ -1,0 +1,4 @@
+#!/bin/sh
+service nginx restart
+
+gunicorn $projeto$.wsgi:application --name=$projeto$ --workers=3 --user=www-data --group=www-data --timeout=900 --log-level=debug --bind=unix:/var/www/$projeto$/run/gunicorn.sock

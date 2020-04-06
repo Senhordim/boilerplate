@@ -1,0 +1,89 @@
+import 'package:flutter/material.dart';
+
+class Config {
+  // Constante contendo o endereço padrão de acesso à API
+  static const uri = "$DjangoAPIPath$";
+
+  // Constante contendo o Token de acesso à API
+  static const DRFToken = "98asdfoadfnafoaufakfasd";
+
+  // Constante com a URL do média no projeto Django
+  static const String uri_media = "$DjangoAPIPath$media/";
+
+  // Constante contendo o nome do aplicativo
+  // esse nome aparecerá por padrão nos títulos das páginas
+  static const String app_title = "$AppName$";
+
+  // Constante para determinar se deve ser utilizada
+  // no service a constante _url ou _uri
+  static const bool usingURL = false;
+}
+
+class DebugPrint{
+  static void imprimir(String texto){
+    print(texto);
+  }
+}
+
+/// Classe para configurar os temas light e dark da app
+class CustomTheme{
+  //Colors for theme
+  static Color defaultColor = Colors.black;
+  static Color lightPrimary = Color(0xfffcfcff);
+  static Color lightAccent = Colors.blue;
+  static Color lightBG = Color(0xfffcfcff);
+  static Color darkPrimary = Colors.black;
+  static Color darkAccent = Colors.blueGrey;
+  static Color darkBG = Colors.black;
+
+  //Colors for main cards theme light and dark
+  static Color mainCardLightBorderColor = Colors.black87;
+  static Color mainCardLightIconColor = Colors.black38;
+  static Color mainCardLightTextColor = Colors.black38;
+  static Color mainCardLightBackgroundColor = Colors.white;
+  static Color mainCardLightShadowColor = Colors.black38;
+
+  static Color mainCardDarkBorderColor = Colors.grey[700];
+  static Color mainCardDarkIconColor = Colors.grey[300];
+  static Color mainCardDarkTextColor = Colors.grey[300];
+  static Color mainCardDarkBackgroundColor = Colors.grey[850];
+  static Color mainCardDarkShadowColor = Colors.grey[900];
+
+  // Área de configuração dos temas
+  static ThemeData lightTheme = ThemeData(
+    backgroundColor: lightBG,
+    primaryColor: lightPrimary,
+    accentColor:  lightAccent,
+    cursorColor: lightAccent,
+    scaffoldBackgroundColor: lightBG,
+    appBarTheme: AppBarTheme(
+      elevation: 0,
+      textTheme: TextTheme(
+        title: TextStyle(
+          color: darkBG,
+          fontSize: 18.0,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    ),
+  );
+
+  static ThemeData darkTheme = ThemeData(
+    brightness: Brightness.dark,
+    backgroundColor: darkBG,
+    primaryColor: darkPrimary,
+    accentColor: darkAccent,
+    scaffoldBackgroundColor: darkBG,
+    cursorColor: darkAccent,
+    appBarTheme: AppBarTheme(
+      elevation: 0,
+      textTheme: TextTheme(
+        title: TextStyle(
+          color: lightBG,
+          fontSize: 18.0,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    ),
+  );
+}

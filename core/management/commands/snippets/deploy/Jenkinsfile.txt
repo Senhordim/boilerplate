@@ -1,0 +1,107 @@
+#!groovy
+
+node("docker") {
+    //def installed = fileExists 'bin/activate'
+
+    //if (!installed) {
+    //    stage("Install Python Virtual Enviroment") {
+    //        sh 'virtualenv --no-site-packages .'
+    //    }
+    //}
+
+    stage ("Get Latest Code") {
+        checkout scm
+    }
+
+    //stage ("Install Application Dependencies") {
+    //    sh '''
+    //        source bin/activate
+    //        pip install -r requirements.txt
+    //        deactivate
+    //       '''
+    //}
+
+    //stage ("Collect Static files") {
+    //    sh '''
+    //        source bin/activate
+    //        python manage.py collectstatic --noinput
+    //        deactivate
+    //       '''
+    //}
+
+    //stage ("Run Unit/Integration Tests") {
+    //    def testsError = null
+    //    try {
+    //        sh '''
+    //            source ../bin/activate
+    //            python <relative path to manage.py> jenkins
+    //            deactivate
+    //          '''
+    //    }
+    //    catch(err) {
+    //        testsError = err
+    //        currentBuild.result = 'FAILURE'
+    //    }
+    //    finally {
+    //        junit 'reports/junit.xml'
+    //
+    //        if (testsError) {
+    //            throw testsError
+    //        }
+    //    }
+    //}
+
+    def firstrun = true
+    stage ("Build docker Image") {
+        sh '''
+            docker build --no-cache -t localhost:5000/$projeto$:new .
+           '''
+    }
+
+    if (!firstrun) {
+        stage ("Tagging the old image") {
+            sh '''
+                docker tag localhost:5000/$projeto$:lts localhost:5000/$projeto$:${env.BUILD_ID}
+               '''
+        }
+        stage ("Pushing the old image") {
+            sh '''
+                docker push localhost:5000/$projeto$:${env.BUILD_ID}
+            '''
+        }
+    }
+
+
+    stage ("Tagging the new Image") {
+        sh '''
+            docker tag localhost:5000/$projeto$:new localhost:5000/$projeto$:lts
+           '''
+    }
+    stage ("Pushing the new Image as :lts") {
+        sh '''
+            docker push localhost:5000/$projeto$:lts
+           '''
+    }
+
+    stage ("Deploy") {
+        node("master") {
+            sh '''
+                ssh root@192.168.1.230 docker service update --image localhost:5000/$projeto$:lts $projeto$_$service_name$
+              '''
+        }
+    }
+
+    //if (firsrun) {
+    //    stage ("Deploy to Production") {
+    //        sh '''
+    //            docker stack deploy -c docker-compose.yml bandodopovo
+    //           '''
+    //    }
+    //} else {
+    //    stage ("Update image of running service") {
+    //        sh '''
+    //            docker service update --image localhost:5000/bancodopovo:lts bancodopovo_bancodopovo
+    //           '''
+    //    }
+    //}
+}

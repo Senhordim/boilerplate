@@ -1,0 +1,127 @@
+/// Service do model $ModelClass$
+/// 
+/// Os Métodos padrões gerados são:
+///     fecthAll() -> Recupera a lista de $ModelClass$ da API.
+///     detail()   -> Recupera os detalhes de $ModelClass$ da API.
+///     post()     -> Salva os dados de uma instância do $ModelClass$ na API.
+///     put()      -> Atualiza os dados de uma instância do $ModelClass$ na API.
+///     delete()   -> Delet os dados de uma instância do $ModelClass$ na API.
+///
+/// Todos os métodos de acesso à API devem ser implementados no nessa classe.
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'model.dart';
+import '../../../utils/config.dart';
+import '../../../utils/http_dio_request.dart';
+
+class $ModelClass$Service {
+  // Instanciando a classe $ModelClass$Model
+  $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model();
+
+  /// Método para retornar todos os $ModelClass$ da API
+  Future<List<$ModelClass$Model>> fetchAll() async {
+    List<$ModelClass$Model> _itens = List<$ModelClass$Model>();
+    String _url = "${Config.uri}$Model$-list/?format=json";
+    String _uri = "${Config.uri}$App$/$Model$/?format=json";
+    
+    // Verificando a configuração de qual endereço utilizar
+    String url = Config.usingURL == true? _url: _uri;
+
+    try {
+      HttpRequestDio _dio = HttpRequestDio(url);
+      var data = await _dio.getHttp();
+      if (data != null) {
+        for (var item in data){
+          _itens.add($ModelClass$Model.fromJson(item));
+        }
+      }
+    } catch (error, exception) {
+      return throw {"error": error, "message": exception};
+    }
+    return _itens;
+  }
+  
+  /// Método para detalhar um $ModelClass$ da API
+  Future<$ModelClass$Model> detail($ModelClass$Model $ModelClassCamelCase$) async {
+    String _url = "${Config.uri}$Model$-detail/${$ModelClassCamelCase$.id}/?format=json";
+    String _uri = "${Config.uri}$App$/$Model$/${$ModelClassCamelCase$.id}/?format=json";
+
+    // Verificando a configuração de qual endereço utilizar
+    String url = Config.usingURL == true? _url: _uri;
+
+    try {
+      HttpRequestDio _dio = HttpRequestDio(url);
+      var data = await _dio.getHttp();
+      if (data != null) {
+        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
+      }
+    } catch (error, exception) {
+        return throw {"error": error, "message": exception};
+    }
+    return _$ModelClassCamelCase$;
+  }
+
+  /// Método para atualizar um $ModelClass$ da API
+  Future<$ModelClass$Model> put($ModelClass$Model $ModelClassCamelCase$) async {
+    String _url = "${Config.uri}$Model$-update/${$ModelClassCamelCase$.id}/?format=json";
+    String _uri = "${Config.uri}$App$/$Model$/${$ModelClassCamelCase$.id}/?format=json";
+    
+    // Verificando a configuração de qual endereço utilizar
+    String url = Config.usingURL == true? _url: _uri;
+
+    try {
+      HttpRequestDio _dio = HttpRequestDio(url);
+      var data = await _dio.putHttp($ModelClassCamelCase$.toJson(), $ModelClassCamelCase$.id);
+      if (data != null) {
+        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
+      }
+    } catch (error, exception) {
+      return throw {"error": error, "message": exception};
+    }
+    return _$ModelClassCamelCase$;
+  }
+  
+  /// Método para adicionar os $ModelClass$ da API
+  Future<$ModelClass$Model> post($ModelClass$Model $ModelClassCamelCase$) async {
+    String _url = "${Config.uri}$Model$-create?format=json";
+    String _uri = "${Config.uri}$App$/$Model$/?format=json";
+    
+    // Verificando a configuração de qual endereço utilizar
+    String url = Config.usingURL == true? _url: _uri;
+
+    try {
+      HttpRequestDio _dio = HttpRequestDio(url);
+      var data = await _dio.postHttp($ModelClassCamelCase$.toJson());
+      if (data != null) {
+        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
+      }
+    } catch (error, exception) {
+      return throw {"error": error, "message": exception};
+    }
+    return _$ModelClassCamelCase$;
+  }
+
+  /// Método para exclui os $ModelClass$ da API
+  Future<$ModelClass$Model> delete($ModelClass$Model $ModelClassCamelCase$) async {
+    String _url = "${Config.uri}$Model$-delete/${$ModelClassCamelCase$.id}/?format=json";
+    String _uri = "${Config.uri}$App$/$Model$/${$ModelClassCamelCase$.id}/?format=json";
+
+    // Verificando a configuração de qual endereço utilizar
+    String url = Config.usingURL == true? _url: _uri;
+
+    try {
+      HttpRequestDio _dio = HttpRequestDio(url);
+      var data = await _dio.deleteHttp($ModelClassCamelCase$.toJson(), $ModelClassCamelCase$.id);
+      if (data != null) {
+        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
+      }
+    } catch (error, exception) {
+      return throw {"error": error, "message": exception};
+    }
+    return _$ModelClassCamelCase$;
+  }
+}

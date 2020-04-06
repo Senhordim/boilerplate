@@ -1,0 +1,31 @@
+server {
+    listen 8080;
+    server_name $subdominio$.palmas.to.gov.br;
+    client_max_body_size 1G;
+    proxy_connect_timeout 900s;
+    proxy_read_timeout 900s;
+    proxy_headers_hash_max_size 1024;
+    proxy_headers_hash_bucket_size 128;
+
+    location = /favicon.ico
+    {
+        access_log off; log_not_found off;
+    }
+    location /static/ {
+        autoindex on;
+        alias /var/www/$projeto$/$projeto$/static/;
+    }
+    location /media/ {
+        autoindex on;
+        alias /var/www/$projeto$/$projeto$/media/;
+    }
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/var/www/$projeto$/run/gunicorn.sock;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+        #proxy_set_header Host $http_host;
+        proxy_redirect off;
+        autoindex off;
+    }
+}

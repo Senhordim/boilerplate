@@ -1,0 +1,47 @@
+/// View/Page inicial de um $ModelClass$
+/// Caso seja necessário criar uma página anterior à da listagem
+/// deve ser alterado o código abaixo e depois alterar a URL de
+/// navegação vinda da main.dart
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart';
+
+import '../controller.dart';
+
+class $ModelClass$IndexPage extends StatefulWidget {
+  @override
+  _$ModelClass$IndexPageState createState() => _$ModelClass$IndexPageState();
+}
+
+class _$ModelClass$IndexPageState extends State<$ModelClass$IndexPage> {
+  // Instânciando uma chave para controle do estado do Scaffold
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // Instânciando o controller via get_it
+  $ModelClass$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClass$Controller>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+
+  /// Método para mostrar/ocultar a barra de mensagem para o usuário
+  ///    Params:
+  ///      message -> String contendo a mensagem a ser mostrada.
+  ///      error -> bool para determinar se a mensagem é de erro ou não.
+  _showMessage(String message, {bool error}) {
+    setState(() {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: error == true ? Colors.red : Colors.blue,
+        ),
+      );
+    });
+  }
+}

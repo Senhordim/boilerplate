@@ -1,0 +1,53 @@
+/// Model do objeto $ModelClass$
+/// 
+/// Os Métodos padrões gerados são:
+///     toString() -> Sobrescreve o toString para trazer todos os atributos da classe.
+///     fromJson() -> Realiza o parser do Json para o Model.
+///     toJson()   -> Realiza o parser do Model para Json.
+///
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import '../../../utils/util.dart';
+
+class $ModelClass$Model {
+  int idSqLite;
+  $AttributeClass$
+
+  /// Construtor da Classe
+  $ModelClass$Model(){
+    this.createdOn = null;
+    this.updatedOn = null;
+  }
+  
+  /// Sobescrevendo o método toString para retornar
+  /// todos os atributos da classe.
+  @override
+  String toString() {
+    return "$StringReturn$";
+  }
+
+  /// Métodos da classe
+  $ModelClass$Model.fromJson(Map<String, dynamic> json) {
+    try {
+      $ParserFromJson$
+    } catch (error, exception) {
+      throw {"error": error, "message": exception};
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    try {
+      Map<String, dynamic> data = {
+        $ParserToMap$
+      };
+      return data;
+    } catch (error, exception) {
+      return throw {"error": error, "message": exception};
+    }
+  }
+
+}

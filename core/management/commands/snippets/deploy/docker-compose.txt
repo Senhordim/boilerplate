@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  $service_name$:
+    image: localhost:5000/$projeto$:lts
+    networks:
+      - proxy
+      - default
+    deploy:
+      replicas: 1
+      labels:
+        - com.df.notify=true
+        - com.df.distribute=true
+        - com.df.serviceDomain=$subdominio$.palmas.to.gov.br
+        - com.df.port=8080
+    volumes:
+      - media-$projeto$:/var/www/$projeto$/$projeto$/media
+
+networks:
+  proxy:
+    external: true
+  default:
+    external: false
+
+volumes:
+  media-$projeto$:
+    driver_opts:
+      type: nfs
+      o: addr=192.168.1.218,rw,nolock,soft
+      device: ":/mnt/media-$projeto$"

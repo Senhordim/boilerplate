@@ -1,0 +1,22 @@
+FROM localhost:5000/nginx-python2:1.0
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+WORKDIR /var/www/$projeto$
+RUN git clone -b $branch$ http://auto_deploy:*2014_deploy@git.palmas.to.gov.br/dti-desenvolvimento/$projeto$.git .
+
+RUN pip install -r requirements.txt
+
+RUN mkdir -p /var/www/$projeto$/$projeto$/media && \
+    chown -R www-data:www-data /var/www/$projeto$/$projeto$/media && \
+    mkdir -p /var/www/$projeto$/$projeto$/static && \
+    chown -R www-data:www-data /var/www/$projeto$/$projeto$/static && \
+    mkdir /var/www/$projeto$/run
+
+RUN python manage.py collectstatic --noinput
+
+#RUN gunicorn $projeto$.wsgi:application --name=$projeto$ --workers=3 --user=www-data --group=www-data --timeout=900 --log-level=debug --bind=/var/www/$projeto$/run/gunicorn.sock
+RUN chmod +x /var/www/$projeto$/run.sh
+
+HEALTHCHECK --interval=3s --timeout=3s --start-period=5s --retries=3 CMD curl --unix-socket /var/www/$projeto$/run/gunicorn.sock http || exit 1
+CMD ["/bin/sh", "run.sh"]
