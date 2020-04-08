@@ -335,6 +335,12 @@ class Command(BaseCommand):
             dest='init',
             help='Gerar o projeto Flutter e executar os métodos auxiliares.'
         )
+        parser.add_argument(
+            '--clear',
+            action='store_true',
+            dest='clear',
+            help='Limpar projeto flutter.'
+        )
 
     """
     #################################################################
@@ -1422,13 +1428,16 @@ class Command(BaseCommand):
         if options['main']:
             self.__replace_main()
             return
-        if options['yaml']:
+        elif options['yaml']:
             self.__add_packages()
             return
-        if options['build_mobx']:
+        elif options['build_mobx']:
             self.__build_mobx()
             return
-        if options['init']:
+        elif options['clear']:
+            self.__clear_project()
+            sys.exit()
+        elif options['init']:
             # Criando o Projeto
             self.__init_flutter()
 
@@ -1507,8 +1516,8 @@ class Command(BaseCommand):
 
     def __clear_project(self, path=None):
         try:
-            __path = path or f"{self.flutter_dir}/lib/apps/"
+            __path = path or f"{self.flutter_dir}"
             import shutil
             shutil.rmtree(__path)
-        except:
-            pass
+        except Exception as error:
+            self.__message(f"Ocorreu um erro ao executar o __clear_project: {error}")
