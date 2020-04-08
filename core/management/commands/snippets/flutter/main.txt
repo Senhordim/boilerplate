@@ -12,6 +12,8 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'utils/localization.dart';
 
 $ImportPages$
 $ImportController$
@@ -41,6 +43,37 @@ class MyApp extends StatelessWidget {
             ? CustomTheme.lightTheme
             : CustomTheme.darkTheme,
         home: MyHomePage(title: '${Config.app_title}'),
+        /// Área para internacionalização
+
+        // Configurando quais idiomas serão suportados, por padrão pt_BR e en_US
+        supportedLocales: [
+          Locale('en', 'US'),
+          Locale('pt', 'BR'),
+        ],
+        // These delegates make sure that the localization data for the proper language is loaded
+        localizationsDelegates: [
+          // A class which loads the translations from JSON files
+          AppLocalizations.delegate,
+          // Built-in localization of basic text for Material widgets
+          GlobalMaterialLocalizations.delegate,
+          // Built-in localization for text direction LTR/RTL
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        // Returns a locale which will be used by the app
+        localeResolutionCallback: (locale, supportedLocales) {
+          // Check if the current device locale is supported
+          for (var supportedLocale in supportedLocales) {
+            if (supportedLocale.languageCode == locale.languageCode &&
+                supportedLocale.countryCode == locale.countryCode) {
+              currentLanguage = supportedLocale.toString();
+              return supportedLocale;
+            }
+          }
+          // If the locale of the device is not supported, use the first one
+          // from the list (English, in this case).
+          return supportedLocales.first;
+        },
+        /// fim da área de internacionalização
         debugShowCheckedModeBanner: false,
       );
     });

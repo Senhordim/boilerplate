@@ -1083,6 +1083,8 @@ class Command(BaseCommand):
             codigo['dependencies']['font_awesome_flutter'] = '^8.5.0'
             codigo['dev_dependencies']['build_runner'] = '^1.8.0'
             codigo['dev_dependencies']['mobx_codegen'] = '^1.0.3'
+            # TODO Verificar se gerará erro
+            codigo['flutter_localizations']['sdk'] = flutter
 
             # Abrindo o arquivo para escrita
             arquivo_alterado = open(__path, "w")
@@ -1313,6 +1315,30 @@ class Command(BaseCommand):
 
     """
     #################################################################
+    Área para criar o localizations.dart, responsável por implementar
+    internacionalização.
+    #################################################################
+    """
+    def __localization_app(self):
+        try:
+            # Acessando o snippet do localizations 
+            snippet = self.__get_snippet(f"{self.snippet_dir}/localization.txt")
+            # Criando o arquivo.
+            path_localization = os.path.join(self.utils_dir, 'localization.dart')
+
+            # Verificando se o arquivo está travado para parser
+            if self.__check_file_is_locked(path_maindart):
+                return
+
+            # Gravando no arquivo
+            with open(path_localization, 'w') as localizations:
+                localizations.write(snippet)
+
+        except Exception as error:
+            self.__message(f"Erro ao executar o localizations app. \n {error}")
+
+    """
+    #################################################################
     Área para alterar o Main.dart
     #################################################################
     """
@@ -1382,6 +1408,9 @@ class Command(BaseCommand):
 
         # Gerando o class de acesso HTTP
         self.__http_dio_request()
+
+        # Criando a app para gerenciar a internacionalização do projeto
+        self.__localization_app()
 
         if options['main']:
             self.__replace_main()
