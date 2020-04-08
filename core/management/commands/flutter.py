@@ -21,8 +21,6 @@ class AppModel:
     """
 
     try:
-        print("Criando a app e seu(s) model(s) ...")
-
         def __init__(self, path_flutter, app_name, model_name=None):
             try:
                 # Atribuindo o caminho do projeto Flutter
@@ -325,9 +323,9 @@ class Command(BaseCommand):
             help='Refatorando o YAML'
         )
         parser.add_argument(
-            '--generate_controller',
+            '--build_mobx',
             action='store_true',
-            dest='generate_controller',
+            dest='build_mobx',
             help='Gerar os arquivos do MobX'
         )
 
@@ -506,8 +504,6 @@ class Command(BaseCommand):
                 __command = "flutter create --androidx {}".format(self.flutter_dir)
                 os.system(__command)
                 self.__message("Projeto criado com sucesso.")
-            else:
-                self.__message(f"Diretório {self.flutter_dir} já existe")
         except Exception as error:
             self.__message(f"Erro ao executar o init do Flutter: {e}")
 
@@ -970,7 +966,6 @@ class Command(BaseCommand):
                     __name, __name_dart)
 
             # Alterando o conteúdo do Snippet com dados do model
-
             content = content.replace("$ModelClass$", app.model_name)
             content = content.replace("$AttributeClass$", content_atributes)
             content = content.replace("$StringReturn$", content_string_return)
@@ -1059,38 +1054,13 @@ class Command(BaseCommand):
         import yaml
         try:
             __path = f"{self.flutter_dir}/pubspec.yaml"
-            # Abrindo arquivo para leitura
-            arquivo_original = open(__path).read()
-
-            codigo = yaml.full_load(arquivo_original)
-            codigo['description'] = f"Aplicativo mobile do {SYSTEM_NAME}"
-            codigo['dependencies']['dio'] = '^3.0.1'
-            codigo['dependencies']['get_it'] = '^4.0.1'
-            codigo['dependencies']['mobx'] = '^1.1.1'
-            codigo['dependencies']['flutter_mobx'] = '^1.1.0'
-            codigo['dependencies']['intl'] = '^0.16.0'
-            codigo['dependencies']['url_launcher'] = '^5.1.3'
-            codigo['dependencies']['transparent_image'] = '^1.0.0'
-            codigo['dependencies']['cached_network_image'] = '^2.0.0-rc'
-            codigo['dependencies']['connectivity'] = '^0.4.6+2'
-            codigo['dependencies']['sqflite'] = '^1.1.6+5'
-            codigo['dependencies']['crypto'] = '^2.1.3'
-            codigo['dependencies']['google_sign_in'] = '^4.0.7'
-            codigo['dependencies']['image_picker'] = '^0.6.1+4'
-            codigo['dependencies']['shared_preferences'] = '^0.5.3+4'
-            codigo['dependencies']['flutter_launcher_icons'] = '^0.7.3'
-            codigo['dependencies']['date_format'] = '^1.0.6'
-            codigo['dependencies']['font_awesome_flutter'] = '^8.5.0'
-            codigo['dev_dependencies']['build_runner'] = '^1.8.0'
-            codigo['dev_dependencies']['mobx_codegen'] = '^1.0.3'
-            # TODO Verificar se gerará erro
-            codigo['flutter_localizations']['sdk'] = flutter
-
-            # Abrindo o arquivo para escrita
-            arquivo_alterado = open(__path, "w")
-
-            yaml.dump(codigo, arquivo_alterado, sort_keys=False)
-            arquivo_alterado.close()
+            # Trabalhando com a geração do arquivo baseado no snippet
+            snippet = self.__get_snippet(f"{self.snippet_dir}/yaml.txt")
+            snippet = snippet.replace("$AppPackage$", self.project.lower())
+            snippet = snippet.replace("$AppDescription$", 
+                f"Projeto Flutter do sistema Django {self.project}")
+            with open(__path, 'w') as yaml_file:
+                yaml_file.write(snippet)
 
         except Exception as error:
             self.__message(f"Erro ao adicionar os pacotes: {error}")
@@ -1327,12 +1297,33 @@ class Command(BaseCommand):
             path_localization = os.path.join(self.utils_dir, 'localization.dart')
 
             # Verificando se o arquivo está travado para parser
-            if self.__check_file_is_locked(path_maindart):
+            if self.__check_file_is_locked(path_localization):
                 return
 
             # Gravando no arquivo
             with open(path_localization, 'w') as localizations:
                 localizations.write(snippet)
+            
+            # 
+            # Adicionando os arquivos de pt.json e en.json no diretório lang
+            # 
+            # Recuperando o caminho do diretório
+            __lang_dir = os.path.join(self.flutter_dir, 'lang')
+            # Verificando se existe o diretório
+            if not self.__check_dir(__lang_dir):
+                # Criando o diretório
+                os.makedirs(__lang_dir)
+            
+            # Verificando se o arquivo do idioma pt_br exiate
+            if not self.__check_file(f"{__lang_dir}/pt.json"):
+                # Criando os arquivos JSON
+                with open(f"{__lang_dir}/pt.json", 'w') as pt_json:
+                    pt_json.write('\{\n"chave_do_texto":"Texto em português",\n\}')
+
+            # Verificando se o arquivo do idioma en_us existe.
+            if not self.__check_file(f"{__lang_dir}/en.json"):
+                with open(f"{__lang_dir}/en.json", 'w') as en_json:
+                    en_json.write('\{\n"chave_do_texto":"Text in english",\n\}')
 
         except Exception as error:
             self.__message(f"Erro ao executar o localizations app. \n {error}")
@@ -1418,7 +1409,7 @@ class Command(BaseCommand):
         if options['yaml']:
             self.__add_packages()
             return
-        if options['generate_controller']:
+        if options['build_mobx']:
             self.__build_mobx()
             return
         else:
