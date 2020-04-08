@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import time
 import traceback
 from django.apps import apps
 from django.core.management.base import BaseCommand
@@ -501,9 +502,24 @@ class Command(BaseCommand):
             if not self.__check_dir(self.flutter_dir):
                 # Se não foi criado, cria o projeto flutter
                 self.__message("Criando o projeto flutter.")
-                __command = "flutter create --androidx {}".format(self.flutter_dir)
-                os.system(__command)
+                __cmd_flutter_create = "flutter create --androidx {}".format(self.flutter_dir)
+                os.system(__cmd_flutter_create)
                 self.__message("Projeto criado com sucesso.")
+                #  Chamando os métodos auxiliares para geração do projeto flutter
+                # Executando o método de atualização do Yaml
+                self.__message("Atualizando o arquivo de dependências .")
+                self.__add_packages()
+                time.sleep(3)
+                # Executando o flutter package get
+                __cmd_get_packages = "cd {};flutter packages get; cd ../{}".format(
+                        self.flutter_dir, self.project)
+                os.system(__cmd_get_packages)
+                time.sleep(5)
+                # Executando o main
+                self.__replace_main()
+                time.sleep(5)
+                # Executando o build_mox
+                self.__build_mobx()
         except Exception as error:
             self.__message(f"Erro ao executar o init do Flutter: {e}")
 
