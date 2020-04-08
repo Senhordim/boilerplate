@@ -198,7 +198,7 @@ class AppModel:
             print("Pages \nCreate: {}\nDetail: {}\nIndex: {}\nList: {}\nUpdate: {}".format(
                 c, d, i, l, u
             ))
-            print("")
+
             print("Models (Generator)")
             if self.models is not None:
                 for __model in self.models:
@@ -505,24 +505,37 @@ class Command(BaseCommand):
                 __cmd_flutter_create = "flutter create --androidx {}".format(self.flutter_dir)
                 os.system(__cmd_flutter_create)
                 self.__message("Projeto criado com sucesso.")
-                #  Chamando os métodos auxiliares para geração do projeto flutter
-                # Executando o método de atualização do Yaml
-                self.__message("Atualizando o arquivo de dependências .")
-                self.__add_packages()
-                time.sleep(3)
-                # Executando o flutter package get
-                __cmd_get_packages = "cd {};flutter packages get; cd ../{}".format(
-                        self.flutter_dir, self.project)
-                os.system(__cmd_get_packages)
-                time.sleep(5)
-                # Executando o main
-                self.__replace_main()
-                time.sleep(5)
-                # Executando o build_mox
-                self.__build_mobx()
         except Exception as error:
             self.__message(f"Erro ao executar o init do Flutter: {e}")
 
+    def __build_flutter(self):
+        """
+        Método para quando o usuário criar o protejo flutter serem
+        chamados os métodos __add_packages, __replace_main e __build_mobx
+        """
+        try:
+            if self.__check_dir(self.flutter_dir):
+                #  Chamando os métodos auxiliares para geração do projeto flutter
+                # Executando o método de atualização do Yaml
+                self.__message("Atualizando o arquivo de dependências.")
+                self.__add_packages()
+                time.sleep(3)
+                # Executando o flutter package get
+                self.__message("Executando o flutter packages get.")
+                __cmd_get_packages = "cd {};flutter pub get; cd ../{}".format(
+                        self.flutter_dir, self.project)
+                os.system(__cmd_get_packages)
+                time.sleep(3)
+                # Executando o main
+                self.__message("Atualizando o arquivo main.dart.")
+                self.__replace_main()
+                time.sleep(3)
+                # Executando o build_mox
+                self.__message("Gerando os arquivos controller.g.dart do MobX")
+                self.__build_mobx()
+        except Exception as error:
+            self.__message(f"Erro ao executar o __build_flutter: {error}")
+        pass
     """
     #################################################################
     Área para métodos assincronos
@@ -1021,7 +1034,6 @@ class Command(BaseCommand):
             # no diretório do projeto Flutter
                     # Verifica se o projeto já foi criado
             if self.__check_dir(self.flutter_dir):
-                self.__message(f"Acessando o diretório -> {self.flutter_dir}")
                 __command = "cd {};flutter pub run build_runner build; cd ../{}".format(
                     self.flutter_dir, self.project)
                 os.system(__command)
@@ -1080,9 +1092,6 @@ class Command(BaseCommand):
 
         except Exception as error:
             self.__message(f"Erro ao adicionar os pacotes: {error}")
-        finally:
-            # Saindo do Script
-            sys.exit()
 
     """
     #################################################################
@@ -1334,12 +1343,12 @@ class Command(BaseCommand):
             if not self.__check_file(f"{__lang_dir}/pt.json"):
                 # Criando os arquivos JSON
                 with open(f"{__lang_dir}/pt.json", 'w') as pt_json:
-                    pt_json.write('\{\n"chave_do_texto":"Texto em português",\n\}')
+                    pt_json.write('{\n"chave_do_texto":"Texto em português"\n}')
 
             # Verificando se o arquivo do idioma en_us existe.
             if not self.__check_file(f"{__lang_dir}/en.json"):
                 with open(f"{__lang_dir}/en.json", 'w') as en_json:
-                    en_json.write('\{\n"chave_do_texto":"Text in english",\n\}')
+                    en_json.write('{\n"chave_do_texto":"Text in english"\n}')
 
         except Exception as error:
             self.__message(f"Erro ao executar o localizations app. \n {error}")
@@ -1418,6 +1427,9 @@ class Command(BaseCommand):
 
         # Criando a app para gerenciar a internacionalização do projeto
         self.__localization_app()
+
+        # Invocando os demais métodos de geração do projeto flutter
+        self.__build_flutter()
 
         if options['main']:
             self.__replace_main()
