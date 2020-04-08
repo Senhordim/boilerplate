@@ -329,6 +329,12 @@ class Command(BaseCommand):
             dest='build_mobx',
             help='Gerar os arquivos do MobX'
         )
+        parser.add_argument(
+            '--init',
+            action='store_true',
+            dest='init',
+            help='Gerar o projeto Flutter e executar os métodos auxiliares.'
+        )
 
     """
     #################################################################
@@ -385,13 +391,16 @@ class Command(BaseCommand):
             self.__message(
                 f"Ocorreu um erro ao validar os campos do Base: {error}")
 
-    def __message(self, message):
+    def __message(self, message, error=False):
         """Método para retornar mensagems ao prompt(Terminal)
 
         Arguments:
             message {str} -- Mensagem a ser exibida
         """
-        self.stdout.write(self.style.SUCCESS(message))
+        if error:
+            self.stdout.write(self.style.ERROR(message))
+        else:
+            self.stdout.write(self.style.SUCCESS(message))
 
     def __to_camel_case(self, text, flutter=False):
         """Método para convert a váriavel de snake_case para camelCase
@@ -1107,9 +1116,6 @@ class Command(BaseCommand):
             if not self.__check_dir(self.utils_dir):
                 os.makedirs(self.utils_dir)
 
-            # Chamando o método do parser da lib Http Dio
-            self.__http_dio_request()
-
             if not self.__check_file(self.config_file):
                 # Acessando o snippet do arquivo de configuração
                 snippet = self.__get_snippet(f"{self.snippet_dir}/config.txt")
@@ -1174,7 +1180,8 @@ class Command(BaseCommand):
                 f"Erro ao executar o Create App From Model: {error}")
 
     def __create_source_from_generators(self):
-        """Método para criar as apps quando apenas a App for informada
+        """
+        Método para criar as apps quando apenas a App for informada
         """
         self.__message("Criando as apps baseado na App e nos Generators")
         try:
@@ -1190,7 +1197,7 @@ class Command(BaseCommand):
 
     def __create_source(self, app_name, model_name):
         """
-            Método para criar a estrutura de diretórios da App/Models
+        Método para criar a estrutura de diretórios da App/Models
         """
         try:
             # Verificando se o self.current_app_model está populado
@@ -1328,8 +1335,7 @@ class Command(BaseCommand):
             # Gravando no arquivo
             with open(path_localization, 'w') as localizations:
                 localizations.write(snippet)
-            
-            # 
+
             # Adicionando os arquivos de pt.json e en.json no diretório lang
             # 
             # Recuperando o caminho do diretório
@@ -1360,6 +1366,9 @@ class Command(BaseCommand):
     """
 
     def __replace_main(self):
+        """
+        Método para atualizar o main conforme o Snippet
+        """
         try:
             __list_itens = []
             __imports = ""
@@ -1410,27 +1419,6 @@ class Command(BaseCommand):
     """
 
     def call_methods(self, options):
-        # Criando o Projeto
-        self.__init_flutter()
-
-        # Invocando o método para criar a app de configuração
-        self.__build_settings_controller()
-
-        # Gerando o arquivo utils
-        self.__create_utils()
-
-        # Gerando a estrutura da UserInterface
-        self.__create_user_interface_directories()
-
-        # Gerando o class de acesso HTTP
-        self.__http_dio_request()
-
-        # Criando a app para gerenciar a internacionalização do projeto
-        self.__localization_app()
-
-        # Invocando os demais métodos de geração do projeto flutter
-        self.__build_flutter()
-
         if options['main']:
             self.__replace_main()
             return
@@ -1440,15 +1428,34 @@ class Command(BaseCommand):
         if options['build_mobx']:
             self.__build_mobx()
             return
-        else:
-            # Verificando se foi informado o model da App
-            if self.current_app_model.model is None:
-                # Gerando o source baseados apenas na App
-                self.__create_source_from_generators()
-            else:
-                # Gerando o source do model
-                self.__create_source_from_model()
+        if options['init']:
+            # Criando o Projeto
+            self.__init_flutter()
+
+            # Invocando o método para criar a app de configuração
+            self.__build_settings_controller()
+
+            # Gerando o arquivo utils
+            self.__create_utils()
+
+            # Gerando a estrutura da UserInterface
+            self.__create_user_interface_directories()
+
+            # Gerando o class de acesso HTTP
+            self.__http_dio_request()
+
+            # Criando a app para gerenciar a internacionalização do projeto
+            self.__localization_app()
+
+            # Invocando os demais métodos de geração do projeto flutter
+            self.__build_flutter()
+
             return
+        else:
+            self.__message(
+                "É necessário passar pelo menos um dos parâmetros a seguir: --init, --main, --yaml, --build_mobx", error=True)
+            sys.exit()
+
 
     def handle(self, *args, **options):
         """Método invocado internamente pelo Command logo após a
@@ -1462,7 +1469,7 @@ class Command(BaseCommand):
         # Verificando se nenhum dos parâmetros necessários foi informado
         if app is None and model is None and FLUTTER_APPS == []:
             self.__message(
-                f"Você não configurou o FLUTTER_APPS no settings e também não informou uma APP para ser gerada.")
+                f"Você não configurou o FLUTTER_APPS no settings e também não informou uma APP para ser gerada.", error=True)
             return
 
         # Foram informados a App e o Model
@@ -1475,9 +1482,10 @@ class Command(BaseCommand):
             self.current_app_model = AppModel(self.flutter_project, app, model)
             self.call_methods(options)
 
+        # Foi informado a App apenas
         if app and model is None:
             if (self.__contain_number(app)):
-                self.__message(f"Nome da app contendo números")
+                self.__message(f"Nome da app contendo números", error=True)
                 return
 
             self.current_app_model = AppModel(self.flutter_project, app)
@@ -1485,13 +1493,17 @@ class Command(BaseCommand):
 
         # Verificando se as app foram configuradas na settings do Core
         if FLUTTER_APPS == []:
-            self.__message("Não foram informadas as APPS a serem mapeadas")
+            self.__message("Não foram informadas as APPS a serem mapeadas", error=True)
             return
         else:
-            # Percorrendo as Apps
+            # Chamando os métodos únicos
+            self.call_methods(options)
             for __app in FLUTTER_APPS:
                 self.current_app_model = AppModel(self.flutter_project, __app)
-                self.call_methods(options)
+                # Gerar as apps.
+                self.__create_source_from_generators()
+            # Chamando o build_mobx para as apps
+            self.__build_mobx()
 
     def __clear_project(self, path=None):
         try:
