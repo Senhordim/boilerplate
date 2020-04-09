@@ -1,0 +1,60 @@
+/// Controller do gerenciamento de erro da aplicação
+///
+///    O CÓDIGO DO ARQUIVO controller.g.dart NUNCA DEVE SER ALTERADO MANUALMENTE.
+///    Quando for alterado algo no arquivo controller.dart deve ser executado o comando:
+///      flutter pub run build_runner build
+///
+/// Após a execução do comando acima o arquivo controller.g.dart terá sido atualizado
+/// com as novas features.
+///
+/// [Esse arquivo não deve ser alterado]
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:mobx/mobx.dart';
+
+part 'controller.g.dart';
+
+class ErrorController = _ErrorControllerBase with _$ErrorController;
+
+abstract class _ErrorControllerBase with Store {
+  // Declarando os atributos do controller
+  // Atributo boleano que determina se a requisição HTTP ocorreu corretamente
+  bool httpSuccess = true;
+
+  // Atributo int com o código de retorno da requisição HTTP
+  int httpStatusCode = 0;
+
+  // Atributo String com a mensagem de retorno da requisição HTTP
+  String httpMessage = '';
+  
+  // Atributo String com o head da requisição HTTP
+  String httpHeader = '';
+  
+  // Atributo String com o data da requisição HTTP
+  String httpData = '';
+
+  // Declarando a Action para setar se retorno foi sucesso ou error
+  @action
+  HttpSuccess({bool success = true}) async => this.httpSuccess = success;
+  
+  // Declarando a Action para setar se retorno com sucesso ou error
+  @action
+  HttpStatusCode(int statusCode) async => this.httpStatusCode = statusCode;
+  
+  // Declarando a Action para setar a mensagem de retorno
+  @action
+  HttpMessage(String content) async => this.httpMessage = content;
+  
+  // Declarando a Action para setar o header em formato String da 
+  @action
+  HttpHeader(String content) async => this.httpHeader = content;
+  
+  // Declarando a Action para setar o data em formato String da 
+  @action
+  HttpData(String content) async => this.httpStrHead = content;
+
+}

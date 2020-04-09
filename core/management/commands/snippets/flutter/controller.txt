@@ -80,14 +80,13 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   fetchAll() async{
     try{
-        this.processing = true;
         // Recuperando a lista de $ModelClass$ da API.
         $ModelClassCamelCase$List = ObservableList<$ModelClass$Model>.of(await _$ModelClassCamelCase$Service.fetchAll());
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      
     }
   }
 
@@ -104,7 +103,7 @@ abstract class _$ModelClass$ControllerBase with Store {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      
     }
   }
 
@@ -112,14 +111,13 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   detail() async{
     try{
-        this.processing = true;
         // Recuperando o detalhe de um determinado $ModelClass$ da API. 
         $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.detail($ModelClassCamelCase$Model);
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      
     }
   }
 
@@ -127,14 +125,13 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   post() async{
     try{
-        this.processing = true;
         // Recuperando o detalhe de um determinado $ModelClass$ da API. 
         $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.post($ModelClassCamelCase$Model);
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      
     }
   }
 
@@ -142,14 +139,13 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   put() async{
     try{
-        this.processing = true;
         // Recuperando o detalhe de um determinado $ModelClass$ da API. 
         $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.put($ModelClassCamelCase$Model);
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      
     }
   }
 
@@ -157,14 +153,13 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   delete() async{
     try{
-        this.processing = true;
         // Recuperando o detalhe de um determinado $ModelClass$ da API. 
         $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.delete($ModelClassCamelCase$Model);
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      
     }
   }
 
@@ -174,13 +169,12 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   fetchAllLocal() async{
     try{
-        this.processing = true;
         $ModelClassCamelCase$LocalList = ObservableList<$ModelClass$Model>.of(await _$ModelClassCamelCase$Data.fetchAll());
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      
     }
   }
   
@@ -188,14 +182,13 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   reloadLocal() async{
     try{
-        this.processing = true;
         $ModelClassCamelCase$LocalList.clear();
         this.fetchAllLocal();
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      
     }
   }
 
@@ -203,13 +196,12 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   detailLocal(int id) async{
     try{
-        this.processing = true;
         $ModelClassCamelCase$LocalModel = await _$ModelClassCamelCase$Data.detail(id);
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      
     }
   }
 
@@ -217,13 +209,12 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   saveLocal($ModelClass$Model model) async{
     try{
-        this.processing = true;
         $ModelClassCamelCase$LocalModel = await _$ModelClassCamelCase$Data.save(model);
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      
     }
   }
 
@@ -231,13 +222,12 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   updateLocal($ModelClass$Model model) async{
     try{
-        this.processing = true;
         $ModelClassCamelCase$LocalModel = await _$ModelClassCamelCase$Data.update(model);
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      
     }
   }
 
@@ -245,13 +235,12 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   deleteLocal(int id) async{
     try{
-        this.processing = true;
         return await _$ModelClassCamelCase$Data.delete(id);
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      
     }
   }
 
@@ -259,13 +248,12 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   deleteAllLocal() async{
     try{
-        this.processing = true;
         return await _$ModelClassCamelCase$Data.deleteAll();
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      
     }
   }
 }

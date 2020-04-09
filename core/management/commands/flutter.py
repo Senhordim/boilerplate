@@ -405,6 +405,7 @@ class Command(BaseCommand):
         """
         if error:
             self.stdout.write(self.style.ERROR(message))
+            sys.exit()
         else:
             self.stdout.write(self.style.SUCCESS(message))
 
@@ -656,6 +657,107 @@ class Command(BaseCommand):
             self.__message(
                 f"Ocorreu um erro ao gerar a página da Listagem {error}")
 
+    def __get_attributes_data(self, attribute, model_name, name, name_title):
+        """
+        Método para recuperar a estrutura dos atributos dos field 
+        para as páginas de create e update
+        Arguments:
+            attibute {String} -- String com o tipo de atributo a ser rederizado
+
+        Returns:
+            String  -- Estrutura do atribute data
+        """
+
+        try:
+            __attribute = ''
+            if attribute == 'int':
+                __attribute = '{0}_{1}.{2} = int.tryParse(_{1}Form{3}.text ?? 0);\n'.format(
+                    ' ' * 6,
+                    self.__to_camel_case(model_name, True),
+                    name, name_title)
+
+            elif attribute == 'double':
+                __attribute = '{0}_{1}.{2} = double.tryParse(_{1}Form{3}.text ?? 0.0);\n'.format(
+                    ' ' * 6,
+                    self.__to_camel_case(model_name, True),
+                    name, name_title)
+
+            elif attribute == 'bool':
+                __attribute = '{0}_{1}.{2} = _{1}Form{3}.text ?? true;\n'.format(
+                    ' ' * 6,
+                    self.__to_camel_case(model_name, True),
+                    name, name_title)
+
+            elif attribute == 'DateTime':
+                __attribute = '{0}_{1}.{2} = _{1}Form{3}.text != ""? Util.convertDate(_{1}Form{3}.text) : null;\n'.format(
+                    ' ' * 6,
+                    self.__to_camel_case(model_name, True),
+                    name, name_title)
+
+            else:
+                __attribute = '{0}_{1}.{2} = _{1}Form{3}.text ?? "";\n'.format(
+                    ' ' * 6,
+                    self.__to_camel_case(model_name, True),
+                    name, name_title)
+        except Exception as error:
+            self.__message(
+                f"Ocorreu um erro ao executar o __get_attributes: {error}", error=True)
+        finally:
+            return __attribute
+
+    def __get_controllers_data(self, attribute, model_name, name, name_title):
+        """Método para construir a linha de comando responsável por recuperar os valores
+        dos controller
+
+        Arguments:
+            attribute {String} -- String contendo o tipo do atributo que está sendo parseado
+
+        Returns:
+            String -- Linha contendo o comando dart para recuperar o valor do controller
+        """
+        __controllers_data = ''
+        try:
+            if attribute == 'int':
+                # Recuperando os valores dos controller e passando para os atributos da classe.
+                __controllers_data = '{0}_{1}.{2} = int.tryParse(_{1}Form{3}.text ?? 0);\n'.format(
+                    ' ' * 6,
+                    self.__to_camel_case(model_name, True),
+                    name, name_title
+                )
+            elif attribute == 'double':
+                # Recuperando os valores dos controller e passando para os atributos da classe.
+                __controllers_data = '{0}_{1}.{2} = double.tryParse(_{1}Form{3}.text ?? 0.0);\n'.format(
+                    ' ' * 6,
+                    self.__to_camel_case(model_name, True),
+                    name, name_title
+                )
+            elif attribute == 'bool':
+                # Recuperando os valores dos controller e passando para os atributos da classe.
+                __controllers_data = '{0}_{1}.{2} = _{1}Form{3}.text ?? true;\n'.format(
+                    ' ' * 6,
+                    self.__to_camel_case(model_name, True),
+                    name, name_title
+                )
+            elif attribute == 'DateTime':
+                # Recuperando os valores dos controller e passando para os atributos da classe.
+                __controllers_data = '{0}_{1}.{2} = _{1}Form{3}.text != ""? Util.convertDate(_{1}Form{3}.text) : null;\n'.format(
+                    ' ' * 6,
+                    self.__to_camel_case(model_name, True),
+                    name, name_title
+                )
+            else:
+                # Recuperando os valores dos controller e passando para os atributos da classe.
+                __controllers_data = '{0}_{1}.{2} = _{1}Form{3}.text;\n'.format(
+                    ' ' * 6,
+                    self.__to_camel_case(model_name, True),
+                    name, name_title
+                )
+        except Exception as error:
+            self.__message(
+                f"Ocorreu um erro ao executar o __get_controller_data: {error}", error=True)
+        finally:
+            return __controllers_data
+
     def __create_update_page_parser(self, app, createpage=True):
         try:
             if createpage is True:
@@ -684,9 +786,10 @@ class Command(BaseCommand):
             # Criando os atributos da classe Flutter
             content_attributes = ""
             text_fiels = ""
-            attributes_data = ''
-            clear_data = ''
-            edited_attributes = ''
+            attributes_data = ""
+            clear_data = ""
+            edited_attributes = ""
+            get_controllers_data = ""
 
             for field in iter(app.model._meta.fields):
                 __app, __model, __name = str(field).split('.')
@@ -711,21 +814,12 @@ class Command(BaseCommand):
                 text_field = text_field.replace("$Field$", str(
                     field.verbose_name).replace("R$", "R\$"))
                 text_fiels += text_field
-                if attribute == 'int':
-                    attributes_data += '{2}_{0}.{1} = int.tryParse(_{0}Form{1}.text ?? 0);\n'.format(
-                        self.__to_camel_case(app.model_name, True), __name, '   ' * 11)
-                elif attribute == 'double':
-                    attributes_data += '{2}_{0}.{1} = double.tryParse(_{0}Form{1}.text ?? 0.0);\n'.format(
-                        self.__to_camel_case(app.model_name, True), __name, '   ' * 11)
-                elif attribute == 'bool':
-                    attributes_data += '{2}_{0}.{1} = _{0}Form{1}.text == "true";\n'.format(
-                        self.__to_camel_case(app.model_name, True), __name, '   ' * 11)
-                elif attribute == 'DateTime':
-                    attributes_data += '{2}_{0}.{1} = Util.convertDate(_{0}Form{1}.text);\n'.format(
-                        self.__to_camel_case(app.model_name, True), __name, '   ' * 11)
-                else:
-                    attributes_data += '{2}_{0}.{1} = _{0}Form{1}.text;\n'.format(
-                        self.__to_camel_case(app.model_name, True), __name, '   ' * 11)
+
+                attributes_data += self.__get_attributes_data(
+                    attribute, app.model_name, __name, __nameTitle)
+                get_controllers_data += self.__get_controllers_data(
+                    attribute, app.model_name, __name, __nameTitle)
+
                 clear_data += '            {}.clear();\n'.format(controller)
                 edited_attributes += '      {}.text = _{}.{}.toString();\n'.format(
                     controller, self.__to_camel_case(app.model_name, True), __name)
@@ -745,15 +839,15 @@ class Command(BaseCommand):
             content = content.replace("$AttributesData$", attributes_data)
             content = content.replace("$ClearData$", clear_data)
             content = content.replace("$EditedAttributes$", edited_attributes)
+            content = content.replace(
+                "$GetValuesControllers$", get_controllers_data)
 
             with open(__createpage_file, 'w') as page:
                 page.write(content)
 
         except Exception as error:
-            self.stdout.write(self.style.ERROR(
-                traceback.format_exc().splitlines()))
             self.__message(
-                f"Ocorreu um erro ao gerar a página da Create {error}")
+                f"Ocorreu um erro ao gerar a página da Create {error}", error=True)
 
     def __detailpage_parser(self, app):
         """Método para criar a página de detalhamento do Model
@@ -1002,7 +1096,7 @@ class Command(BaseCommand):
                 # Verificando se o campo é do tipo DateTime
                 if str(field_type) == "DateTimeField":
                     if __name_dart in ('createdOn', 'updatedOn'):
-                        content_to_map += "'{0}': this.{1},\n        ".format(
+                        content_to_map += "'{0}': this.{1}.toString(),\n        ".format(
                             __name, __name_dart)
                     else:
                         content_to_map += '\'{0}\': Util.stringDateTimeSplit(this.{1}, returnType: "dt"), \n'.format(
@@ -1156,12 +1250,15 @@ class Command(BaseCommand):
                 with open(self.config_file, "w") as config:
                     config.write(snippet)
 
+            # Verificando se o arquivo util.dart já existe
             if not self.__check_file(self.util_file):
                 # Acessando o snippet do arquivo de funções auxiliares
                 snippet = self.__get_snippet(f"{self.snippet_dir}/util.txt")
                 # Classe de configuração
                 with open(self.util_file, "w") as config:
                     config.write(snippet)
+
+            # Verificando se o arquivo error_http.dart já existe
 
         except Exception as error:
             self.__message(f"Erro ao criar o arquivo utils {error}")

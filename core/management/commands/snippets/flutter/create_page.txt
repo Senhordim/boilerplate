@@ -135,7 +135,12 @@ $AttributesData$
   void _post() async {
     // Método para enviar a requisição de inserção de dados para a API
     try{
-      // TODO: Implementar o método de envio dos dados para o controller que envia para o service
+      // Recuperando os valores do controller
+      $GetValuesControllers$
+
+      // Invocando o método do Controller para salvar
+      _$Model$Controller.$Model$Model = _$Model$;
+      _$Model$Controller.post();
     }catch (e){
 
     }

@@ -135,7 +135,12 @@ void _clearForm(){
   void _post() async {
     // Método para enviar a requisição de inserção de dados para a API
     try{
+      // Recuperando os valores do controller
+      $GetValuesControllers$
 
+      // Invocando o método do Controller para atualizar
+      _$Model$Controller.$Model$Model = _$Model$;
+      _$Model$Controller.put();
     }catch (e){
 
     }
