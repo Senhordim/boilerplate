@@ -16,7 +16,7 @@
 
 import 'package:mobx/mobx.dart';
 
-part 'controller.g.dart';
+part 'error.controller.g.dart';
 
 class ErrorController = _ErrorControllerBase with _$ErrorController;
 
@@ -37,9 +37,13 @@ abstract class _ErrorControllerBase with Store {
   // Atributo String com o data da requisição HTTP
   String httpData = '';
 
-  // Declarando a Action para setar se retorno foi sucesso ou error
+  // Declarando a Action para setar sucesso no request
   @action
-  HttpSuccess({bool success = true}) async => this.httpSuccess = success;
+  HttpSuccess() async => this.httpSuccess = true;
+  
+  // Declarando a Action para setar erro no request
+  @action
+  HttpError() async => this.httpSuccess = true;
   
   // Declarando a Action para setar se retorno com sucesso ou error
   @action
@@ -55,6 +59,25 @@ abstract class _ErrorControllerBase with Store {
   
   // Declarando a Action para setar o data em formato String da 
   @action
-  HttpData(String content) async => this.httpStrHead = content;
+  HttpData(String content) async => this.httpData = content;
 
+  // Declarando a Action para setar o sucesso do request
+  @action
+  Success(String message, int statusCode, {String data, String header}){
+    this.httpSuccess = true;
+    this.httpMessage = message;
+    this.httpStatusCode = statusCode;
+    this.httpData = data != null? data: null;
+    this.httpHeader = header != null? header: null;
+  }
+  
+  // Declarando a Action para setar o erro do request
+  @action
+  Error(String message, int statusCode, {String data, String header}){
+    this.httpSuccess = false;
+    this.httpMessage = message;
+    this.httpStatusCode = statusCode;
+    this.httpData = data != null? data: null;
+    this.httpHeader = header != null? header: null;
+  }
 }

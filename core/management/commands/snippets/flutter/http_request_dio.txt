@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'config.dart';
 import 'package:dio/dio.dart';
-import 'package:$project$/utils/config.dart';
+import 'error.controller.dart';
+import 'package:get_it/get_it.dart';
 
 class HttpRequestDio {
   Dio _dio;
@@ -19,17 +21,19 @@ class HttpRequestDio {
     if (errorMessage != null && errorMessage.isNotEmpty){
       _errorMessage = errorMessage;
     }
+
   }
 
   Future<dynamic> getHttp() async {
     try {
       Response _response = await _dio.get(_url);
       if (_response.statusCode == 200) {
+        _success(_response);
         return _response.data;
       }
       return null;
     } on DioError catch (error) {
-      return throw {"error": error, "message": _errorMessage};
+        _error(error.message, error.response);
     }
   }
 
@@ -37,11 +41,12 @@ class HttpRequestDio {
     try {
       Response _response = await _dio.post(_url, data: data);
       if (_response.statusCode == 201) {
+        _success(_response);
         return _response.data;
       }
       return null;
     } on DioError catch (error) {
-      return throw {"error": error, "message": _errorMessage};
+        _error(error.message, error.response);
     }
   }
 
@@ -49,11 +54,12 @@ class HttpRequestDio {
     try {
       Response _response = await _dio.put(_url, data: data);
       if (_response.statusCode == 200) {
+        _success(_response);
         return _response.data;
       }
       return null;
     } on DioError catch (error) {
-      return throw {"error": error, "message": _errorMessage};
+        _error(error.message, error.response);
     }
   }
 
@@ -61,11 +67,38 @@ class HttpRequestDio {
     try {
       Response _response = await _dio.delete(_url, data: data);
       if (_response.statusCode == 200) {
+        _success(_response);
         return _response.data;
       }
       return null;
     } on DioError catch (error) {
-      return throw {"error": error, "message": _errorMessage};
+        _error(error.message, error.response);
     }
   }
+
+  /// Métodos para tratar o retorno da requisição HTTP
+  void _success(Response response) async {
+    // Instânciando o controller ErrorController
+    // para tratar os erros HTTP
+    ErrorController _errorController = GetIt.I.get<ErrorController>();
+    try {
+      _errorController.Success(
+        response.statusMessage,
+        response.statusCode,
+        data: response.data.toString(),
+        header: response.headers.toString(),
+      );
+    } catch (e) {}
+  }
+
+  void _error(String message, Response response) async {
+    // Instânciando o controller ErrorController
+    // para tratar os erros HTTP
+    ErrorController _errorController = GetIt.I.get<ErrorController>();
+    try {
+      _errorController.Error(message, response.statusCode,
+          data: response.data.toString(), header: response.headers.toString());
+    } catch (e) {}
+  }
+
 }

@@ -237,6 +237,8 @@ class Command(BaseCommand):
         self.ui_dir = "{}/lib/user_interface".format(self.flutter_dir)
         self.config_file = "{}/lib/utils/config.dart".format(self.flutter_dir)
         self.util_file = "{}/lib/utils/util.dart".format(self.flutter_dir)
+        self.error_controller_file = "{}/lib/utils/error.controller.dart".format(
+            self.flutter_dir)
         self.snippet_dir = "{}/{}".format(
             self.path_core, "management/commands/snippets/flutter")
 
@@ -551,7 +553,8 @@ class Command(BaseCommand):
                 self.__message("Gerando os arquivos controller.g.dart do MobX")
                 self.__build_mobx()
         except Exception as error:
-            self.__message(f"Erro ao executar o __build_flutter: {error}")
+            self.__message(
+                f"Erro ao executar o __build_flutter: {error}", error=True)
         pass
     """
     #################################################################
@@ -1031,9 +1034,7 @@ class Command(BaseCommand):
                 service_file.write(content)
 
         except Exception as error:
-            self.stdout.write(self.style.ERROR(
-                traceback.format_exc().splitlines()))
-            self.__message(f"Erro no parser do service: {error}")
+            self.__message(f"Erro no parser do service: {error}", error=True)
 
     def __model_parser(self, app):
         """ Método responsável por criar a classe de modelo do Model
@@ -1147,9 +1148,8 @@ class Command(BaseCommand):
                 model_file.write(content)
 
         except Exception as error:
-            self.stdout.write(self.style.ERROR(
-                traceback.format_exc().splitlines()))
-            self.__message(f"Erro ao realizar o parser do model: {error}")
+            self.__message(
+                f"Erro ao realizar o parser do model: {error}", error=True)
 
     """
     #################################################################
@@ -1171,9 +1171,8 @@ class Command(BaseCommand):
                     self.flutter_dir, self.project)
                 os.system(__command)
         except Exception as error:
-            self.stdout.write(self.style.ERROR(
-                traceback.format_exc().splitlines()))
-            self.__message(f"Erro ao realizar o parser do model: {error}")
+            self.__message(
+                f"Erro ao realizar o parser do model: {error}", error=True)
 
     def __build_settings_controller(self):
         """
@@ -1258,7 +1257,13 @@ class Command(BaseCommand):
                 with open(self.util_file, "w") as config:
                     config.write(snippet)
 
-            # Verificando se o arquivo error_http.dart já existe
+            # Verificando se o arquivo error.controller.dart já existe
+            if not self.__check_file(self.error_controller_file):
+                # Acessando o snippet do error.controller.dart
+                snippet = self.__get_snippet(
+                    f"{self.snippet_dir}/error_controller.txt")
+                with open(self.error_controller_file, "w") as error_controller:
+                    error_controller.write(snippet)
 
         except Exception as error:
             self.__message(f"Erro ao criar o arquivo utils {error}")
