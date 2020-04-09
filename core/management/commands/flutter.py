@@ -517,7 +517,8 @@ class Command(BaseCommand):
             if not self.__check_dir(self.flutter_dir):
                 # Se não foi criado, cria o projeto flutter
                 self.__message("Criando o projeto flutter.")
-                __cmd_flutter_create = "flutter create --androidx {}".format(self.flutter_dir)
+                __cmd_flutter_create = "flutter create --androidx {}".format(
+                    self.flutter_dir)
                 os.system(__cmd_flutter_create)
                 self.__message("Projeto criado com sucesso.")
         except Exception as error:
@@ -538,7 +539,7 @@ class Command(BaseCommand):
                 # Executando o flutter package get
                 self.__message("Executando o flutter packages get.")
                 __cmd_get_packages = "cd {};flutter pub get; cd ../{}".format(
-                        self.flutter_dir, self.project)
+                    self.flutter_dir, self.project)
                 os.system(__cmd_get_packages)
                 time.sleep(3)
                 # Executando o main
@@ -610,7 +611,8 @@ class Command(BaseCommand):
             content = content.replace("$ModelClass$", app.model_name)
             content = content.replace(
                 "$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
-            content = content.replace("$project$", self.flutter_project.lower())
+            content = content.replace(
+                "$project$", self.flutter_project.lower())
 
             with open(__indexpage_file, 'w') as page:
                 page.write(content)
@@ -975,6 +977,16 @@ class Command(BaseCommand):
                 if str(attribute) == "DateTime":
                     content_from_json += "{1} = Util.convertDate(json['{2}']) ?? \"\";\n        ".format(
                         __model.lower(), __name_dart, __name)
+                elif str(attribute) == "bool":
+                    if __name_dart.lower() == "enabled":
+                        content_from_json += "{1} = json['{2}'] ?? true;\n        ".format(
+                            __model.lower(), __name_dart, __name)
+                    elif __name_dart.lower() == "deleted":
+                        content_from_json += "{1} = json['{2}'] ?? false;\n        ".format(
+                            __model.lower(), __name_dart, __name)
+                    else:
+                        content_from_json += "{1} = json['{2}'] ?? true;\n        ".format(
+                            __model.lower(), __name_dart, __name)
                 else:
                     # Verificando se o campo é do tipo FK para retornar null caso o valor não venha da API
                     if __name_dart.startswith("fk"):
@@ -1005,7 +1017,17 @@ class Command(BaseCommand):
                         __name, __name_dart
                     )
                     continue
-
+                if str(attribute) == "bool":
+                    if __name_dart.lower() == "enabled":
+                        content_to_map += "'{0}': this.{1} ?? true,\n        ".format(
+                            __name, __name_dart)
+                    elif __name_dart.lower() == "deleted":
+                        content_to_map += "'{0}': this.{1} ?? false,\n        ".format(
+                            __name, __name_dart)
+                    else:
+                        content_to_map += "'{0}': this.{1} ?? true,\n        ".format(
+                            __name, __name_dart)
+                    continue
                 content_to_map += "'{0}': this.{1} ?? \"\",\n        ".format(
                     __name, __name_dart)
 
@@ -1047,7 +1069,7 @@ class Command(BaseCommand):
             # Executando o comando
             # flutter pub run build_runner build
             # no diretório do projeto Flutter
-                    # Verifica se o projeto já foi criado
+            # Verifica se o projeto já foi criado
             if self.__check_dir(self.flutter_dir):
                 __command = "cd {};flutter pub run build_runner build; cd ../{}".format(
                     self.flutter_dir, self.project)
@@ -1100,8 +1122,8 @@ class Command(BaseCommand):
             # Trabalhando com a geração do arquivo baseado no snippet
             snippet = self.__get_snippet(f"{self.snippet_dir}/yaml.txt")
             snippet = snippet.replace("$AppPackage$", self.project.lower())
-            snippet = snippet.replace("$AppDescription$", 
-                f"Projeto Flutter do sistema Django {self.project}")
+            snippet = snippet.replace("$AppDescription$",
+                                      f"Projeto Flutter do sistema Django {self.project}")
             with open(__path, 'w') as yaml_file:
                 yaml_file.write(snippet)
 
@@ -1327,12 +1349,15 @@ class Command(BaseCommand):
     internacionalização.
     #################################################################
     """
+
     def __localization_app(self):
         try:
-            # Acessando o snippet do localizations 
-            snippet = self.__get_snippet(f"{self.snippet_dir}/localization.txt")
+            # Acessando o snippet do localizations
+            snippet = self.__get_snippet(
+                f"{self.snippet_dir}/localization.txt")
             # Criando o arquivo.
-            path_localization = os.path.join(self.utils_dir, 'localization.dart')
+            path_localization = os.path.join(
+                self.utils_dir, 'localization.dart')
 
             # Verificando se o arquivo está travado para parser
             if self.__check_file_is_locked(path_localization):
@@ -1343,19 +1368,20 @@ class Command(BaseCommand):
                 localizations.write(snippet)
 
             # Adicionando os arquivos de pt.json e en.json no diretório lang
-            # 
+            #
             # Recuperando o caminho do diretório
             __lang_dir = os.path.join(self.flutter_dir, 'lang')
             # Verificando se existe o diretório
             if not self.__check_dir(__lang_dir):
                 # Criando o diretório
                 os.makedirs(__lang_dir)
-            
+
             # Verificando se o arquivo do idioma pt_br exiate
             if not self.__check_file(f"{__lang_dir}/pt.json"):
                 # Criando os arquivos JSON
                 with open(f"{__lang_dir}/pt.json", 'w') as pt_json:
-                    pt_json.write('{\n"chave_do_texto":"Texto em português"\n}')
+                    pt_json.write(
+                        '{\n"chave_do_texto":"Texto em português"\n}')
 
             # Verificando se o arquivo do idioma en_us existe.
             if not self.__check_file(f"{__lang_dir}/en.json"):
@@ -1465,7 +1491,6 @@ class Command(BaseCommand):
                 "É necessário passar pelo menos um dos parâmetros a seguir: --init, --main, --yaml, --build_mobx", error=True)
             sys.exit()
 
-
     def handle(self, *args, **options):
         """Método invocado internamente pelo Command logo após a
         validação da passagem de parâmetro.
@@ -1502,7 +1527,8 @@ class Command(BaseCommand):
 
         # Verificando se as app foram configuradas na settings do Core
         if FLUTTER_APPS == []:
-            self.__message("Não foram informadas as APPS a serem mapeadas", error=True)
+            self.__message(
+                "Não foram informadas as APPS a serem mapeadas", error=True)
             return
         else:
             # Chamando os métodos únicos
@@ -1520,4 +1546,5 @@ class Command(BaseCommand):
             import shutil
             shutil.rmtree(__path)
         except Exception as error:
-            self.__message(f"Ocorreu um erro ao executar o __clear_project: {error}")
+            self.__message(
+                f"Ocorreu um erro ao executar o __clear_project: {error}")

@@ -21,10 +21,11 @@ class $ModelClass$Model {
   $ModelClass$Model(){
     this.createdOn = null;
     this.updatedOn = null;
+    this.enabled = true;
+    this.deleted = false;
   }
   
-  /// Sobescrevendo o método toString para retornar
-  /// todos os atributos da classe.
+  /// Sobescrevendo o método toString para retornar todos os atributos da classe.
   @override
   String toString() {
     return "$StringReturn$";
