@@ -706,7 +706,7 @@ class Command(BaseCommand):
                     self.__to_camel_case(app.model_name, True), __nameTitle)
                 text_field = content_form
                 controller = '_{}Form{}'.format(
-                    self.__to_camel_case(app.model_name, True), __name)
+                    self.__to_camel_case(app.model_name, True), __nameTitle)
                 text_field = text_field.replace("$controller$", controller)
                 text_field = text_field.replace("$Field$", str(
                     field.verbose_name).replace("R$", "R\$"))
