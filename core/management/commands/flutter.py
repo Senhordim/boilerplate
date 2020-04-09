@@ -690,6 +690,8 @@ class Command(BaseCommand):
 
             for field in iter(app.model._meta.fields):
                 __app, __model, __name = str(field).split('.')
+                __nameTitle = self.__to_camel_case(
+                    __name.title())
                 __name = self.__to_camel_case(__name.lower())
 
                 # Verificando se o field deve ser ignorado
@@ -701,7 +703,7 @@ class Command(BaseCommand):
                 attribute = self._tipos_flutter[
                     self._tipos_originais.index(field_type)]
                 content_attributes += '  final _{0}Form{1} = TextEditingController();\n'.format(
-                    self.__to_camel_case(app.model_name, True), __name)
+                    self.__to_camel_case(app.model_name, True), __nameTitle)
                 text_field = content_form
                 controller = '_{}Form{}'.format(
                     self.__to_camel_case(app.model_name, True), __name)
