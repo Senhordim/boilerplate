@@ -239,6 +239,8 @@ class Command(BaseCommand):
         self.util_file = "{}/lib/utils/util.dart".format(self.flutter_dir)
         self.error_controller_file = "{}/lib/utils/error.controller.dart".format(
             self.flutter_dir)
+        self.processing_controller_file = "{}/lib/utils/processing.controller.dart".format(
+            self.flutter_dir)
         self.snippet_dir = "{}/{}".format(
             self.path_core, "management/commands/snippets/flutter")
 
@@ -505,8 +507,9 @@ class Command(BaseCommand):
                 with open(path) as arquivo:
                     content = arquivo.read()
                     return "#FileLocked" in content
-        except Exception as e:
-            self.__message(e)
+        except Exception as error:
+            self.__message(
+                f"Ocorreu erro ao verificar se o arquivo está travado: {error}", error=True)
             return true
     """
     #################################################################
@@ -587,7 +590,7 @@ class Command(BaseCommand):
                     # import 'apps/animal/especie/controller.dart';
                     __imports_controllers += f"import 'apps/{__app.lower()}/{__model.lower()}/controller.dart';\n"
                     # Construindo os registros dos controllers
-                    __controllers_models += f"getIt.registerSingleton<{__model}Controller>({__model}Controller());\n"
+                    __controllers_models += f"getIt.registerSingleton<{__model}Controller>({__model}Controller());\n    "
 
             return __imports_pages, __imports_controllers, __controllers_models, __list_pages
 
@@ -1257,13 +1260,25 @@ class Command(BaseCommand):
                 with open(self.util_file, "w") as config:
                     config.write(snippet)
 
-            # Verificando se o arquivo error.controller.dart já existe
-            if not self.__check_file(self.error_controller_file):
-                # Acessando o snippet do error.controller.dart
-                snippet = self.__get_snippet(
-                    f"{self.snippet_dir}/error_controller.txt")
-                with open(self.error_controller_file, "w") as error_controller:
-                    error_controller.write(snippet)
+            # Criando o controller de gerenciamento dos erros
+            # Verificando se o arquivo está travado para parser
+            if self.__check_file_is_locked(self.error_controller_file):
+                return
+
+            snippet = self.__get_snippet(
+                f"{self.snippet_dir}/error_controller.txt")
+            with open(self.error_controller_file, "w") as error_controller:
+                error_controller.write(snippet)
+
+            # Criando o controller de gerenciamento do processamento
+            # Verificando se o arquivo está travado para parser
+            if self.__check_file_is_locked(self.processing_controller_file):
+                return
+
+            snippet = self.__get_snippet(
+                f"{self.snippet_dir}/processing_controller.txt")
+            with open(self.processing_controller_file, "w") as processing_controller:
+                processing_controller.write(snippet)
 
         except Exception as error:
             self.__message(f"Erro ao criar o arquivo utils {error}")
@@ -1306,10 +1321,8 @@ class Command(BaseCommand):
                 self.current_app_model.model_name
             )
         except Exception as error:
-            self.stdout.write(self.style.ERROR(
-                traceback.format_exc().splitlines()))
             self.__message(
-                f"Erro ao executar o Create App From Model: {error}")
+                f"Erro ao executar o Create App From Model: {error}", error=True)
 
     def __create_source_from_generators(self):
         """
@@ -1322,10 +1335,8 @@ class Command(BaseCommand):
                     self.current_app_model.app_name,
                     model[1])
         except Exception as error:
-            self.stdout.write(self.style.ERROR(
-                traceback.format_exc().splitlines()))
             self.__message(
-                f"Erro ao executar o Create Apps From Generators: {error}")
+                f"Erro ao executar o Create Apps From Generators: {error}", error=True)
 
     def __create_source(self, app_name, model_name):
         """
@@ -1442,10 +1453,7 @@ class Command(BaseCommand):
             self.__controller_parser(__source_class)
 
         except Exception as error:
-            self.stdout.write(self.style.ERROR(
-                traceback.format_exc().splitlines()))
-            self.__message(f"Error ao executar source. \n {error}")
-            raise error
+            self.__message(f"Error ao executar source. \n {error}", error=True)
 
     """
     #################################################################

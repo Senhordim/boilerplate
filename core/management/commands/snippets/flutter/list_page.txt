@@ -19,6 +19,7 @@ import '../../../../utils/util.dart';
 import '../../../../utils/config.dart';
 import '../../../../user_interface/font.dart';
 import '../../../../user_interface/widget.dart';
+import '../../../../utils/error.controller.dart';
 
 class $ModelClass$ListPage extends StatefulWidget {
   @override
@@ -38,6 +39,9 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
 
   // Instânciando o controller via get_it
   $ModelClass$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClass$Controller>();
+
+  // Instânciando o controller de error
+  ErrorController _errorController = GetIt.I.get<ErrorController>();
 
   @override
   void initState() {
@@ -97,7 +101,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
               ),
           ),
         );
-      }else if(_$ModelClassCamelCase$Controller.error.isNotEmpty) {
+      }else if(_errorController.httpSuccess == false) {
         /// Ocorreu um erro
         return Center(
           child: Text(_$ModelClassCamelCase$Controller.error),
@@ -127,7 +131,8 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
                     child: Text(_$Model$.toString()),
                 ),
               );
-            })
+            },
+           ),
           );
         }
       }

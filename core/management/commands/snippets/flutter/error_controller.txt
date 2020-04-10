@@ -39,31 +39,39 @@ abstract class _ErrorControllerBase with Store {
 
   // Declarando a Action para setar sucesso no request
   @action
-  HttpSuccess() async => this.httpSuccess = true;
+  setSuccess() async => this.httpSuccess = true;
   
   // Declarando a Action para setar erro no request
   @action
-  HttpError() async => this.httpSuccess = true;
+  setError() async => this.httpSuccess = true;
   
   // Declarando a Action para setar se retorno com sucesso ou error
   @action
-  HttpStatusCode(int statusCode) async => this.httpStatusCode = statusCode;
+  statusCode(int statusCode) async => this.httpStatusCode = statusCode;
   
   // Declarando a Action para setar a mensagem de retorno
   @action
-  HttpMessage(String content) async => this.httpMessage = content;
+  message(String content) async => this.httpMessage = content;
   
   // Declarando a Action para setar o header em formato String da 
   @action
-  HttpHeader(String content) async => this.httpHeader = content;
+  header(String content) async => this.httpHeader = content;
   
   // Declarando a Action para setar o data em formato String da 
   @action
-  HttpData(String content) async => this.httpData = content;
+  data(String content) async => this.httpData = content;
 
+  /// Área para sobrescrever métodos
+  // Sobrescrevendo o toString
+  @override
+  String toString() {
+    return "ErrorController:\nSucesso -> ${this.httpSuccess.toString()}\nStatusCode -> ${this.httpStatusCode.toString()}\nMessage -> ${this.httpMessage.toString()}\nData -> ${this.httpData.toString()}\nHeader -> ${this.httpHeader}";
+  }
+
+  /// Área para os Actions/Metodos
   // Declarando a Action para setar o sucesso do request
   @action
-  Success(String message, int statusCode, {String data, String header}){
+  success(String message, int statusCode, {String data, String header}){
     this.httpSuccess = true;
     this.httpMessage = message;
     this.httpStatusCode = statusCode;
@@ -73,7 +81,7 @@ abstract class _ErrorControllerBase with Store {
   
   // Declarando a Action para setar o erro do request
   @action
-  Error(String message, int statusCode, {String data, String header}){
+  error(String message, int statusCode, {String data, String header}){
     this.httpSuccess = false;
     this.httpMessage = message;
     this.httpStatusCode = statusCode;

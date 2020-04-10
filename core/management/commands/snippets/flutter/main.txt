@@ -8,12 +8,14 @@
 import 'utils/config.dart';
 import 'user_interface/font.dart';
 import 'user_interface/widget.dart';
+import 'utils/localization.dart';
+import 'utils/error.controller.dart';
+
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'utils/localization.dart';
 
 $ImportPages$
 $ImportController$
@@ -25,6 +27,9 @@ void main() {
     /// Criando uma instância do Get_it para trabalhar
     /// com injeção de dependência
     GetIt getIt = GetIt.instance;
+
+    // Registrando o controller do ErrorController
+    getIt.registerSingleton<ErrorController>(ErrorController());
 
     /// Registrando os controllers dos Models utiliznado o getIt
     $RegisterControllers$

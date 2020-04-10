@@ -82,13 +82,15 @@ class HttpRequestDio {
     // para tratar os erros HTTP
     ErrorController _errorController = GetIt.I.get<ErrorController>();
     try {
-      _errorController.Success(
+      _errorController.success(
         response.statusMessage,
         response.statusCode,
         data: response.data.toString(),
         header: response.headers.toString(),
       );
-    } catch (e) {}
+    } catch (e) {
+      DebugPrint.imprimir("Ocorreu um erro no método error: $e");
+    }
   }
 
   void _error(String message, Response response) async {
@@ -96,9 +98,14 @@ class HttpRequestDio {
     // para tratar os erros HTTP
     ErrorController _errorController = GetIt.I.get<ErrorController>();
     try {
-      _errorController.Error(message, response.statusCode,
-          data: response.data.toString(), header: response.headers.toString());
-    } catch (e) {}
+      _errorController.error(
+        message, response.statusCode,
+        data: response.data.toString(), 
+        header: response.headers.toString(),
+      );
+    } catch (e) {
+      DebugPrint.imprimir("Ocorreu um erro no método error: $e");
+    }
   }
 
 }

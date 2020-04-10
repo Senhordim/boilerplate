@@ -1,0 +1,30 @@
+/// Controller do gerenciamento do processamento assincrono
+///
+/// [Esse arquivo não deve ser alterado] Se necessário deve ser modificado
+/// o manage do Django que gera esse arquivo
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:mobx/mobx.dart';
+
+part 'processing.controller.g.dart';
+
+class ProcessingController = _ProcessingControllerBase with _$ProcessingController;
+
+abstract class _ProcessingControllerBase with Store {
+  // Declarando os atributos do controller
+  // Atributo para determinar quando está sendo processo alguma tarefa assíncrona.
+  @observable
+  bool processing = true;
+
+  // Declarando a Action para informar que o processamento iniciou
+  @action
+  beginProcessing() async => this.processing = true;
+  
+  // Declarando a Action para informar que o processamento parou
+  @action
+  endProcessing() async => this.processing = false;
+}
