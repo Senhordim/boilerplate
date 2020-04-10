@@ -20,6 +20,7 @@ import '../../../../utils/config.dart';
 import '../../../../user_interface/font.dart';
 import '../../../../user_interface/widget.dart';
 import '../../../../utils/error.controller.dart';
+import '../../../../utils/processing.controller.dart';
 
 class $ModelClass$ListPage extends StatefulWidget {
   @override
@@ -29,7 +30,7 @@ class $ModelClass$ListPage extends StatefulWidget {
 class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
     with SingleTickerProviderStateMixin {
   // Instânciando um controller para Animações
-  AnimationController _controller;
+  AnimationController _animationController;
   
   // Instânciando uma chave para controle do estado do Scaffold
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -43,10 +44,13 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
   // Instânciando o controller de error
   ErrorController _errorController = GetIt.I.get<ErrorController>();
 
+  // Instânciando o controller de processamento
+  ProcessingController _processingController = GetIt.I.get<ProcessingController>();
+
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this);
+    _animationController = AnimationController(vsync: this);
 
     // Invocando o método fetchAll para recuperar os items
     _$ModelClassCamelCase$Controller.fetchAll();
@@ -93,7 +97,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
   Widget _listBuilder(){
     return Observer(builder: (context){
       // Verificando se está em processamento para mostrar a mensagem de carregamento
-      if(_$ModelClassCamelCase$Controller.processing == true){
+      if(_processingController.processing == true){
         return Expanded(
             child: Center(
               child: Container(
@@ -104,7 +108,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
       }else if(_errorController.httpSuccess == false) {
         /// Ocorreu um erro
         return Center(
-          child: Text(_$ModelClassCamelCase$Controller.error),
+          child: Text(_errorController.httpMessage),
         );
       } else {
         if(_$ModelClassCamelCase$Controller.$ModelClassCamelCase$List == null){
@@ -161,5 +165,23 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
         ),
       );
     });
+  }
+
+  /// Método para mostrar na snackbar uma mensagem que ocorreu um erro
+  /// baseado no controller.
+  showErrorControllerMessage() {
+    Observer(
+      builder: (context) {
+        if (_errorController.httpSuccess == false) {
+          _scaffoldKey.currentState.showSnackBar(
+            SnackBar(
+              content: Text(_errorController.httpMessage),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        return null;
+      },
+    );
   }
 }

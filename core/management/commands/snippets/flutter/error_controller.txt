@@ -23,6 +23,7 @@ class ErrorController = _ErrorControllerBase with _$ErrorController;
 abstract class _ErrorControllerBase with Store {
   // Declarando os atributos do controller
   // Atributo boleano que determina se a requisição HTTP ocorreu corretamente
+  @observable
   bool httpSuccess = true;
 
   // Atributo int com o código de retorno da requisição HTTP

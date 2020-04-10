@@ -36,10 +36,13 @@
 /// pelo manage do Django adicione um # antes da palavra abaixo
 /// FileLocked
 
-import 'package:mobx/mobx.dart';
+import 'data.dart';
 import 'model.dart';
 import 'service.dart';
-import 'data.dart';
+import '../../../utils/processing.controller.dart';
+
+import 'package:mobx/mobx.dart';
+import 'package:get_it/get_it.dart';
 
 part 'controller.g.dart';
 
@@ -63,9 +66,9 @@ abstract class _$ModelClass$ControllerBase with Store {
 
   @observable
   String error = "";
-  
-  @observable
-  bool processing = false;
+
+  // Instânciando o controller de processamento
+  ProcessingController _processingController = GetIt.I.get<ProcessingController>();
 
   /// Declarando os elementos observáveis do SQLite do $ModelClass$Controller.
   @observable
@@ -80,14 +83,14 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   fetchAll() async{
     try{
-     this.processing = true;
+     _processingController.processing = true;
       // Recuperando a lista de $ModelClass$ da API.
       $ModelClassCamelCase$List = ObservableList<$ModelClass$Model>.of(await _$ModelClassCamelCase$Service.fetchAll());
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      _processingController.processing = false;
     }
   }
 
@@ -95,7 +98,7 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   reload() async{
     try{
-      this.processing = true;
+      _processingController.processing = true;
       // Limpando os dados contidos na lista de $ModelClass$
       $ModelClassCamelCase$List.clear();
       // Invocando o método que carrega os dados da API.
@@ -104,7 +107,7 @@ abstract class _$ModelClass$ControllerBase with Store {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      _processingController.processing = false;
     }
   }
 
@@ -112,14 +115,14 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   detail() async{
     try{
-      this.processing = true;
+      _processingController.processing = true;
       // Recuperando o detalhe de um determinado $ModelClass$ da API. 
       $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.detail($ModelClassCamelCase$Model);
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      _processingController.processing = false;
     }
   }
 
@@ -127,14 +130,14 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   post() async{
     try{
-      this.processing = true;
+      _processingController.processing = true;
       // Recuperando o detalhe de um determinado $ModelClass$ da API. 
       $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.post($ModelClassCamelCase$Model);
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      _processingController.processing = false;
     }
   }
 
@@ -142,14 +145,14 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   put() async{
     try{
-      this.processing = true;
+      _processingController.processing = true;
       // Recuperando o detalhe de um determinado $ModelClass$ da API. 
       $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.put($ModelClassCamelCase$Model);
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      _processingController.processing = false;
     }
   }
 
@@ -157,14 +160,14 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   delete() async{
     try{
-      this.processing = true;
+      _processingController.processing = true;
       // Recuperando o detalhe de um determinado $ModelClass$ da API. 
       $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.delete($ModelClassCamelCase$Model);
     } catch (error, exception) {
       this.error = exception.toString();
       return throw {"error": error, "message": exception};
     }finally{
-      this.processing = false;
+      _processingController.processing = false;
     }
   }
 

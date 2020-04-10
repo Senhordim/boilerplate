@@ -10,6 +10,7 @@ import 'user_interface/font.dart';
 import 'user_interface/widget.dart';
 import 'utils/localization.dart';
 import 'utils/error.controller.dart';
+import 'utils/processing.controller.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,9 @@ void main() {
 
     // Registrando o controller do ErrorController
     getIt.registerSingleton<ErrorController>(ErrorController());
+
+    // Registrando o controller do ProcessingController
+    getIt.registerSingleton<ProcessingController>(ProcessingController());
 
     /// Registrando os controllers dos Models utiliznado o getIt
     $RegisterControllers$
