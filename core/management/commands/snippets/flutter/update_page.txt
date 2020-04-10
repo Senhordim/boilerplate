@@ -15,7 +15,7 @@ import '../../../../utils/util.dart';
 import '../../../../utils/config.dart';
 import '../../../../user_interface/font.dart';
 import '../../../../user_interface/widget.dart';
-import '../../../../utils/error.controller.dart';
+import '../../../../utils/process.controller.dart';
 
 class $ModelClass$UpdatePage extends StatefulWidget {
   final $ModelClass$Model $Model$;
@@ -27,12 +27,20 @@ class $ModelClass$UpdatePage extends StatefulWidget {
 }
 
 class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage> {
-  final _form$ModelClass$ = GlobalKey<FormState>();
+  // Instanciando uma chave para controle do estado do Scaffold
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // Instanciando o controller de processamento
+  ProcessController _processController = GetIt.I.get<ProcessController>();
+
+  // Instanciando o controller via get_it
+  $ModelClass$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClass$Controller>();
+
+  // Instanciando o model
   $ModelClass$Model _$Model$ = $ModelClass$Model();
 
-  // Instânciando o controller via get_it
-  $ModelClass$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClass$Controller>();
+  // Criando os controladores do Form
+  final _form$ModelClass$ = GlobalKey<FormState>();
 
   $Atributes$
 

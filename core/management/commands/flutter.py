@@ -237,9 +237,7 @@ class Command(BaseCommand):
         self.ui_dir = "{}/lib/user_interface".format(self.flutter_dir)
         self.config_file = "{}/lib/utils/config.dart".format(self.flutter_dir)
         self.util_file = "{}/lib/utils/util.dart".format(self.flutter_dir)
-        self.error_controller_file = "{}/lib/utils/error.controller.dart".format(
-            self.flutter_dir)
-        self.processing_controller_file = "{}/lib/utils/processing.controller.dart".format(
+        self.process_controller_file = "{}/lib/utils/process.controller.dart".format(
             self.flutter_dir)
         self.snippet_dir = "{}/{}".format(
             self.path_core, "management/commands/snippets/flutter")
@@ -1260,25 +1258,15 @@ class Command(BaseCommand):
                 with open(self.util_file, "w") as config:
                     config.write(snippet)
 
-            # Criando o controller de gerenciamento dos erros
-            # Verificando se o arquivo está travado para parser
-            if self.__check_file_is_locked(self.error_controller_file):
-                return
-
-            snippet = self.__get_snippet(
-                f"{self.snippet_dir}/error_controller.txt")
-            with open(self.error_controller_file, "w") as error_controller:
-                error_controller.write(snippet)
-
             # Criando o controller de gerenciamento do processamento
             # Verificando se o arquivo está travado para parser
-            if self.__check_file_is_locked(self.processing_controller_file):
+            if self.__check_file_is_locked(self.process_controller_file):
                 return
 
             snippet = self.__get_snippet(
-                f"{self.snippet_dir}/processing_controller.txt")
-            with open(self.processing_controller_file, "w") as processing_controller:
-                processing_controller.write(snippet)
+                f"{self.snippet_dir}/process_controller.txt")
+            with open(self.process_controller_file, "w") as process_controller:
+                process_controller.write(snippet)
 
         except Exception as error:
             self.__message(f"Erro ao criar o arquivo utils {error}")

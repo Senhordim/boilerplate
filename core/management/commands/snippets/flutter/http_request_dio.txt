@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'config.dart';
 import 'package:dio/dio.dart';
-import 'error.controller.dart';
+import 'process.controller.dart';
 import 'package:get_it/get_it.dart';
 
 class HttpRequestDio {
   Dio _dio;
   String _url;
-  String _errorMessage = "Ocorreu um erro ao executar a consulta, favor tentar novamente.";
 
   HttpRequestDio(String url, {String authenticationToken, String errorMessage}) {
     _url = url;
@@ -18,11 +17,10 @@ class HttpRequestDio {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.authorizationHeader: " ${authenticationToken ?? Config.DRFToken}"
     };
-    if (errorMessage != null && errorMessage.isNotEmpty){
-      _errorMessage = errorMessage;
-    }
-
   }
+
+  // Instanciando o ProcessController
+  ProcessController _processController = GetIt.I.get<ProcessController>();
 
   Future<dynamic> getHttp() async {
     try {
@@ -78,15 +76,12 @@ class HttpRequestDio {
 
   /// Métodos para tratar o retorno da requisição HTTP
   void _success(Response response) async {
-    // Instânciando o controller ErrorController
-    // para tratar os erros HTTP
-    ErrorController _errorController = GetIt.I.get<ErrorController>();
     try {
-      _errorController.success(
-        response.statusMessage,
-        response.statusCode,
-        data: response.data.toString(),
-        header: response.headers.toString(),
+      _processController.withSuccess(
+        statusCode: response.statusCode,
+        message: response.statusMessage,
+        httpData: response.data.toString(),
+        httpHeader: response.headers.toString(),
       );
     } catch (e) {
       DebugPrint.imprimir("Ocorreu um erro no método error: $e");
@@ -94,14 +89,12 @@ class HttpRequestDio {
   }
 
   void _error(String message, Response response) async {
-    // Instânciando o controller ErrorController
-    // para tratar os erros HTTP
-    ErrorController _errorController = GetIt.I.get<ErrorController>();
     try {
-      _errorController.error(
-        message, response.statusCode,
-        data: response.data.toString(), 
-        header: response.headers.toString(),
+      _processController.withError(
+        message: message,
+        statusCode: response.statusCode,
+        httpData: response.data.toString(),
+        httpHeader: response.headers.toString(),
       );
     } catch (e) {
       DebugPrint.imprimir("Ocorreu um erro no método error: $e");

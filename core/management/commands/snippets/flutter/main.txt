@@ -6,11 +6,10 @@
 /// FileLocked
 
 import 'utils/config.dart';
+import 'utils/localization.dart';
 import 'user_interface/font.dart';
 import 'user_interface/widget.dart';
-import 'utils/localization.dart';
-import 'utils/error.controller.dart';
-import 'utils/processing.controller.dart';
+import 'utils/process.controller.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
@@ -29,11 +28,8 @@ void main() {
     /// com injeção de dependência
     GetIt getIt = GetIt.instance;
 
-    // Registrando o controller do ErrorController
-    getIt.registerSingleton<ErrorController>(ErrorController());
-
-    // Registrando o controller do ProcessingController
-    getIt.registerSingleton<ProcessingController>(ProcessingController());
+    // Registrando o controller do ProcessController
+    getIt.registerSingleton<ProcessController>(ProcessController());
 
     /// Registrando os controllers dos Models utiliznado o getIt
     $RegisterControllers$

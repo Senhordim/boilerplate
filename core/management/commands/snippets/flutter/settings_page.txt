@@ -27,10 +27,10 @@ class SettingsIndexPage extends StatefulWidget {
 }
 
 class _SettingsIndexPageState extends State<SettingsIndexPage> {
-  // Instânciando uma chave para controle do estado do Scaffold
+  // Instanciando uma chave para controle do estado do Scaffold
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // Instânciando o controller via get_it
+  // Instanciando o controller via get_it
   SettingsController _settingsController = GetIt.I.get<SettingsController>();
 
   @override

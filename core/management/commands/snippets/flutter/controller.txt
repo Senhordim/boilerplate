@@ -39,7 +39,8 @@
 import 'data.dart';
 import 'model.dart';
 import 'service.dart';
-import '../../../utils/processing.controller.dart';
+import '../../../utils/config.dart';
+import '../../../utils/process.controller.dart';
 
 import 'package:mobx/mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -48,27 +49,25 @@ part 'controller.g.dart';
 
 class $ModelClass$Controller = _$ModelClass$ControllerBase with _$$ModelClass$Controller;
 
+
 /// Declarando a classe abstrata do $ModelClass$ com o Mixin de Store
 abstract class _$ModelClass$ControllerBase with Store {
 
-  /// Instânciando o $ModelClass$Data responsável pelo acesso ao SQLite.
+  // Instanciando o controller de processamento
+  ProcessController _processController = GetIt.I.get<ProcessController>();
+
+  // Instanciando o $ModelClass$Data responsável pelo acesso ao SQLite.
   $ModelClass$Data _$ModelClassCamelCase$Data = $ModelClass$Data();
 
-  /// Instânciando o $ModelClass$Service responsável pelo acesso à API.
+  // Instanciando o $ModelClass$Service responsável pelo acesso à API.
   $ModelClass$Service _$ModelClassCamelCase$Service = $ModelClass$Service();
 
-  /// Declarando os elementos observáveis padrões do $ModelClass$Controller.
+  // Declarando os elementos observáveis padrões do $ModelClass$Controller.
   @observable
   ObservableList<$ModelClass$Model> $ModelClassCamelCase$List;
   
   @observable
   $ModelClass$Model $ModelClassCamelCase$Model;
-
-  @observable
-  String error = "";
-
-  // Instânciando o controller de processamento
-  ProcessingController _processingController = GetIt.I.get<ProcessingController>();
 
   /// Declarando os elementos observáveis do SQLite do $ModelClass$Controller.
   @observable
@@ -83,14 +82,13 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   fetchAll() async{
     try{
-     _processingController.processing = true;
+     _processController.processing = true;
       // Recuperando a lista de $ModelClass$ da API.
       $ModelClassCamelCase$List = ObservableList<$ModelClass$Model>.of(await _$ModelClassCamelCase$Service.fetchAll());
     } catch (error, exception) {
-      this.error = exception.toString();
-      return throw {"error": error, "message": exception};
+      _error(error.toString(), exception.toString());
     }finally{
-      _processingController.processing = false;
+      _processController.processing = false;
     }
   }
 
@@ -98,16 +96,15 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   reload() async{
     try{
-      _processingController.processing = true;
+      _processController.processing = true;
       // Limpando os dados contidos na lista de $ModelClass$
       $ModelClassCamelCase$List.clear();
       // Invocando o método que carrega os dados da API.
       this.fetchAll();
     } catch (error, exception) {
-      this.error = exception.toString();
-      return throw {"error": error, "message": exception};
+      _error(error.toString(), exception.toString());
     }finally{
-      _processingController.processing = false;
+      _processController.processing = false;
     }
   }
 
@@ -115,14 +112,13 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   detail() async{
     try{
-      _processingController.processing = true;
+      _processController.processing = true;
       // Recuperando o detalhe de um determinado $ModelClass$ da API. 
       $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.detail($ModelClassCamelCase$Model);
     } catch (error, exception) {
-      this.error = exception.toString();
-      return throw {"error": error, "message": exception};
+      _error(error.toString(), exception.toString());
     }finally{
-      _processingController.processing = false;
+      _processController.processing = false;
     }
   }
 
@@ -130,14 +126,13 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   post() async{
     try{
-      _processingController.processing = true;
+      _processController.processing = true;
       // Recuperando o detalhe de um determinado $ModelClass$ da API. 
       $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.post($ModelClassCamelCase$Model);
     } catch (error, exception) {
-      this.error = exception.toString();
-      return throw {"error": error, "message": exception};
+      _error(error.toString(), exception.toString());
     }finally{
-      _processingController.processing = false;
+      _processController.processing = false;
     }
   }
 
@@ -145,14 +140,13 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   put() async{
     try{
-      _processingController.processing = true;
+      _processController.processing = true;
       // Recuperando o detalhe de um determinado $ModelClass$ da API. 
       $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.put($ModelClassCamelCase$Model);
     } catch (error, exception) {
-      this.error = exception.toString();
-      return throw {"error": error, "message": exception};
+      _error(error.toString(), exception.toString());
     }finally{
-      _processingController.processing = false;
+      _processController.processing = false;
     }
   }
 
@@ -160,29 +154,28 @@ abstract class _$ModelClass$ControllerBase with Store {
   @action
   delete() async{
     try{
-      _processingController.processing = true;
+      _processController.processing = true;
       // Recuperando o detalhe de um determinado $ModelClass$ da API. 
       $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.delete($ModelClassCamelCase$Model);
     } catch (error, exception) {
-      this.error = exception.toString();
-      return throw {"error": error, "message": exception};
+      _error(error.toString(), exception.toString());
     }finally{
-      _processingController.processing = false;
+      _processController.processing = false;
     }
   }
 
+  ///
   /// Área dos métodos da persistência no SQLite
-  
+  ///
+
   /// Action para recuperar todos os registros do SQLite
   @action
   fetchAllLocal() async{
     try{
+      _processController.processing = true;
       $ModelClassCamelCase$LocalList = ObservableList<$ModelClass$Model>.of(await _$ModelClassCamelCase$Data.fetchAll());
     } catch (error, exception) {
-      this.error = exception.toString();
-      return throw {"error": error, "message": exception};
-    }finally{
-      
+      _error(error.toString(), exception.toString());
     }
   }
   
@@ -193,10 +186,7 @@ abstract class _$ModelClass$ControllerBase with Store {
       $ModelClassCamelCase$LocalList.clear();
       this.fetchAllLocal();
     } catch (error, exception) {
-      this.error = exception.toString();
-      return throw {"error": error, "message": exception};
-    }finally{
-      
+      _error(error.toString(), exception.toString());
     }
   }
 
@@ -206,10 +196,9 @@ abstract class _$ModelClass$ControllerBase with Store {
     try{
       $ModelClassCamelCase$LocalModel = await _$ModelClassCamelCase$Data.detail(id);
     } catch (error, exception) {
-      this.error = exception.toString();
-      return throw {"error": error, "message": exception};
+      _error(error.toString(), exception.toString());
     }finally{
-      
+      _processController.processing = false;
     }
   }
 
@@ -219,10 +208,7 @@ abstract class _$ModelClass$ControllerBase with Store {
     try{
       $ModelClassCamelCase$LocalModel = await _$ModelClassCamelCase$Data.save(model);
     } catch (error, exception) {
-      this.error = exception.toString();
-      return throw {"error": error, "message": exception};
-    }finally{
-      
+      _error(error.toString(), exception.toString());
     }
   }
 
@@ -232,10 +218,7 @@ abstract class _$ModelClass$ControllerBase with Store {
     try{
       $ModelClassCamelCase$LocalModel = await _$ModelClassCamelCase$Data.update(model);
     } catch (error, exception) {
-      this.error = exception.toString();
-      return throw {"error": error, "message": exception};
-    }finally{
-      
+      _error(error.toString(), exception.toString());
     }
   }
 
@@ -245,10 +228,7 @@ abstract class _$ModelClass$ControllerBase with Store {
     try{
       return await _$ModelClassCamelCase$Data.delete(id);
     } catch (error, exception) {
-      this.error = exception.toString();
-      return throw {"error": error, "message": exception};
-    }finally{
-      
+      _error(error.toString(), exception.toString());
     }
   }
 
@@ -258,10 +238,28 @@ abstract class _$ModelClass$ControllerBase with Store {
     try{
       return await _$ModelClassCamelCase$Data.deleteAll();
     } catch (error, exception) {
-      this.error = exception.toString();
-      return throw {"error": error, "message": exception};
-    }finally{
-      
+      _error(error.toString(), exception.toString());
     }
   }
+
+  /// Métodos para tratar o retorno do processamento
+  void _success(String message) async {
+    try {
+      _processController.withSuccess(message: message);
+    } catch (e) {
+      DebugPrint.imprimir("Ocorreu um erro no método error: $e");
+    }
+  }
+
+  void _error(String error, String exception) async {
+    try {
+      _processController.withError(
+        error: error,
+        exception: exception,
+      );
+    } catch (e) {
+      DebugPrint.imprimir("Ocorreu um erro no método error: $e");
+    }
+  }
+
 }

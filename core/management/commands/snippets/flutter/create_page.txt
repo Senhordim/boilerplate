@@ -14,8 +14,7 @@ import '../../../../utils/util.dart';
 import '../../../../utils/config.dart';
 import '../../../../user_interface/font.dart';
 import '../../../../user_interface/widget.dart';
-import '../../../../utils/error.controller.dart';
-import '../../../../utils/processing.controller.dart';
+import '../../../../utils/process.controller.dart';
 
 class $ModelClass$AddPage extends StatefulWidget {
   final $ModelClass$Model $Model$;
@@ -27,25 +26,23 @@ class $ModelClass$AddPage extends StatefulWidget {
 }
 
 class _$ModelClass$AddPageState extends State<$ModelClass$AddPage> {
-  // Instânciando uma chave para controle do estado do Scaffold
+  // Instanciando uma chave para controle do estado do Scaffold
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // Instânciando o controller de processamento
-  ProcessingController _processingController = GetIt.I.get<ProcessingController>();
+  // Instanciando o controller de processamento
+  ProcessController _processController = GetIt.I.get<ProcessController>();
 
-  // Instânciando o controller de processamento
-  ErrorController _errorController = GetIt.I.get<ErrorController>();
-
-  // Instânciando o controller via get_it
+  // Instanciando o controller via get_it
   $ModelClass$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClass$Controller>();
+
+  // Instanciando o model
+  $ModelClass$Model _$Model$ = $ModelClass$Model();
 
   // Criando os controladores do Form
   final _form$ModelClass$ = GlobalKey<FormState>();
   
   // Criando os controladores dos inputs do formulário.  
   $Atributes$
-
-  $ModelClass$Model _$Model$ = $ModelClass$Model();
 
   @override
   void initState() {
