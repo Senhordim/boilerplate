@@ -1240,33 +1240,28 @@ class Command(BaseCommand):
             if not self.__check_dir(self.utils_dir):
                 os.makedirs(self.utils_dir)
 
-            if not self.__check_file(self.config_file):
+            if self.__check_file_is_locked(self.config_file) is False:
                 # Acessando o snippet do arquivo de configuração
                 snippet = self.__get_snippet(f"{self.snippet_dir}/config.txt")
                 snippet = snippet.replace("$AppName$", SYSTEM_NAME)
                 snippet = snippet.replace("$DjangoAPIPath$", API_PATH)
-
-                # Classe de configuração
                 with open(self.config_file, "w") as config:
                     config.write(snippet)
 
-            # Verificando se o arquivo util.dart já existe
-            if not self.__check_file(self.util_file):
+            # Verificando se o arquivo está travado para parser
+            if self.__check_file_is_locked(self.process_controller_file) is False:
                 # Acessando o snippet do arquivo de funções auxiliares
                 snippet = self.__get_snippet(f"{self.snippet_dir}/util.txt")
-                # Classe de configuração
                 with open(self.util_file, "w") as config:
                     config.write(snippet)
 
             # Criando o controller de gerenciamento do processamento
             # Verificando se o arquivo está travado para parser
-            if self.__check_file_is_locked(self.process_controller_file):
-                return
-
-            snippet = self.__get_snippet(
-                f"{self.snippet_dir}/process_controller.txt")
-            with open(self.process_controller_file, "w") as process_controller:
-                process_controller.write(snippet)
+            if self.__check_file_is_locked(self.process_controller_file) is False:
+                snippet = self.__get_snippet(
+                    f"{self.snippet_dir}/process_controller.txt")
+                with open(self.process_controller_file, "w") as process_controller:
+                    process_controller.write(snippet)
 
         except Exception as error:
             self.__message(f"Erro ao criar o arquivo utils {error}")
@@ -1281,19 +1276,19 @@ class Command(BaseCommand):
         """Método para criar a estrutura de diretórios UI
         """
         try:
-            # Criando o diretório user_interface
+            # Verificando se o diretório existe, caso não cria.
             if not self.__check_dir(self.ui_dir):
                 os.makedirs(self.ui_dir)
 
-                # Criando os subdiretórios do user_interface
-                for arquivo in ['widget', 'font']:
-                    arquivo_dart = f"{self.ui_dir}/{arquivo}.dart"
-                    if not self.__check_file(arquivo_dart):
-                        # Criando os arquivos
-                        snippet = self.__get_snippet(
-                            f"{self.snippet_dir}/ui_{arquivo}.txt")
-                        with open(arquivo_dart, "w") as arq:
-                            arq.write(snippet)
+            # Criando os subdiretórios do user_interface
+            for arquivo in ['widget', 'font']:
+                arquivo_dart = f"{self.ui_dir}/{arquivo}.dart"
+                # Verificando se o arquivo está destravado para parser
+                if self.__check_file_is_locked(arquivo_dart) is False:
+                    snippet = self.__get_snippet(
+                        f"{self.snippet_dir}/ui_{arquivo}.txt")
+                    with open(arquivo_dart, "w") as arq:
+                        arq.write(snippet)
 
         except Exception as error:
             self.__message(
@@ -1481,12 +1476,13 @@ class Command(BaseCommand):
                 # Criando os arquivos JSON
                 with open(f"{__lang_dir}/pt.json", 'w') as pt_json:
                     pt_json.write(
-                        '{\n"chave_do_texto":"Texto em português"\n}')
+                        '{\n"custom_processing_card_label":"Processando..."\n}')
 
             # Verificando se o arquivo do idioma en_us existe.
             if not self.__check_file(f"{__lang_dir}/en.json"):
                 with open(f"{__lang_dir}/en.json", 'w') as en_json:
-                    en_json.write('{\n"chave_do_texto":"Text in english"\n}')
+                    en_json.write(
+                        '{\n"custom_processing_card_label":"Processing..."\n}')
 
         except Exception as error:
             self.__message(f"Erro ao executar o localizations app. \n {error}")

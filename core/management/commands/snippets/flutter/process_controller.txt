@@ -36,9 +36,13 @@ abstract class _ProcessControllerBase with Store {
   @observable
   int statusCode = 0;
 
-  // Atributo com a mensagem de retorno da requisição HTTP
+  // Atributo com a mensagem de retorno
   @observable
   String message = '';
+
+  // Atributo com a mensagem de retorno para o usuário
+  @observable
+  String friendlyMessage = 'Ocorreu um erro, favor tentar novamente.';
   
   // Atributo com o head da requisição HTTP
   @observable
@@ -126,7 +130,7 @@ abstract class _ProcessControllerBase with Store {
   }) {
     try {
       this.processing = false;
-      this.success = true;
+      this.success = false;
       this.statusCode = statusCode;
       this.message = message;
       this.httpHeader = httpHeader;

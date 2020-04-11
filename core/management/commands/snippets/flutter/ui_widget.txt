@@ -1,13 +1,14 @@
 /// Arquivo contendo os Widgets componentizados da aplicação
 
 import 'dart:ui';
-import 'package:agendeweb/apps/configuracao/controller.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../utils/config.dart';
+import '../utils/localization.dart';
+import '../apps/configuracao/controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 
 /// Widget para gerar os "botões" da tela inicial de acesso rápido
 Widget customMainCardButton(icon, label,
@@ -81,7 +82,7 @@ Widget customAvatarAppBar() {
 
 /// Componente ImageCircular
 ///
-///    Params:
+///    Parameters:
 ///     context -> BuildContext
 ///     path -> String com o caminho da image
 ///     size (default = 22) -> Double com o tamanho do elemento.
@@ -118,7 +119,7 @@ Widget customImageCircular(BuildContext context, String path,
 
 /// Componente Card
 ///
-///    Params:
+///    Parameters:
 ///     context -> BuildContext
 ///     child -> Widget filho do card
 ///     backgroundColor (opcional) -> Color com a cor do card
@@ -165,7 +166,7 @@ Widget customCard(
 
 /// Componente Card com imagem
 ///
-///    Params:
+///    Parameters:
 ///     context -> BuildContext
 ///     child -> Widget filho do card
 ///     path -> String com o caminho da imagem
@@ -338,7 +339,7 @@ Widget customCardWithImage(
 
 /// Componente FlatButton
 ///
-///    Params:
+///    Parameters:
 ///     label -> String com o texto a ser mostrado no botão
 ///     onPress -> Função a ser executada ao clicar no botão
 ///     textColor (opcional) -> Color com a cor do texto
@@ -381,7 +382,7 @@ Widget customFlatButton(
 
 /// Componente RaisedButton
 ///
-///    Params:
+///    Parameters:
 ///     label -> String com o texto a ser mostrado no botão
 ///     onPress -> Função a ser executada ao clicar no botão
 ///     color (opcional) -> Color contendo a cor de background do botão
@@ -436,7 +437,7 @@ Widget customRaisedButton(
 
 /// Componente OutlineButton
 ///
-///    Params:
+///    Parameters:
 ///     label -> String com o texto a ser mostrado no botão
 ///     onPress -> Função a ser executada ao clicar no botão
 ///     borderSize (default = 1.12) -> Double com a expessura da borda
@@ -498,7 +499,7 @@ Widget customButtonOutline(
 
 /// Componente TextFormField
 ///
-///    Params:
+///    Parameters:
 ///     labelText -> String com o texto a ser mostrado no label do TextField
 ///     hintText -> String com o texto a ser mostrado como help dentro do TextField
 ///     controller -> TextEditController do TextField
@@ -537,4 +538,34 @@ Widget customTextFormField(
     print("Error: $error, Exception: $exception");
     return Container();
   }
+}
+
+
+/// Componente visual para mostrar um card enquando o usuário aguarda
+/// o processamento da operação.
+///
+///    Parameters:
+///
+///      context -> BuildContext contendo o contexto do App
+Widget customProcessingCardModal(BuildContext context){
+  return Container(
+    child: Align(
+      alignment: Alignment.center,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+              vertical: 12, horizontal: 8.0),
+          child: Column(
+              children: [
+              CircularProgressIndicator(),
+              Text(
+                AppLocalizations.of(context)
+                    .translate("custom_processing_card_label"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 }

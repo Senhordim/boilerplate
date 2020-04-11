@@ -104,8 +104,10 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
         );
       }else if(_processController.success == false) {
         /// Ocorreu um erro
-        return Center(
-          child: Text(_processController.message),
+        return Expanded(
+            child: Center(
+            child: Text(_processController.friendlyMessage),
+          ),
         );
       } else {
         if(_$ModelClassCamelCase$Controller.$ModelClassCamelCase$List == null){
