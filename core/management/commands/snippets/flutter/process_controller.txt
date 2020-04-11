@@ -109,4 +109,15 @@ abstract class _ProcessControllerBase with Store {
       this.exception = exception;
     } catch (e) {}
   }
+
+  clear(){
+    this.processing = null;
+    this.success = null;
+    this.statusCode = 0;
+    this.message = '';
+    this.httpHeader = '';
+    this.httpData = '';
+    this.error = '';
+    this.exception = '';
+  }
 }
