@@ -26,12 +26,16 @@ class $ModelClass$UpdatePage extends StatefulWidget {
   _$ModelClass$AddPageState createState() => _$ModelClass$AddPageState();
 }
 
-class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage> {
+class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage> 
+  with SingleTickerProviderStateMixin{
   // Instanciando uma chave para controle do estado do Scaffold
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   // Instanciando o controller de processamento
   ProcessController _processController = GetIt.I.get<ProcessController>();
+
+  // Instanciando um controller para Animações
+  AnimationController _animationController;
 
   // Instanciando o controller via get_it
   $ModelClass$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClass$Controller>();
@@ -44,12 +48,13 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage> {
 
   $Atributes$
 
-  bool _loading = false;
-
   @override
   void initState() {
     super.initState();
+    // Iniciando o AnimationController
+    _animationController = AnimationController(vsync: this);
 
+    // Recuperando o objeto passado na chamada da view.
     _$Model$ = widget.$Model$;
 
     $EditedAttributes$
@@ -70,57 +75,51 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage> {
   }
 
   Widget _createBody(context) {
-    if (_loading == true) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    } else {
-      return SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: new BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height
-          ),
-          child: Container(
-          child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                // Configurando para que a Coluna oculpe a largura máxima da tela
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 12.0, top: 12.0),
-                    child: customTitlePage(context, 
-                      'Atualizar $ModelClass$',
-                    ),
+    return SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: new BoxConstraints(
+          minHeight: MediaQuery.of(context).size.height
+        ),
+        child: Container(
+        child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              // Configurando para que a Coluna oculpe a largura máxima da tela
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0, top: 12.0),
+                  child: customTitlePage(context, 
+                    'Atualizar $ModelClass$',
                   ),
-                  _createForm(context),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 24.0),
-                    child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: customRaisedButton(
-                          label: 'Salvar',
-                          context: context,
-                          onPress: () {
-                            if (_form$ModelClass$.currentState.validate()) {
-                              setState(() {
-                                  // Recuperando os dados do formulário e atribuindo à instância da classe
+                ),
+                _createForm(context),
+                Padding(
+                  padding: const EdgeInsets.only(top: 24.0),
+                  child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: customRaisedButton(
+                        label: 'Salvar',
+                        context: context,
+                        onPress: () {
+                          if (_form$ModelClass$.currentState.validate()) {
+                            setState(() {
+                                // Recuperando os dados do formulário e atribuindo à instância da classe
 $AttributesData$
-                                  _post();
-                              });
-                            }
-                          },
-                        ),
+                                _post();
+                            });
+                          }
+                        },
                       ),
-                  )
-                ],
-              ),
+                    ),
+                )
+              ],
             ),
           ),
         ),
-      );
-    }
+      ),
+    );
   }
 
   Widget _createForm(context){

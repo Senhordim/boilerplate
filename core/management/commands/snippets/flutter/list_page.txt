@@ -27,7 +27,7 @@ class $ModelClass$ListPage extends StatefulWidget {
 }
 
 class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
-    with SingleTickerProviderStateMixin {
+  with SingleTickerProviderStateMixin {
   // Instanciando uma chave para controle do estado do Scaffold
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -46,6 +46,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
   @override
   void initState() {
     super.initState();
+    // Iniciando o AnimationController
     _animationController = AnimationController(vsync: this);
 
     // Invocando o método fetchAll para recuperar os items

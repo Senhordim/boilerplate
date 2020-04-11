@@ -27,12 +27,16 @@ class $ModelClass$DetailPage extends StatefulWidget {
   _$ModelClass$DetailPageState createState() => _$ModelClass$DetailPageState();
 }
 
-class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage> {
-    // Instanciando uma chave para controle do estado do Scaffold
+class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage> 
+  with SingleTickerProviderStateMixin{
+  // Instanciando uma chave para controle do estado do Scaffold
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   
   // Instanciando o controller de processamento
   ProcessController _processController = GetIt.I.get<ProcessController>();
+
+  // Instanciando um controller para Animações
+  AnimationController _animationController;
 
   // Instanciando o controller via get_it
   $ModelClass$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClass$Controller>();
@@ -43,6 +47,8 @@ class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage> {
   @override
   void initState() {
     super.initState();
+    // Iniciando o AnimationController
+    _animationController = AnimationController(vsync: this);
 
     _$Model$ = widget.$Model$;
   }
