@@ -30,7 +30,7 @@ abstract class _ProcessControllerBase with Store {
 
   // Atributo para determinar se o processo foi concluído com sucesso ou não
   @observable
-  bool success = true;
+  bool success;
 
   // Atributo com o código de retorno da requisição HTTP
   @observable
@@ -67,36 +67,6 @@ abstract class _ProcessControllerBase with Store {
   // Declarando a Action para informar que o processamento parou
   @action
   endProcessing() async => this.processing = false;
-
-  /// Área para controlar o retorno dos processamentos
-  /// de consumo da API (dio) dos services e dos controllers
-
-  // Action que determina que o processamento foi 
-  //concluído com sucesso
-  @action
-  processedWithSuccess() async => this.success = true;
-
-  // Action que determina que o processamento foi
-  // concluído com erro
-  @action 
-  processedWithError() async => this.success = false;
-
-  // Action para atribuir o StatusCode da requisição Http
-  @action
-  setStatusCode(int statusCode) async => this.statusCode = statusCode;
-  
-  // Action para atribuir a mensagem de retorno do processamento
-  // podendo ser uma mensagem de sucesso ou de error.
-  @action
-  setMessage(String message) async => this.message = message;
-
-  // Action para atribuir o header da requisição HTTP
-  @action
-  setHeader(String header) async => this.httpHeader = header;
-
-  // Action para atribuir o data da requisição HTTP
-  @action
-  setData(String data) async => this.httpData = data;
 
   // Action para retorno com sucesso
   @action

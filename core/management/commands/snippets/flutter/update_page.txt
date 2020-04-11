@@ -38,6 +38,9 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
   // Instanciando um controller para Animações
   AnimationController _animationController;
 
+  // Instanciando uma lista de Disposes das Reactions
+  List<ReactionDisposer> _disposers = [];
+
   // Instanciando o controller via get_it
   $ModelClass$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClass$Controller>();
 
@@ -51,7 +54,23 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
 
   @override
   void initState() {
-    super.initState();
+    // Criando a reaction para mostrar a Snackbar
+    // conforme o retorno do _processController.sucess
+    _disposers.add(
+      autorun((_) {
+        // Está vindo true por causa do retorno lá na lista
+        if (_processController.success == true) {
+          print("Sucesso");
+          // _scaffoldKey.currentState
+          //    .showSnackBar(customSuccessSnackBar(_processController.message));
+        } else if (_processController.success == false) {
+          // _scaffoldKey.currentState.showSnackBar(
+          //    customErrorSnackBar(_processController.friendlyMessage));
+          print("Error");
+        }
+      }),
+    );
+
     // Iniciando o AnimationController
     _animationController = AnimationController(vsync: this);
 
@@ -59,8 +78,16 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
     _$Model$ = widget.$Model$;
 
     $EditedAttributes$
+
+    super.initState();
   }
- 
+  
+  @override
+  void dispose() {
+    _disposers.forEach((dispose) => dispose());
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,7 +131,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
                       ]
                     ),
                     Observer(
-                      builder: (_) {
+                      builder: (context) {
                         if (_processController.processing == true) {
                           return customProcessingCardModal(context);
                         } else {

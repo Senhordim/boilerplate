@@ -79,12 +79,13 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
             onRefresh: _refresh),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-        ),
+        child: Icon(Icons.add),
         onPressed: () {
+          _processController.success = null;
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => $ModelClass$AddPage(),),);
+              MaterialPageRoute(builder: (context) => $ModelClass$AddPage(),
+            ),
+          );
         },
       ),
     );
@@ -121,6 +122,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
               $ModelClass$Model _$Model$ = itens[index];
               return GestureDetector(
                 onTap: () {
+                  _processController.success = null;
                   Navigator.push(
                     context,
                     MaterialPageRoute(

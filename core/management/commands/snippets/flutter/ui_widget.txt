@@ -569,3 +569,8 @@ Widget customProcessingCardModal(BuildContext context){
     ),
   );
 }
+
+/// Componente para mostrar a mensagem de erro para o usuário na UI
+Widget customErrorMessage(BuildContext context, {String title, String message}){
+  return Center(child: Text(message));
+}
