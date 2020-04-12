@@ -1450,7 +1450,8 @@ class Command(BaseCommand):
             # Acessando o snippet do localizations
             snippet = self.__get_snippet(
                 f"{self.snippet_dir}/localization.txt")
-            # Criando o arquivo.
+
+            # Recuperando o caminho do arquivo localization.dart
             path_localization = os.path.join(
                 self.utils_dir, 'localization.dart')
 
@@ -1473,16 +1474,18 @@ class Command(BaseCommand):
 
             # Verificando se o arquivo do idioma pt_br exiate
             if not self.__check_file(f"{__lang_dir}/pt.json"):
+                snippet = self.__get_snippet(
+                    f"{self.snippet_dir}/pt_language.txt")
                 # Criando os arquivos JSON
                 with open(f"{__lang_dir}/pt.json", 'w') as pt_json:
-                    pt_json.write(
-                        '{\n"custom_processing_card_label":"Processando..."\n}')
+                    pt_json.write(snippet)
 
             # Verificando se o arquivo do idioma en_us existe.
             if not self.__check_file(f"{__lang_dir}/en.json"):
+                snippet = self.__get_snippet(
+                    f"{self.snippet_dir}/en_language.txt")
                 with open(f"{__lang_dir}/en.json", 'w') as en_json:
-                    en_json.write(
-                        '{\n"custom_processing_card_label":"Processing..."\n}')
+                    en_json.write(snippet)
 
         except Exception as error:
             self.__message(f"Erro ao executar o localizations app. \n {error}")

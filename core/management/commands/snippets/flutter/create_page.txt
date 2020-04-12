@@ -62,7 +62,8 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
         if (_processController.success == true) {
           _showMessage(_processController.message);
         } else if (_processController.success == false) {
-          _showMessage("Ocorreu um erro.", error: true);
+          _showMessage(AppLocalizations.of(context).translate("label_generic_error"), 
+          error: true);
         }
       }),
     );
@@ -202,9 +203,11 @@ $AttributesData$
   ///      error -> bool para determinar se a mensagem é de erro ou não.
   _showMessage(String message, {bool error = false}) {
     setState(() {
-      _scaffoldKey.currentState.showSnackBar(error == false
-          ? customSuccessSnackbar(message)
-          : customErrorSnackbar(message));
+      _scaffoldKey.currentState.showSnackBar(
+        error == false
+            ? customSuccessSnackbar(message)
+            : customErrorSnackbar(message),
+        );
     });
   }
 }

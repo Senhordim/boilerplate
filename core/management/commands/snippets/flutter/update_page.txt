@@ -59,15 +59,10 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
     // conforme o retorno do _processController.sucess
     _disposers.add(
       autorun((_) {
-        // Está vindo true por causa do retorno lá na lista
         if (_processController.success == true) {
-          print("Sucesso");
-          // _scaffoldKey.currentState
-          //    .showSnackBar(customSuccessSnackBar(_processController.message));
+          _showMessage(_processController.message);
         } else if (_processController.success == false) {
-          // _scaffoldKey.currentState.showSnackBar(
-          //    customErrorSnackBar(_processController.friendlyMessage));
-          print("Error");
+          _showMessage("Ocorreu um erro.", error: true);
         }
       }),
     );
@@ -210,13 +205,12 @@ void _clearForm(){
   ///    Params:
   ///      message -> String contendo a mensagem a ser mostrada.
   ///      error -> bool para determinar se a mensagem é de erro ou não.
-  _showMessage(String message, {bool error}) {
+  _showMessage(String message, {bool error = false}) {
     setState(() {
       _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: error == true ? Colors.red : Colors.blue,
-        ),
+        error == false
+            ? customSuccessSnackbar(message)
+            : customErrorSnackbar(message),
       );
     });
   }

@@ -578,8 +578,8 @@ Widget customErrorMessage(BuildContext context,
 
 /// Componente para mostrar mensagens aos usuário de
 /// ações que retornaram com sucesso
-customSuccessSnackbar(String message, {int secondsDuration = 10}) {
-  return SnackBar(
+customSuccessSnackbar(String message, {int secondsDuration = 4}) {
+  return SnackBar( 
     content: Text(message),
     backgroundColor: Color(0xFFF799FCB),
     duration: Duration(seconds: secondsDuration),
@@ -588,10 +588,10 @@ customSuccessSnackbar(String message, {int secondsDuration = 10}) {
 
 /// Componente para mostrar mensagens aos usuário de
 /// ações que retornaram com sucesso
-customErrorSnackbar(String message, {int secondsDuration = 10}) {
-  return SnackBar(
+customErrorSnackbar(String message, {int secondsDuration = 4}) {
+  return SnackBar( 
     content: Text(message),
-    backgroundColor: Color(0xfffF9665E),
+    backgroundColor: Color(0xfffFF6961),
     duration: Duration(seconds: secondsDuration),
   );
 }
