@@ -86,6 +86,8 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
   @override
   void dispose() {
     _disposers.forEach((dispose) => dispose());
+    // Limpando o ProcessController
+    _processController.clear();
     super.dispose();
   }
 

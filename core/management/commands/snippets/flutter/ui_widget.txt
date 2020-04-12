@@ -571,6 +571,27 @@ Widget customProcessingCardModal(BuildContext context){
 }
 
 /// Componente para mostrar a mensagem de erro para o usuário na UI
-Widget customErrorMessage(BuildContext context, {String title, String message}){
+Widget customErrorMessage(BuildContext context, 
+    {String title, String message}){
   return Center(child: Text(message));
+}
+
+/// Componente para mostrar mensagens aos usuário de
+/// ações que retornaram com sucesso
+customSuccessSnackbar(String message, {int secondsDuration = 10}) {
+  return SnackBar(
+    content: Text(message),
+    backgroundColor: Color(0xFFF799FCB),
+    duration: Duration(seconds: secondsDuration),
+  );
+}
+
+/// Componente para mostrar mensagens aos usuário de
+/// ações que retornaram com sucesso
+customErrorSnackbar(String message, {int secondsDuration = 10}) {
+  return SnackBar(
+    content: Text(message),
+    backgroundColor: Color(0xfffF9665E),
+    duration: Duration(seconds: secondsDuration),
+  );
 }
