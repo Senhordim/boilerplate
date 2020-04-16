@@ -54,6 +54,10 @@ class AppModel:
                     self.models = ((x, x.__name__.strip(),
                                     x.__name__.strip().lower()) for x in self.app.get_models())
 
+                # Verificando o sistema operacional
+                # O retorno pode ser Windows ou Linux
+                self.operation_system = platform.system().lower()
+
             except Exception as error:
                 raise error
 
@@ -227,14 +231,10 @@ class Command(BaseCommand):
         # Criando o path para a APP Core.
         self.path_core = os.path.join(self.BASE_DIR, "core")
 
-        # Verificando o sistema operacional
-        # O retorno pode ser Windows ou Linux
-        system_operation = platform.system().lower()
-
         # Recuperando o Path Absoluto do projeto
         _path_project = os.getcwd()
 
-        if system_operation == 'windows':
+        if self.operation_system == 'windows':
             self.project = os.getcwd().split("\\")[-1:][0]
             self.flutter_dir = "{}/Flutter/{}".format(
                 "\\".join(os.getcwd().split("\\")[:-2]), self.project.lower())
