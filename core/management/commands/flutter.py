@@ -241,28 +241,46 @@ class Command(BaseCommand):
             self.project = os.getcwd().split("\\")[-1:][0]
             self.flutter_dir = "{}/Flutter/{}".format(
                 "\\".join(os.getcwd().split("\\")[:-2]), self.project.lower())
+            self.project = self.project.replace("-", "").replace("_", "")
+            # Concatenando o nome do projeto Django com o prefixo flutter
+            self.flutter_project = '{}'.format(self.project)
+            self.utils_dir = "{}\\lib\\utils\\".format(self.flutter_dir)
+            self.ui_dir = "{}\\lib\\user_interface\\".format(self.flutter_dir)
+            self.config_file = "{}\\lib\\utils\\config.dart".format(self.flutter_dir)
+            self.util_file = "{}\\lib\\utils\\util.dart".format(self.flutter_dir)
+            self.process_controller_file = "{}\\lib\\utils\\process.controller.dart".format(
+                self.flutter_dir)
+            self.snippet_dir = "{}\\{}".format(
+                self.path_core, "management\\commands\\snippets\\flutter\\")
+
+            # Criando o path da APP de configuração
+            self.app_configuration = "{}\\lib\\apps\\configuracao\\".format(
+                self.flutter_dir)
+            self.app_configuration_page_file = f"{self.app_configuration}\\index.page.dart"
+            self.app_configuration_controller_file = f"{self.app_configuration}\\controller.dart"
+
         else:
             self.project = _path_project.split("/")[-1:][0]
+            self.project = self.project.replace("-", "").replace("_", "")
             self.flutter_dir = "{}/Flutter/{}".format(
                 "/".join(_path_project.split("/")[:-2]), self.project.lower())
 
-        self.project = self.project.replace("-", "").replace("_", "")
-        # Concatenando o nome do projeto Django com o prefixo flutter
-        self.flutter_project = '{}'.format(self.project)
-        self.utils_dir = "{}/lib/utils".format(self.flutter_dir)
-        self.ui_dir = "{}/lib/user_interface".format(self.flutter_dir)
-        self.config_file = "{}/lib/utils/config.dart".format(self.flutter_dir)
-        self.util_file = "{}/lib/utils/util.dart".format(self.flutter_dir)
-        self.process_controller_file = "{}/lib/utils/process.controller.dart".format(
-            self.flutter_dir)
-        self.snippet_dir = "{}/{}".format(
-            self.path_core, "management/commands/snippets/flutter")
+            # Concatenando o nome do projeto Django com o prefixo flutter
+            self.flutter_project = '{}'.format(self.project)
+            self.utils_dir = "{}/lib/utils/".format(self.flutter_dir)
+            self.ui_dir = "{}/lib/user_interface/".format(self.flutter_dir)
+            self.config_file = "{}/lib/utils/config.dart".format(self.flutter_dir)
+            self.util_file = "{}/lib/utils/util.dart".format(self.flutter_dir)
+            self.process_controller_file = "{}/lib/utils/process.controller.dart".format(
+                self.flutter_dir)
+            self.snippet_dir = "{}/{}".format(
+                self.path_core, "management/commands/snippets/flutter/")
 
-        # Criando o path da APP de configuração
-        self.app_configuration = "{}/lib/apps/configuracao".format(
-            self.flutter_dir)
-        self.app_configuration_page_file = f"{self.app_configuration}/index.page.dart"
-        self.app_configuration_controller_file = f"{self.app_configuration}/controller.dart"
+            # Criando o path da APP de configuração
+            self.app_configuration = "{}/lib/apps/configuracao/".format(
+                self.flutter_dir)
+            self.app_configuration_page_file = f"{self.app_configuration}/index.page.dart"
+            self.app_configuration_controller_file = f"{self.app_configuration}/controller.dart"
 
         # //////////////////////////////////////////////
         # Fim da estrutura dos diretórios do projeto
@@ -463,10 +481,9 @@ class Command(BaseCommand):
             if os.path.isfile(path):
                 with open(path) as arquivo:
                     return arquivo.read()
-            print("Arquivo não encontrado para captura.")
         except Exception as e:
-            self.__message(f"Erro no get_snippet {e}")
-            return None
+            self.__message(f"Erro no get_snippet {e}", error=True)
+            sys.exit()
 
     def __check_file(self, path):
         """Método para verificar se o arquivo existe
@@ -481,8 +498,8 @@ class Command(BaseCommand):
         try:
             return os.path.isfile(path)
         except Exception as e:
-            self.__message(e)
-            return False
+            self.__message(f"Erro no check_file {e}", error=True)
+            sys.exit()
 
     def __check_content(self, path, text_check):
         """Método para verificar se determinado texto existe
