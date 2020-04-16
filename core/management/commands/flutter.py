@@ -235,20 +235,17 @@ class Command(BaseCommand):
         _path_project = os.getcwd()
 
         if system_operation == 'windows':
-            self.project = os.getcwd().split("/")[-1:][0]
-            self.project = self.project.replace("-", "").replace("_", "")
-            # Concatenando o nome do projeto Django com o prefixo flutter
-            self.flutter_project = '{}'.format(self.project)
+            self.project = os.getcwd().split("\\")[-1:][0]
             self.flutter_dir = "{}/Flutter/{}".format(
-                "/".join(os.getcwd().split("/")[:-2]), self.project.lower())
+                "\\".join(os.getcwd().split("\\")[:-2]), self.project.lower())
         else:
             self.project = _path_project.split("/")[-1:][0]
-            self.project = self.project.replace("-", "").replace("_", "")
-            # Concatenando o nome do projeto Django com o prefixo flutter
-            self.flutter_project = '{}'.format(self.project)
             self.flutter_dir = "{}/Flutter/{}".format(
                 "/".join(_path_project.split("/")[:-2]), self.project.lower())
 
+        self.project = self.project.replace("-", "").replace("_", "")
+        # Concatenando o nome do projeto Django com o prefixo flutter
+        self.flutter_project = '{}'.format(self.project)
         self.utils_dir = "{}/lib/utils".format(self.flutter_dir)
         self.ui_dir = "{}/lib/user_interface".format(self.flutter_dir)
         self.config_file = "{}/lib/utils/config.dart".format(self.flutter_dir)
