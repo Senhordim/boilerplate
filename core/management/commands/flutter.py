@@ -237,7 +237,7 @@ class Command(BaseCommand):
         # Recuperando o Path Absoluto do projeto
         _path_project = os.getcwd()
 
-        if system_operation == 'windows':
+        if self.operation_system == 'windows':
             self.project = os.getcwd().split("\\")[-1:][0]
             self.flutter_dir = "{}/Flutter/{}".format(
                 "\\".join(os.getcwd().split("\\")[:-2]), self.project.lower())
