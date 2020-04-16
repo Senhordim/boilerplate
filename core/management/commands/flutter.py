@@ -231,16 +231,26 @@ class Command(BaseCommand):
         pdb.set_trace()
 
         # Verificando o sistema operacional
-        sytem_operation = platform.system()
+        system_operation = platform.system().lower() # O retorno pode ser Windows ou Linux
 
-        # TODO Verificar se tem o C:\ para tratar para Windows 
-        # Obtém o nome do projeto
-        self.project = os.getcwd().split("/")[-1:][0]
-        self.project = self.project.replace("-", "").replace("_", "")
-        # Concatenando o nome do projeto Django com o prefixo flutter
-        self.flutter_project = '{}'.format(self.project)
-        self.flutter_dir = "{}/Flutter/{}".format(
-            "/".join(os.getcwd().split("/")[:-2]), self.project.lower())
+        # Recuperando o Path Absoluto do projeto
+        _path_project = os.getcwd()
+
+        if system_operation == 'windows':
+            self.project = os.getcwd().split("/")[-1:][0]
+            self.project = self.project.replace("-", "").replace("_", "")
+            # Concatenando o nome do projeto Django com o prefixo flutter
+            self.flutter_project = '{}'.format(self.project)
+            self.flutter_dir = "{}/Flutter/{}".format(
+                "/".join(os.getcwd().split("/")[:-2]), self.project.lower())
+        elif system_operation == 'linux':
+            self.project = _path_project.split("/")[-1:][0]
+            self.project = self.project.replace("-", "").replace("_", "")
+            # Concatenando o nome do projeto Django com o prefixo flutter
+            self.flutter_project = '{}'.format(self.project)
+            self.flutter_dir = "{}/Flutter/{}".format(
+                "/".join(_path_project[:-2]), self.project.lower())
+
         self.utils_dir = "{}/lib/utils".format(self.flutter_dir)
         self.ui_dir = "{}/lib/user_interface".format(self.flutter_dir)
         self.config_file = "{}/lib/utils/config.dart".format(self.flutter_dir)
