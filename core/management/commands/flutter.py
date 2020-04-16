@@ -623,9 +623,10 @@ class Command(BaseCommand):
                 self.__add_packages()
                 time.sleep(3)
                 if self.operation_system == 'windows':
-                    pass
-                    #__cmd_get_packages = "cd {}; flutter pub get; cd ..\\..\\Django\\{}".format(
-                    #    self.flutter_dir, self.project)
+                    # TODO Verificar como executar o caminho no Windows
+                    __cmd_get_packages = "cd {}; flutter pub get;".format(
+                        self.flutter_dir, self.project)
+                    subprocess.call(__cmd_get_packages.split(), shell=True)
                 else:
                     __cmd_get_packages = "cd {}; flutter pub get; cd ../{}".format(
                         self.flutter_dir, self.project)
