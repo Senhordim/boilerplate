@@ -4,6 +4,7 @@ import json
 import time
 import platform
 import traceback
+import subprocess
 from django.apps import apps
 from django.core.management.base import BaseCommand
 
@@ -105,11 +106,11 @@ class AppModel:
             """
             try:
                 if self.operation_system == 'windows':
-                    return "{}\\lib\\apps\\{}\\{}\\pages".format(
+                    return "{}\\lib\\apps\\{}\\{}\\pages\\".format(
                         self.path_flutter, self.app_name_lower,
                         self.model_name_lower)
                 else:
-                    return "{}/lib/apps/{}/{}/pages".format(
+                    return "{}/lib/apps/{}/{}/pages/".format(
                         self.path_flutter, self.app_name_lower,
                         self.model_name_lower)
             except Exception as error:
@@ -280,7 +281,7 @@ class Command(BaseCommand):
 
         if self.operation_system == 'windows':
             self.project = os.getcwd().split("\\")[-1:][0]
-            self.flutter_dir = "{}/Flutter/{}".format(
+            self.flutter_dir = "{}\\Flutter\\{}".format(
                 "\\".join(os.getcwd().split("\\")[:-2]), self.project.lower())
             self.project = self.project.replace("-", "").replace("_", "")
             # Concatenando o nome do projeto Django com o prefixo flutter
@@ -525,7 +526,7 @@ class Command(BaseCommand):
 
         try:
             if os.path.isfile(path):
-                with open(path) as arquivo:
+                with open(path, encoding="utf8") as arquivo:
                     return arquivo.read()
         except Exception as e:
             self.__message(f"Erro no get_snippet {e}", error=True)
@@ -602,7 +603,8 @@ class Command(BaseCommand):
                 self.__message("Criando o projeto flutter.")
                 __cmd_flutter_create = "flutter create --androidx {}".format(
                     self.flutter_dir)
-                os.system(__cmd_flutter_create)
+                subprocess.call(__cmd_flutter_create, shell=True)
+                # os.system(__cmd_flutter_create)
                 self.__message("Projeto criado com sucesso.")
         except Exception as error:
             self.__message(
@@ -620,12 +622,17 @@ class Command(BaseCommand):
                 self.__message("Atualizando o arquivo de dependências.")
                 self.__add_packages()
                 time.sleep(3)
-                # Executando o flutter package get
-                self.__message("Executando o flutter packages get.")
-                __cmd_get_packages = "cd {};flutter pub get; cd ../{}".format(
-                    self.flutter_dir, self.project)
-                os.system(__cmd_get_packages)
+                if self.operation_system == 'windows':
+                    pass
+                    #__cmd_get_packages = "cd {}; flutter pub get; cd ..\\..\\Django\\{}".format(
+                    #    self.flutter_dir, self.project)
+                else:
+                    __cmd_get_packages = "cd {}; flutter pub get; cd ../{}".format(
+                        self.flutter_dir, self.project)
+                    subprocess.call(__cmd_get_packages, shell=True)
+                # os.system(__cmd_get_packages)
                 time.sleep(3)
+
                 # Executando o main
                 self.__message("Atualizando o arquivo main.dart.")
                 self.__replace_main()
@@ -1243,9 +1250,15 @@ class Command(BaseCommand):
             # no diretório do projeto Flutter
             # Verifica se o projeto já foi criado
             if self.__check_dir(self.flutter_dir):
-                __command = "cd {};flutter pub run build_runner build; cd ../{}".format(
-                    self.flutter_dir, self.project)
-                os.system(__command)
+                if self.operation_system == 'windows':
+                    pass
+                    # __command = "cd {};flutter pub run build_runner build; cd ..\\..\\Django\\{}".format(
+                    #     self.flutter_dir, self.project)
+                else:
+                    __command = "cd {};flutter pub run build_runner build; cd ../{}".format(
+                        self.flutter_dir, self.project)
+                    subprocess.call(__command, shell=True)
+                # os.system(__command)
         except Exception as error:
             self.__message(
                 f"Erro ao realizar o parser do model: {error}", error=True)
@@ -1282,13 +1295,23 @@ class Command(BaseCommand):
     #################################################################
     """
 
+    def __get_yaml_file(self):
+        try:
+            if self.operation_system == 'windows':
+                return f"{self.flutter_dir}\\pubspec.yaml"
+            else:
+                return f"{self.flutter_dir}/pubspec.yaml"
+        except Exception as error:
+            self.__message(
+                "Ocorreu um erro ao recuperar o arquivo Yaml:{error}", error=True)
+
     def __add_packages(self):
         """
         Método assincrono para alterar os pacotes do projeto
         """
         import yaml
         try:
-            __path = f"{self.flutter_dir}pubspec.yaml"
+            __path = self.__get_yaml_file()
             # Trabalhando com a geração do arquivo baseado no snippet
             snippet = self.__get_snippet(f"{self.snippet_dir}yaml.txt")
             snippet = snippet.replace("$AppPackage$", self.project.lower())
@@ -1586,7 +1609,8 @@ class Command(BaseCommand):
 
             # Verificando o SO
             if self.operation_system == 'windows':
-                path_maindart = os.path.join(self.flutter_dir, 'lib\\main.dart')
+                path_maindart = os.path.join(
+                    self.flutter_dir, 'lib\\main.dart')
             else:
                 # Recuperando o caminho do arquivo main.dart no projeto Flutter
                 path_maindart = os.path.join(self.flutter_dir, 'lib/main.dart')

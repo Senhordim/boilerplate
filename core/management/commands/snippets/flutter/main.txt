@@ -95,7 +95,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-/// Caso deseje ativar a navegação pela barra inferior BottomNavigationBar deve-se setar a 
+/// Caso deseje ativar a pela barra inferior BottomNavigationBar deve-se setar a 
 /// variável [bottomNavigationEnable], depois criar as páginas que serão invocadas quando o usuário
 /// clicar nos elementos e vinculas à lista de páginas disponíveis conforme exemplo  seguir
 /// 
@@ -112,33 +112,33 @@ class _MyHomePageState extends State<MyHomePage> {
   // Declarando o booleano que controla se será mostrado o ButtonNavigationBar
   bool bottomNavigationEnable = false;
 
-    // Declarando o PageController para navegação pelo ButtonNavigationBar
+    // Declarando o PageController para pelo ButtonNavigationBar
   PageController _pageController;
 
   // Declarando o inteiro para controlar qual página deve ser exibida
   int _page = 0;
 
   // Declarando a lista de Widgets que devem conter as páginas no caso de ser configurada
-  // navegação por meu do bottomNavigationBar
+  // por meu do bottomNavigationBar
   List<Widget> _pages;
 
-  /// Declarando o Widget da página atual para o caso de ser configurado a navegação 
+  /// Declarando o Widget da página atual para o caso de ser configurado a 
   /// por meio do ButtonNavigationBar
   Widget _currentPage;
 
-  /// Sobrescrevendo o initState para caso seja configurada a navegação 
+  /// Sobrescrevendo o initState para caso seja configurada a 
   /// pelo ButtonNavigationBar sejam instânciadas as variáveis de controle
-  /// da navegação.
+  /// da 
   @override
   void initState(){
-    /// Iniciando a lista de Widgets com as páginas da navegação via ButtonNavigationBar
+    /// Iniciando a lista de Widgets com as páginas da via ButtonNavigationBar
     // _pages = [];
     // _currentPage = _pages[_page];
   }
 
   @override
   Widget build(BuildContext context) {
-    // Verificando se a navegação será pelo navigationButton
+    // Verificando se a será pelo navigationButton
       return Scaffold(
         appBar: AppBar(
           title: customAppBarTitle(
@@ -263,7 +263,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  /// Método para controlar a navegação das páginas
+  /// Método para controlar a das páginas
   /// conforme o clique nos elementos do ButtonNavigationBar
   _navigationTapped(int page) {
     setState((){

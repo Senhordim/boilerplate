@@ -25,7 +25,7 @@ class $ModelClass$Model {
     this.deleted = false;
   }
   
-  /// Sobescrevendo o método toString para retornar todos os atributos da classe.
+  /// Sobscrevendo o método toString para retornar todos os atributos da classe.
   @override
   String toString() {
     return "$StringReturn$";
