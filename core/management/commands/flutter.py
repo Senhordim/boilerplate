@@ -68,8 +68,12 @@ class AppModel:
                 String -- Caminho do diretório da app no projeto Flutter
             """
             try:
-                return "{}/lib/apps/{}".format(
-                    self.path_flutter, self.app_name_lower)
+                if self.operation_system == 'windows':
+                    return "{}\\lib\\apps\\{}".format(
+                        self.path_flutter, self.app_name_lower)
+                else:
+                    return "{}/lib/apps/{}".format(
+                        self.path_flutter, self.app_name_lower)
             except Exception as error:
                 print(error)
                 return None
@@ -81,10 +85,14 @@ class AppModel:
                 String -- Caminho do diretório do model no projeto Flutter
             """
             try:
-                return "{}/lib/apps/{}/{}".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower
-                )
+                if self.operation_system == 'windows':
+                    return "{}\\lib/apps/{}/{}".format(
+                        self.path_flutter, self.app_name_lower,
+                        self.model_name_lower)
+                else:
+                    return "{}/lib/apps/{}/{}".format(
+                        self.path_flutter, self.app_name_lower,
+                        self.model_name_lower)
             except Exception as error:
                 print(error)
                 return None
@@ -96,10 +104,14 @@ class AppModel:
                 String -- Caminho do diretório pages no projeto Flutter
             """
             try:
-                return "{}/lib/apps/{}/{}/pages".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower
-                )
+                if self.operation_system == 'windows':
+                    return "{}\\lib\\apps\\{}\\{}\\pages".format(
+                        self.path_flutter, self.app_name_lower,
+                        self.model_name_lower)
+                else:
+                    return "{}/lib/apps/{}/{}/pages".format(
+                        self.path_flutter, self.app_name_lower,
+                        self.model_name_lower)
             except Exception as error:
                 print(error)
                 return None
@@ -111,26 +123,49 @@ class AppModel:
                 String's -- Caminho de cada arquivo das páginas na create, detail, index, list e update
             """
             try:
-                __create = "{}/lib/apps/{}/{}/pages/create.dart".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower
-                )
-                __detail = "{}/lib/apps/{}/{}/pages/detail.dart".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower
-                )
-                __index = "{}/lib/apps/{}/{}/pages/index.dart".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower
-                )
-                __list = "{}/lib/apps/{}/{}/pages/list.dart".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower
-                )
-                __update = "{}/lib/apps/{}/{}/pages/update.dart".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower
-                )
+                if self.operation_system == "windows":
+                    __create = "{}\\lib\\apps\\{}\\{}\\pages\\create.dart".format(
+                        self.path_flutter, self.app_name_lower,
+                        self.model_name_lower
+                    )
+                    __detail = "{}\\lib\\apps\\{}\\{}\\pages\\detail.dart".format(
+                        self.path_flutter, self.app_name_lower,
+                        self.model_name_lower
+                    )
+                    __index = "{}\\lib\\apps\\{}\\{}\\pages\\index.dart".format(
+                        self.path_flutter, self.app_name_lower,
+                        self.model_name_lower
+                    )
+                    __list = "{}\\lib\\apps\\{}\\{}\\pages\\list.dart".format(
+                        self.path_flutter, self.app_name_lower,
+                        self.model_name_lower
+                    )
+                    __update = "{}\\lib\\apps\\{}\\{}\\pages\\update.dart".format(
+                        self.path_flutter, self.app_name_lower,
+                        self.model_name_lower
+                    )
+                else:
+                    __create = "{}/lib/apps/{}/{}/pages/create.dart".format(
+                        self.path_flutter, self.app_name_lower,
+                        self.model_name_lower
+                    )
+                    __detail = "{}/lib/apps/{}/{}/pages/detail.dart".format(
+                        self.path_flutter, self.app_name_lower,
+                        self.model_name_lower
+                    )
+                    __index = "{}/lib/apps/{}/{}/pages/index.dart".format(
+                        self.path_flutter, self.app_name_lower,
+                        self.model_name_lower
+                    )
+                    __list = "{}/lib/apps/{}/{}/pages/list.dart".format(
+                        self.path_flutter, self.app_name_lower,
+                        self.model_name_lower
+                    )
+                    __update = "{}/lib/apps/{}/{}/pages/update.dart".format(
+                        self.path_flutter, self.app_name_lower,
+                        self.model_name_lower
+                    )
+
                 return __create, __detail, __index, __list, __update
             except Exception as error:
                 print(error)
@@ -138,10 +173,16 @@ class AppModel:
 
         def get_path_data_file(self):
             try:
-                return "{}/lib/apps/{}/{}/data.dart".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower
-                )
+                if self.operation_system == 'windows':
+                    return "{}\\lib\\apps\\{}\\{}\\data.dart".format(
+                        self.path_flutter, self.app_name_lower,
+                        self.model_name_lower
+                    )
+                else:
+                    return "{}/lib/apps/{}/{}/data.dart".format(
+                        self.path_flutter, self.app_name_lower,
+                        self.model_name_lower
+                    )
             except Exception as error:
                 print(error)
                 return None
@@ -246,8 +287,10 @@ class Command(BaseCommand):
             self.flutter_project = '{}'.format(self.project)
             self.utils_dir = "{}\\lib\\utils\\".format(self.flutter_dir)
             self.ui_dir = "{}\\lib\\user_interface\\".format(self.flutter_dir)
-            self.config_file = "{}\\lib\\utils\\config.dart".format(self.flutter_dir)
-            self.util_file = "{}\\lib\\utils\\util.dart".format(self.flutter_dir)
+            self.config_file = "{}\\lib\\utils\\config.dart".format(
+                self.flutter_dir)
+            self.util_file = "{}\\lib\\utils\\util.dart".format(
+                self.flutter_dir)
             self.process_controller_file = "{}\\lib\\utils\\process.controller.dart".format(
                 self.flutter_dir)
             self.snippet_dir = "{}\\{}".format(
@@ -269,7 +312,8 @@ class Command(BaseCommand):
             self.flutter_project = '{}'.format(self.project)
             self.utils_dir = "{}/lib/utils/".format(self.flutter_dir)
             self.ui_dir = "{}/lib/user_interface/".format(self.flutter_dir)
-            self.config_file = "{}/lib/utils/config.dart".format(self.flutter_dir)
+            self.config_file = "{}/lib/utils/config.dart".format(
+                self.flutter_dir)
             self.util_file = "{}/lib/utils/util.dart".format(self.flutter_dir)
             self.process_controller_file = "{}/lib/utils/process.controller.dart".format(
                 self.flutter_dir)
@@ -598,6 +642,7 @@ class Command(BaseCommand):
 
     def __mapping_all_application(self):
         try:
+            # TODO Verificar o OS também
             __imports_pages = ""
             __imports_controllers = ""
             __controllers_models = ""
@@ -638,7 +683,7 @@ class Command(BaseCommand):
         """
         try:
             # Recuperando o arquivo a ser editado
-            __indexpage_file = f"{app.get_path_pages_dir()}/index.dart"
+            __indexpage_file = f"{app.get_path_pages_dir()}index.dart"
 
             # Verificando se o arquivo está travado para parser
             if self.__check_file_is_locked(__indexpage_file):
