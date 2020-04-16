@@ -227,9 +227,6 @@ class Command(BaseCommand):
         # Criando o path para a APP Core.
         self.path_core = os.path.join(self.BASE_DIR, "core")
 
-        import pdb
-        pdb.set_trace()
-
         # Verificando o sistema operacional
         system_operation = platform.system().lower() # O retorno pode ser Windows ou Linux
 
