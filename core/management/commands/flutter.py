@@ -228,7 +228,8 @@ class Command(BaseCommand):
         self.path_core = os.path.join(self.BASE_DIR, "core")
 
         # Verificando o sistema operacional
-        system_operation = platform.system().lower() # O retorno pode ser Windows ou Linux
+        # O retorno pode ser Windows ou Linux
+        system_operation = platform.system().lower()
 
         # Recuperando o Path Absoluto do projeto
         _path_project = os.getcwd()
@@ -246,7 +247,7 @@ class Command(BaseCommand):
             # Concatenando o nome do projeto Django com o prefixo flutter
             self.flutter_project = '{}'.format(self.project)
             self.flutter_dir = "{}/Flutter/{}".format(
-                "/".join(_path_project[:-2]), self.project.lower())
+                "/".join(_path_project.split("/")[:-2]), self.project.lower())
 
         self.utils_dir = "{}/lib/utils".format(self.flutter_dir)
         self.ui_dir = "{}/lib/user_interface".format(self.flutter_dir)
