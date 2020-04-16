@@ -240,7 +240,7 @@ class Command(BaseCommand):
             self.flutter_project = '{}'.format(self.project)
             self.flutter_dir = "{}/Flutter/{}".format(
                 "/".join(os.getcwd().split("/")[:-2]), self.project.lower())
-        elif system_operation == 'linux':
+        else:
             self.project = _path_project.split("/")[-1:][0]
             self.project = self.project.replace("-", "").replace("_", "")
             # Concatenando o nome do projeto Django com o prefixo flutter
