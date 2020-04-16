@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import time
+import platform
 import traceback
 from django.apps import apps
 from django.core.management.base import BaseCommand
@@ -226,6 +227,13 @@ class Command(BaseCommand):
         # Criando o path para a APP Core.
         self.path_core = os.path.join(self.BASE_DIR, "core")
 
+        import pdb
+        pdb.set_trace()
+
+        # Verificando o sistema operacional
+        sytem_operation = platform.system()
+
+        # TODO Verificar se tem o C:\ para tratar para Windows 
         # Obtém o nome do projeto
         self.project = os.getcwd().split("/")[-1:][0]
         self.project = self.project.replace("-", "").replace("_", "")
