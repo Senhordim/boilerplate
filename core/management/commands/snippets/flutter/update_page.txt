@@ -15,6 +15,7 @@ import '../model.dart';
 import '../controller.dart';
 import '../../../../utils/util.dart';
 import '../../../../utils/config.dart';
+import '../../../../utils/localization.dart';
 import '../../../../user_interface/font.dart';
 import '../../../../user_interface/widget.dart';
 import '../../../../utils/process.controller.dart';

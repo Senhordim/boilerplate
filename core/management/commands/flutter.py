@@ -635,8 +635,8 @@ class Command(BaseCommand):
                 self.__replace_main()
                 time.sleep(3)
                 # Executando o build_mox
-                # self.__message("Gerando os arquivos controller.g.dart do MobX")
-                # self.__build_mobx()
+                self.__message("Gerando os arquivos controller.g.dart do MobX")
+                self.__build_mobx()
         except Exception as error:
             self.__message(
                 f"Erro ao executar o __build_flutter: {error}", error=True)
@@ -703,7 +703,7 @@ class Command(BaseCommand):
             content = content.replace(
                 "$project$", self.flutter_project.lower())
 
-            with open(__indexpage_file, 'w') as page:
+            with open(__indexpage_file, 'w', encoding='utf-8') as page:
                 page.write(content)
 
         except Exception as error:
@@ -734,7 +734,7 @@ class Command(BaseCommand):
                 "$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
             content = content.replace("$project$", self.flutter_project)
 
-            with open(__listpage_file, 'w') as page:
+            with open(__listpage_file, 'w', encoding='utf-8') as page:
                 page.write(content)
 
         except Exception as error:
@@ -926,7 +926,7 @@ class Command(BaseCommand):
             content = content.replace(
                 "$GetValuesControllers$", get_controllers_data)
 
-            with open(__createpage_file, 'w') as page:
+            with open(__createpage_file, 'w', encoding='utf-8') as page:
                 page.write(content)
 
         except Exception as error:
@@ -959,7 +959,7 @@ class Command(BaseCommand):
             content = content.replace("$ModelClass$", app.model_name)
             content = content.replace("$project$", self.flutter_project)
 
-            with open(__detailpage_file, 'w') as page:
+            with open(__detailpage_file, 'w', encoding='utf-8') as page:
                 page.write(content)
 
         except Exception as error:
@@ -1018,7 +1018,7 @@ class Command(BaseCommand):
             content = content.replace("$App$", app.app_name_lower)
             content = content.replace("$project$", self.flutter_project)
 
-            with open(__data_file, 'w') as data_helper:
+            with open(__data_file, 'w', encoding='utf-8') as data_helper:
                 data_helper.write(content)
 
         except Exception as error:
@@ -1040,7 +1040,7 @@ class Command(BaseCommand):
                     os.path.join(self.path_core,
                                  "management/commands/snippets/flutter/http_request_dio.txt"))
             content = content.replace("$project$", self.flutter_project)
-            with open(__dio_file, 'w') as http_request:
+            with open(__dio_file, 'w', encoding='utf-8') as http_request:
                 http_request.write(content)
         except Exception as error:
             self.__message(f"Ocorreu um erro ao criar o Dio Request {error}")
@@ -1064,8 +1064,8 @@ class Command(BaseCommand):
             # Recuperando o snnipet do controller
             content = self.__get_snippet(f"{self.snippet_dir}controller.txt")
             content = content.replace("$ModelClass$", app.model_name)
-            content = content.replace(
-                "$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
+            content = content.replace("$ModelClassCamelCase$",
+                                      self.__to_camel_case(app.model_name, True))
 
             # Verifiando se o arquivo existe
             if not self.__check_file(__controller_file):
@@ -1073,7 +1073,7 @@ class Command(BaseCommand):
                 os.makedirs(__controller_file)
 
             # Escrevendo no arquivo
-            with open(__controller_file, 'w') as controller_file:
+            with open(__controller_file, 'w', encoding='utf-8') as controller_file:
                 controller_file.write(content)
 
         except Exception as error:
@@ -1112,7 +1112,7 @@ class Command(BaseCommand):
                 os.makedirs(__service_file)
 
             # Abrindo o arquivo para escrever
-            with open(__service_file, 'w') as service_file:
+            with open(__service_file, 'w', encoding='utf-8') as service_file:
                 # Escrevendo o conteúdo no arquivo e fechando o arquivo
                 service_file.write(content)
 
@@ -1223,7 +1223,7 @@ class Command(BaseCommand):
                 os.makedirs(__model_file)
 
             # Abrindo o arquivo para escrever
-            with open(__model_file, 'w') as model_file:
+            with open(__model_file, 'w', encoding='utf-8') as model_file:
                 # Escrevendo o conteúdo no arquivo e fechando o arquivo
                 model_file.write(content)
 
@@ -1766,8 +1766,8 @@ class Command(BaseCommand):
                 self.current_app_model = AppModel(self.flutter_project, __app)
                 # Gerar as apps.
                 self.__create_source_from_generators()
-            # # Chamando o build_mobx para as apps
-            # self.__build_mobx()
+            # Chamando o build_mobx para as apps
+            self.__build_mobx()
 
     def __clear_project(self, path=None):
         try:

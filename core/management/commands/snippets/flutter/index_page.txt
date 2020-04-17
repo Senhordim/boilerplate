@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 
 import '../model.dart';
 import '../controller.dart';
+import '../../../../utils/localization.dart';
 import '../../../../utils/process.controller.dart';
 
 class $ModelClass$IndexPage extends StatefulWidget {
