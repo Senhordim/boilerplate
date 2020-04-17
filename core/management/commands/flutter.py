@@ -57,7 +57,7 @@ class AppModel:
                                     x.__name__.strip().lower()) for x in self.app.get_models())
 
                 # Verificando o sistema operacional
-                # O retorno pode ser Windows ou Linux
+                # O retorno pode ser windows ou linux
                 self.operation_system = platform.system().lower()
 
             except Exception as error:
@@ -70,15 +70,10 @@ class AppModel:
                 String -- Caminho do diretório da app no projeto Flutter
             """
             try:
-                if self.operation_system == 'windows':
-                    return "{}\\lib\\apps\\{}".format(
-                        self.path_flutter, self.app_name_lower)
-                else:
-                    return "{}/lib/apps/{}".format(
-                        self.path_flutter, self.app_name_lower)
+                return Path("{}/lib/apps/{}".format(
+                    self.path_flutter, self.app_name_lower))
             except Exception as error:
-                print(error)
-                return None
+                self.__message(f"Erro no get_path_app_dir: {e}", error=True)
 
         def get_path_app_model_dir(self):
             """Método para retornar o path do model no projeto Flutter
@@ -87,17 +82,12 @@ class AppModel:
                 String -- Caminho do diretório do model no projeto Flutter
             """
             try:
-                if self.operation_system == 'windows':
-                    return "{}\\lib/apps/{}/{}".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
-                else:
-                    return "{}/lib/apps/{}/{}".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
+                return Path("{}/lib/apps/{}/{}".format(
+                    self.path_flutter, self.app_name_lower,
+                    self.model_name_lower))
             except Exception as error:
-                print(error)
-                return None
+                self.__message(
+                    f"Erro no get_path_app_model_dir {e}", error=True)
 
         def get_path_pages_dir(self):
             """Método para retornar o path do diretório pages
@@ -106,17 +96,11 @@ class AppModel:
                 String -- Caminho do diretório pages no projeto Flutter
             """
             try:
-                if self.operation_system == 'windows':
-                    return "{}\\lib\\apps\\{}\\{}\\pages\\".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
-                else:
-                    return "{}/lib/apps/{}/{}/pages/".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
+                return Path("{}/lib/apps/{}/{}/pages/".format(
+                    self.path_flutter, self.app_name_lower,
+                    self.model_name_lower))
             except Exception as error:
-                print(error)
-                return None
+                self.__message(f"Erro no get_path_pages_dir {e}", error=True)
 
         def get_path_files_pages(self):
             """Método para retornar os arquivos das páginas no projeto Flutter
@@ -125,71 +109,44 @@ class AppModel:
                 String's -- Caminho de cada arquivo das páginas na create, detail, index, list e update
             """
             try:
-                if self.operation_system == "windows":
-                    __create = "{}\\lib\\apps\\{}\\{}\\pages\\create.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
-                    __detail = "{}\\lib\\apps\\{}\\{}\\pages\\detail.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
-                    __index = "{}\\lib\\apps\\{}\\{}\\pages\\index.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
-                    __list = "{}\\lib\\apps\\{}\\{}\\pages\\list.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
-                    __update = "{}\\lib\\apps\\{}\\{}\\pages\\update.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
-                else:
-                    __create = "{}/lib/apps/{}/{}/pages/create.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
-                    __detail = "{}/lib/apps/{}/{}/pages/detail.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
-                    __index = "{}/lib/apps/{}/{}/pages/index.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
-                    __list = "{}/lib/apps/{}/{}/pages/list.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
-                    __update = "{}/lib/apps/{}/{}/pages/update.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
+                __create = Path("{}/lib/apps/{}/{}/pages/create.dart".format(
+                    self.path_flutter, self.app_name_lower,
+                    self.model_name_lower))
+                __detail = Path("{}/lib/apps/{}/{}/pages/detail.dart".format(
+                    self.path_flutter, self.app_name_lower,
+                    self.model_name_lower))
+                __index = Path("{}/lib/apps/{}/{}/pages/index.dart".format(
+                    self.path_flutter, self.app_name_lower,
+                    self.model_name_lower))
+                __list = Path("{}/lib/apps/{}/{}/pages/list.dart".format(
+                    self.path_flutter, self.app_name_lower,
+                    self.model_name_lower))
+                __update = Path("{}/lib/apps/{}/{}/pages/update.dart".format(
+                    self.path_flutter, self.app_name_lower,
+                    self.model_name_lower))
 
                 return __create, __detail, __index, __list, __update
             except Exception as error:
-                print(error)
-                return None
+                self.__message(
+                    f"Erro no get_path_files_pages: {e}", error=True)
 
         def get_path_data_file(self):
+            """Método para recuperar o caminho do arquivo data.dart
+            """
             try:
-                if self.operation_system == 'windows':
-                    return "{}\\lib\\apps\\{}\\{}\\data.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
-                else:
-                    return "{}/lib/apps/{}/{}/data.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
+                return Path("{}/lib/apps/{}/{}/data.dart".format(
+                    self.path_flutter, self.app_name_lower,
+                    self.model_name_lower))
             except Exception as error:
-                print(error)
-                return None
+                self.__message(f"Erro no get_path_data_file: {e}", error=True)
 
         def get_path_model_file(self):
             try:
-                if self.operation_system == 'windows':
-                    return "{}\\lib\\apps\\{}\\{}\\model.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
-                else:
-                    return "{}/lib/apps/{}/{}/model.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
+                return Path("{}/lib/apps/{}/{}/model.dart".format(
+                    self.path_flutter, self.app_name_lower,
+                    self.model_name_lower))
             except Exception as error:
-                print(error)
-                return None
+                self.__message(f"Erro no get_path_model_file {e}", error=True)
 
         def get_path_controller_file(self):
             """Método responsável por retornar o caminho para o arquivo controller.dart
