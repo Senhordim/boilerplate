@@ -62,6 +62,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
       autorun((_) {
         if (_processController.success == true) {
           _showMessage(_processController.message);
+          _hideKeyboard(context);
         } else if (_processController.success == false) {
           _showMessage(AppLocalizations.of(context).translate("label_generic_error"), 
           error: true);
@@ -199,7 +200,7 @@ $AttributesData$
   }
 
   /// Método para mostrar/ocultar a barra de mensagem para o usuário
-  ///    Params:
+  ///    Parameters:
   ///      message -> String contendo a mensagem a ser mostrada.
   ///      error -> bool para determinar se a mensagem é de erro ou não.
   _showMessage(String message, {bool error = false}) {
@@ -210,5 +211,12 @@ $AttributesData$
             : customErrorSnackbar(message),
         );
     });
+  }
+
+  /// Método para ocultar o teclado após o usuário clicar no botão de Salvar
+  ///    Parameters:
+  ///        context -> BuildContext
+  _hideKeyboard(BuildContext context){
+    FocusScope.of(context).requestFocus(FocusNode());
   }
 }

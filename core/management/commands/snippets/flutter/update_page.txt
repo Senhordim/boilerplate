@@ -62,6 +62,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
       autorun((_) {
         if (_processController.success == true) {
           _showMessage(_processController.message);
+          _hideKeyboard(context);
         } else if (_processController.success == false) {
           _showMessage("Ocorreu um erro.", error: true);
         }
@@ -174,7 +175,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
                 setState(() {
                     // Recuperando os dados do formulário e atribuindo à instância da classe
 $AttributesData$
-                    _post();
+                    _put();
                 });
               }
             },
@@ -188,7 +189,7 @@ void _clearForm(){
     $ClearData$
   }
 
-  void _post() async {
+  void _put() async {
     // Método para enviar a requisição de inserção de dados para a API
     try{
       // Recuperando os valores do controller
@@ -214,5 +215,12 @@ void _clearForm(){
             : customErrorSnackbar(message),
       );
     });
+  }
+  
+  /// Método para ocultar o teclado após o usuário clicar no botão de Salvar
+  ///    Parameters:
+  ///        context -> BuildContext
+  _hideKeyboard(BuildContext context){
+    FocusScope.of(context).requestFocus(FocusNode());
   }
 }

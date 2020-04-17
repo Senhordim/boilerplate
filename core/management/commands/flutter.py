@@ -543,7 +543,7 @@ class Command(BaseCommand):
         """
         try:
             if self.__check_file(path):
-                with open(path) as arquivo:
+                with open(path, encoding='utf-8') as arquivo:
                     content = arquivo.read()
                     return "#FileLocked" in content
         except Exception as error:
@@ -648,7 +648,7 @@ class Command(BaseCommand):
         """
         try:
             # Recuperando o arquivo a ser editado
-            __indexpage_file = f"{app.get_path_pages_dir()}index.dart"
+            __indexpage_file = Path(f"{app.get_path_pages_dir()}/index.dart")
 
             # Verificando se o arquivo está travado para parser
             if self.__check_file_is_locked(__indexpage_file):
@@ -677,7 +677,7 @@ class Command(BaseCommand):
         """
         try:
             # Recuperando o arquivo a ser editado
-            __listpage_file = f"{app.get_path_pages_dir()}list.dart"
+            __listpage_file = Path(f"{app.get_path_pages_dir()}/list.dart")
 
             # Verificando se o arquivo está travado para parser
             if self.__check_file_is_locked(__listpage_file):
@@ -805,7 +805,8 @@ class Command(BaseCommand):
         try:
             if createpage is True:
                 # Recuperando o arquivo da página de criação
-                __createpage_file = f"{app.get_path_pages_dir()}create.dart"
+                __createpage_file = Path(
+                    f"{app.get_path_pages_dir()}/create.dart")
                 content = self.__get_snippet(
                     f"{self.snippet_dir}create_page.txt")
 
@@ -814,7 +815,8 @@ class Command(BaseCommand):
                     return
             else:
                 # Recuperando o arquivo da página de edição
-                __createpage_file = f"{app.get_path_pages_dir()}update.dart"
+                __createpage_file = Path(
+                    f"{app.get_path_pages_dir()}/update.dart")
                 content = self.__get_snippet(
                     f"{self.snippet_dir}update_page.txt")
 
@@ -900,7 +902,7 @@ class Command(BaseCommand):
         """
         try:
             # Recuperando o arquivo a ser editado
-            __detailpage_file = f"{app.get_path_pages_dir()}detail.dart"
+            __detailpage_file = Path(f"{app.get_path_pages_dir()}/detail.dart")
 
             # Verificando se o arquivo está travado para parser
             if self.__check_file_is_locked(__detailpage_file):
@@ -1311,7 +1313,7 @@ class Command(BaseCommand):
                     __config_snippet = __config_snippet.replace(
                         "$DjangoAPIPath$", API_PATH)
                     with open(self.config_file, "w", encoding='utf-8') as config:
-                        config.write(snippet)
+                        config.write(__config_snippet )
 
             # Verificando se o arquivo já existe
             if self.__check_file(self.util_file) is False:
