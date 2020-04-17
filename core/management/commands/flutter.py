@@ -1332,28 +1332,52 @@ class Command(BaseCommand):
             if not self.__check_dir(self.utils_dir):
                 os.makedirs(self.utils_dir)
 
-            if self.__check_file_is_locked(self.config_file) is False:
-                # Acessando o snippet do arquivo de configuração
-                snippet = self.__get_snippet(f"{self.snippet_dir}config.txt")
-                snippet = snippet.replace("$AppName$", SYSTEM_NAME)
-                snippet = snippet.replace("$DjangoAPIPath$", API_PATH)
-                with open(self.config_file, "w", encoding='utf-8') as config:
-                    config.write(snippet)
+            __config_snippet = self.__get_snippet(
+                f"{self.snippet_dir}config.txt")
 
-            # Verificando se o arquivo está travado para parser
-            if self.__check_file_is_locked(self.process_controller_file) is False:
-                # Acessando o snippet do arquivo de funções auxiliares
-                snippet = self.__get_snippet(f"{self.snippet_dir}util.txt")
+            __util_snippet = self.__get_snippet(f"{self.snippet_dir}util.txt")
+
+            __controller_snippet = self.__get_snippet(
+                f"{self.snippet_dir}process_controller.txt")
+
+            # Verificando se os arquivos já existem
+            if self.__check_file(self.config_file) is False:
+                __config_snippet = __config_snippet.replace(
+                    "$AppName$", SYSTEM_NAME)
+                __config_snippet = __config_snippet.replace(
+                    "$DjangoAPIPath$", API_PATH)
+                with open(self.config_file, "w", encoding='utf-8') as config:
+                    config.write(__config_snippet)
+            else:
+                if self.__check_file_is_locked(self.config_file) is False:
+                    # Acessando o snippet do arquivo de configuração
+                    __config_snippet = __config_snippet.replace(
+                        "$AppName$", SYSTEM_NAME)
+                    __config_snippet = __config_snippet.replace(
+                        "$DjangoAPIPath$", API_PATH)
+                    with open(self.config_file, "w", encoding='utf-8') as config:
+                        config.write(snippet)
+
+            # Verificando se o arquivo já existe
+            if self.__check_file(self.util_file) is False:
                 with open(self.util_file, "w", encoding='utf-8') as config:
-                    config.write(snippet)
+                    config.write(__util_snippet)
+            else:
+                # Verificando se o arquivo está travado para parser
+                if self.__check_file_is_locked(self.util_file) is False:
+                    # Acessando o snippet do arquivo de funções auxiliares
+                    with open(self.util_file, "w", encoding='utf-8') as config:
+                        config.write(__util_snippet)
 
             # Criando o controller de gerenciamento do processamento
             # Verificando se o arquivo está travado para parser
-            if self.__check_file_is_locked(self.process_controller_file) is False:
-                snippet = self.__get_snippet(
-                    f"{self.snippet_dir}process_controller.txt")
+            if self.__check_file(self.process_controller_file) is False:
                 with open(self.process_controller_file, "w", encoding='utf-8') as process_controller:
-                    process_controller.write(snippet)
+                    process_controller.write(__controller_snippet)
+            else:
+                if self.__check_file_is_locked(self.process_controller_file) is False:
+                    with open(self.process_controller_file, "w", encoding='utf-8') as process_controller:
+                        process_controller.write(__controller_snippet)
 
         except Exception as error:
             self.__message(
