@@ -5,6 +5,7 @@ import time
 import platform
 import traceback
 import subprocess
+from pathlib import Path
 from django.apps import apps
 from django.core.management.base import BaseCommand
 
@@ -1374,13 +1375,19 @@ class Command(BaseCommand):
 
             # Criando os subdiretórios do user_interface
             for arquivo in ['widget', 'font']:
-                arquivo_dart = f"{self.ui_dir}{arquivo}.dart"
-                # Verificando se o arquivo está destravado para parser
-                if self.__check_file_is_locked(arquivo_dart) is False:
-                    snippet = self.__get_snippet(
-                        f"{self.snippet_dir}ui_{arquivo}.txt")
-                    with open(arquivo_dart, "w", encoding='utf-8') as arq:
-                        arq.write(snippet)
+                # Verificando se o arquivo existe
+                __path = Path(f"{self.ui_dir}{arquivo}.dart")
+                __snippet = self.__get_snippet(
+                    Path(f"{self.snippet_dir}ui_{ arquivo}.txt"))
+                if self.__check_file(__path) is False:
+                    # Criando o arquivo
+                    with open(__path, "w", encoding='utf-8') as arq:
+                        arq.write(__snippet)
+                else:
+                    # Verificando se o arquivo está destravado para parser
+                    if self.__check_file_is_locked(__path) is False:
+                        with open(__path, "w", encoding='utf-8') as arq:
+                            arq.write(__snippet)
 
         except Exception as error:
             self.__message(
@@ -1538,7 +1545,6 @@ class Command(BaseCommand):
     """
 
     def __localization_app(self):
-        from pathlib import Path
         try:
             # Acessando o snippet do localizations
             snippet = self.__get_snippet(
