@@ -526,7 +526,7 @@ class Command(BaseCommand):
 
         try:
             if os.path.isfile(path):
-                with open(path, encoding="utf8") as arquivo:
+                with open(path, encoding='utf-8') as arquivo:
                     return arquivo.read()
         except Exception as e:
             self.__message(f"Erro no get_snippet {e}", error=True)
@@ -622,16 +622,11 @@ class Command(BaseCommand):
                 self.__message("Atualizando o arquivo de dependências.")
                 self.__add_packages()
                 time.sleep(3)
-                if self.operation_system == 'windows':
-                    # TODO Verificar como executar o caminho no Windows
-                    __cmd_get_packages = "cd {}; flutter pub get;".format(
-                        self.flutter_dir, self.project)
-                    subprocess.call(__cmd_get_packages.split(), shell=True)
-                else:
-                    __cmd_get_packages = "cd {}; flutter pub get; cd ../{}".format(
-                        self.flutter_dir, self.project)
-                    subprocess.call(__cmd_get_packages, shell=True)
-                # os.system(__cmd_get_packages)
+
+                current_path = os.getcwd()
+                os.chdir(self.flutter_dir)
+                subprocess.run("flutter pub get", shell=True)
+                os.chdir(current_path)
                 time.sleep(3)
 
                 # Executando o main
@@ -639,8 +634,8 @@ class Command(BaseCommand):
                 self.__replace_main()
                 time.sleep(3)
                 # Executando o build_mox
-                self.__message("Gerando os arquivos controller.g.dart do MobX")
-                self.__build_mobx()
+                # self.__message("Gerando os arquivos controller.g.dart do MobX")
+                # self.__build_mobx()
         except Exception as error:
             self.__message(
                 f"Erro ao executar o __build_flutter: {error}", error=True)
@@ -1251,15 +1246,12 @@ class Command(BaseCommand):
             # no diretório do projeto Flutter
             # Verifica se o projeto já foi criado
             if self.__check_dir(self.flutter_dir):
-                if self.operation_system == 'windows':
-                    pass
-                    # __command = "cd {};flutter pub run build_runner build; cd ..\\..\\Django\\{}".format(
-                    #     self.flutter_dir, self.project)
-                else:
-                    __command = "cd {};flutter pub run build_runner build; cd ../{}".format(
-                        self.flutter_dir, self.project)
-                    subprocess.call(__command, shell=True)
-                # os.system(__command)
+                current_path = os.getcwd()
+                os.chdir(self.flutter_dir)
+                subprocess.run(
+                    "flutter pub run build_runner build", shell=True)
+                os.chdir(current_path)
+                time.sleep(3)
         except Exception as error:
             self.__message(
                 f"Erro ao realizar o parser do model: {error}", error=True)
@@ -1279,11 +1271,11 @@ class Command(BaseCommand):
                     f"{self.snippet_dir}settings_controller.txt")
 
                 # Abrindo o arquivo da página para escrever
-                with open(self.app_configuration_page_file, 'w') as arquivo:
+                with open(self.app_configuration_page_file, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(_content_page)
 
                 # Abrindo o arquivo da página para escrever
-                with open(self.app_configuration_controller_file, 'w') as arquivo:
+                with open(self.app_configuration_controller_file, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(_content_controller)
 
         except Exception as error:
@@ -1318,7 +1310,7 @@ class Command(BaseCommand):
             snippet = snippet.replace("$AppPackage$", self.project.lower())
             snippet = snippet.replace("$AppDescription$",
                                       f"Projeto Flutter do sistema Django {self.project}")
-            with open(__path, 'w') as yaml_file:
+            with open(__path, 'w', encoding='utf-8') as yaml_file:
                 yaml_file.write(snippet)
 
         except Exception as error:
@@ -1344,14 +1336,14 @@ class Command(BaseCommand):
                 snippet = self.__get_snippet(f"{self.snippet_dir}config.txt")
                 snippet = snippet.replace("$AppName$", SYSTEM_NAME)
                 snippet = snippet.replace("$DjangoAPIPath$", API_PATH)
-                with open(self.config_file, "w") as config:
+                with open(self.config_file, "w", encoding='utf-8') as config:
                     config.write(snippet)
 
             # Verificando se o arquivo está travado para parser
             if self.__check_file_is_locked(self.process_controller_file) is False:
                 # Acessando o snippet do arquivo de funções auxiliares
                 snippet = self.__get_snippet(f"{self.snippet_dir}util.txt")
-                with open(self.util_file, "w") as config:
+                with open(self.util_file, "w", encoding='utf-8') as config:
                     config.write(snippet)
 
             # Criando o controller de gerenciamento do processamento
@@ -1359,7 +1351,7 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(self.process_controller_file) is False:
                 snippet = self.__get_snippet(
                     f"{self.snippet_dir}process_controller.txt")
-                with open(self.process_controller_file, "w") as process_controller:
+                with open(self.process_controller_file, "w", encoding='utf-8') as process_controller:
                     process_controller.write(snippet)
 
         except Exception as error:
@@ -1387,7 +1379,7 @@ class Command(BaseCommand):
                 if self.__check_file_is_locked(arquivo_dart) is False:
                     snippet = self.__get_snippet(
                         f"{self.snippet_dir}ui_{arquivo}.txt")
-                    with open(arquivo_dart, "w") as arq:
+                    with open(arquivo_dart, "w", encoding='utf-8') as arq:
                         arq.write(snippet)
 
         except Exception as error:
@@ -1466,44 +1458,44 @@ class Command(BaseCommand):
 
                 # Criando os arquivos dart das páginas
                 if __pages is not None:
-                    with open(__pages[0], 'w') as pagina:
+                    with open(__pages[0], 'w', encoding='utf-8') as pagina:
                         pagina.write(
                             f"// Create Page {__app_name} {__model_name}")
 
-                    with open(__pages[1], 'w') as pagina:
+                    with open(__pages[1], 'w', encoding='utf-8') as pagina:
                         pagina.write(
                             f"// Detail Page {__app_name} {__model_name}")
 
-                    with open(__pages[2], 'w') as pagina:
+                    with open(__pages[2], 'w', encoding='utf-8') as pagina:
                         pagina.write(
                             f"// Index Page {__app_name} {__model_name}")
 
-                    with open(__pages[3], 'w') as pagina:
+                    with open(__pages[3], 'w', encoding='utf-8') as pagina:
                         pagina.write(
                             f"// List Page {__app_name} {__model_name}")
 
-                    with open(__pages[4], 'w') as pagina:
+                    with open(__pages[4], 'w', encoding='utf-8') as pagina:
                         pagina.write(
                             f"// Update Page {__app_name} {__model_name}")
 
             # Verificando se o arquivo model.dart já existe
             if not self.__check_file(__model_file):
-                with open(__model_file, 'w') as arquivo:
+                with open(__model_file, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(f"// Modelo do {__model_name}")
 
             # Verificando se o arquivo data.dart já existe
             if not self.__check_file(__data_file):
-                with open(__data_file, 'w') as arquivo:
+                with open(__data_file, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(f"// Persistência do {__model_name}")
 
             # Verificando se o arquivo service.dart já existe
             if not self.__check_file(__service_file):
-                with open(__service_file, 'w') as arquivo:
+                with open(__service_file, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(f"// Service do {__model_name}")
 
             # Verificando se o arquivo controller.dart já existe
             if not self.__check_file(__controller_file):
-                with open(__controller_file, 'w') as arquivo:
+                with open(__controller_file, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(f"// Controller do {__model_name}")
 
             # Área do parser
@@ -1546,6 +1538,7 @@ class Command(BaseCommand):
     """
 
     def __localization_app(self):
+        from pathlib import Path
         try:
             # Acessando o snippet do localizations
             snippet = self.__get_snippet(
@@ -1560,13 +1553,14 @@ class Command(BaseCommand):
                 return
 
             # Gravando no arquivo
-            with open(path_localization, 'w') as localizations:
+            with open(path_localization, 'w', encoding='utf-8') as localizations:
                 localizations.write(snippet)
 
             # Adicionando os arquivos de pt.json e en.json no diretório lang
             #
             # Recuperando o caminho do diretório
-            __lang_dir = os.path.join(self.flutter_dir, 'lang')
+            __lang_dir = Path(f"{self.flutter_dir}/lang/")
+
             # Verificando se existe o diretório
             if not self.__check_dir(__lang_dir):
                 # Criando o diretório
@@ -1577,14 +1571,14 @@ class Command(BaseCommand):
                 snippet = self.__get_snippet(
                     f"{self.snippet_dir}pt_language.txt")
                 # Criando os arquivos JSON
-                with open(f"{__lang_dir}pt.json", 'w') as pt_json:
+                with open(f"{__lang_dir}pt.json", 'w', encoding='utf-8') as pt_json:
                     pt_json.write(snippet)
 
             # Verificando se o arquivo do idioma en_us existe.
             if not self.__check_file(f"{__lang_dir}en.json"):
                 snippet = self.__get_snippet(
                     f"{self.snippet_dir}en_language.txt")
-                with open(f"{__lang_dir}en.json", 'w') as en_json:
+                with open(f"{__lang_dir}en.json", 'w', encoding='utf-8') as en_json:
                     en_json.write(snippet)
 
         except Exception as error:
@@ -1640,7 +1634,7 @@ class Command(BaseCommand):
             snippet = snippet.replace('$ListPages$', __pages)
 
             # Alterando o conteúdo do arquivo main.dart original
-            with open(path_maindart, 'w') as main_dart:
+            with open(path_maindart, 'w', encoding='utf-8') as main_dart:
                 main_dart.write(snippet)
 
         except Exception as error:
@@ -1740,8 +1734,8 @@ class Command(BaseCommand):
                 self.current_app_model = AppModel(self.flutter_project, __app)
                 # Gerar as apps.
                 self.__create_source_from_generators()
-            # Chamando o build_mobx para as apps
-            self.__build_mobx()
+            # # Chamando o build_mobx para as apps
+            # self.__build_mobx()
 
     def __clear_project(self, path=None):
         try:
