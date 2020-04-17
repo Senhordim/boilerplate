@@ -13,7 +13,9 @@ import '../model.dart';
 import '../controller.dart';
 import '../../../../utils/util.dart';
 import '../../../../utils/config.dart';
+import '../../../../utils/localization.dart';
 import '../../../../user_interface/font.dart';
+import '../../../../utils/process.controller.dart';
 
 
 class $ModelClass$DetailPage extends StatefulWidget {
@@ -26,17 +28,28 @@ class $ModelClass$DetailPage extends StatefulWidget {
   _$ModelClass$DetailPageState createState() => _$ModelClass$DetailPageState();
 }
 
-class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage> {
-  // Instânciando o controller via get_it
+class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage> 
+  with SingleTickerProviderStateMixin{
+  // Instanciando uma chave para controle do estado do Scaffold
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  
+  // Instanciando o controller de processamento
+  ProcessController _processController = GetIt.I.get<ProcessController>();
+
+  // Instanciando um controller para Animações
+  AnimationController _animationController;
+
+  // Instanciando o controller via get_it
   $ModelClass$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClass$Controller>();
 
+  // Instanciando o model
   $ModelClass$Model _$Model$ = $ModelClass$Model();
-
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
+    // Iniciando o AnimationController
+    _animationController = AnimationController(vsync: this);
 
     _$Model$ = widget.$Model$;
   }

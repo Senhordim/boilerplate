@@ -6,20 +6,30 @@
 /// FileLocked
 
 import 'utils/config.dart';
+import 'utils/localization.dart';
 import 'user_interface/font.dart';
 import 'user_interface/widget.dart';
+import 'utils/process.controller.dart';
+
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 $ImportPages$
 $ImportController$
+
+// Variável para controlar o idioma padrão da App
+String currentLanguage = "";
 
 void main() {
     /// Criando uma instância do Get_it para trabalhar
     /// com injeção de dependência
     GetIt getIt = GetIt.instance;
+
+    // Registrando o controller do ProcessController
+    getIt.registerSingleton<ProcessController>(ProcessController());
 
     /// Registrando os controllers dos Models utiliznado o getIt
     $RegisterControllers$
@@ -41,6 +51,36 @@ class MyApp extends StatelessWidget {
             ? CustomTheme.lightTheme
             : CustomTheme.darkTheme,
         home: MyHomePage(title: '${Config.app_title}'),
+        /// Área para internacionalização
+        // Configurando quais idiomas serão suportados, por padrão pt_BR e en_US
+        supportedLocales: [
+          Locale('en', 'US'),
+          Locale('pt', 'BR'),
+        ],
+        // These delegates make sure that the localization data for the proper language is loaded
+        localizationsDelegates: [
+          // A class which loads the translations from JSON files
+          AppLocalizations.delegate,
+          // Built-in localization of basic text for Material widgets
+          GlobalMaterialLocalizations.delegate,
+          // Built-in localization for text direction LTR/RTL
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        // Returns a locale which will be used by the app
+        localeResolutionCallback: (locale, supportedLocales) {
+          // Check if the current device locale is supported
+          for (var supportedLocale in supportedLocales) {
+            if (supportedLocale.languageCode == locale.languageCode &&
+                supportedLocale.countryCode == locale.countryCode) {
+              currentLanguage = supportedLocale.toString();
+              return supportedLocale;
+            }
+          }
+          // If the locale of the device is not supported, use the first one
+          // from the list (English, in this case).
+          return supportedLocales.first;
+        },
+        /// fim da área de internacionalização
         debugShowCheckedModeBanner: false,
       );
     });
@@ -55,7 +95,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-/// Caso deseje ativar a navegação pela barra inferior BottomNavigationBar deve-se setar a 
+/// Caso deseje ativar a pela barra inferior BottomNavigationBar deve-se setar a 
 /// variável [bottomNavigationEnable], depois criar as páginas que serão invocadas quando o usuário
 /// clicar nos elementos e vinculas à lista de páginas disponíveis conforme exemplo  seguir
 /// 
@@ -72,33 +112,33 @@ class _MyHomePageState extends State<MyHomePage> {
   // Declarando o booleano que controla se será mostrado o ButtonNavigationBar
   bool bottomNavigationEnable = false;
 
-    // Declarando o PageController para navegação pelo ButtonNavigationBar
+    // Declarando o PageController para pelo ButtonNavigationBar
   PageController _pageController;
 
   // Declarando o inteiro para controlar qual página deve ser exibida
   int _page = 0;
 
   // Declarando a lista de Widgets que devem conter as páginas no caso de ser configurada
-  // navegação por meu do bottomNavigationBar
+  // por meu do bottomNavigationBar
   List<Widget> _pages;
 
-  /// Declarando o Widget da página atual para o caso de ser configurado a navegação 
+  /// Declarando o Widget da página atual para o caso de ser configurado a 
   /// por meio do ButtonNavigationBar
   Widget _currentPage;
 
-  /// Sobrescrevendo o initState para caso seja configurada a navegação 
+  /// Sobrescrevendo o initState para caso seja configurada a 
   /// pelo ButtonNavigationBar sejam instânciadas as variáveis de controle
-  /// da navegação.
+  /// da 
   @override
   void initState(){
-    /// Iniciando a lista de Widgets com as páginas da navegação via ButtonNavigationBar
+    /// Iniciando a lista de Widgets com as páginas da via ButtonNavigationBar
     // _pages = [];
     // _currentPage = _pages[_page];
   }
 
   @override
   Widget build(BuildContext context) {
-    // Verificando se a navegação será pelo navigationButton
+    // Verificando se a será pelo navigationButton
       return Scaffold(
         appBar: AppBar(
           title: customAppBarTitle(
@@ -223,7 +263,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  /// Método para controlar a navegação das páginas
+  /// Método para controlar a das páginas
   /// conforme o clique nos elementos do ButtonNavigationBar
   _navigationTapped(int page) {
     setState((){
