@@ -132,6 +132,9 @@ class AppModel:
 
         def get_path_data_file(self):
             """Método para recuperar o caminho do arquivo data.dart
+
+            Returns:
+                String -- Caminho do arquivo data.dart
             """
             try:
                 return Path("{}/lib/apps/{}/{}/data.dart".format(
@@ -141,6 +144,11 @@ class AppModel:
                 self.__message(f"Erro no get_path_data_file: {e}", error=True)
 
         def get_path_model_file(self):
+            """Método para recuperar o caminho do arquivo model.dart
+
+            Returns:
+                String -- Caminho do arquivo model.dart
+            """
             try:
                 return Path("{}/lib/apps/{}/{}/model.dart".format(
                     self.path_flutter, self.app_name_lower,
@@ -149,38 +157,33 @@ class AppModel:
                 self.__message(f"Erro no get_path_model_file {e}", error=True)
 
         def get_path_controller_file(self):
-            """Método responsável por retornar o caminho para o arquivo controller.dart
+            """Método para recuperar o caminho para o arquivo controller.dart
             da app
 
             Returns:
                 String -- Caminho do arquivo controller.dart
             """
             try:
-                if self.operation_system == 'windows':
-                    return "{}\\lib\\apps\\{}\\{}\\controller.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
-                else:
-                    return "{}/lib/apps/{}/{}/controller.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
+                return Path("{}/lib/apps/{}/{}/controller.dart".format(
+                    self.path_flutter, self.app_name_lower,
+                    self.model_name_lower))
             except expression as identifier:
-                print(error)
-                return None
+                self.__message(
+                    f"Erro no get_path_controller_file {e}", error=True)
 
         def get_path_service_file(self):
+            """Método para recuperar o caminho do arquivo service.dart
+
+            Returns:
+                String -- Caminho do arquivo service.dart
+            """
             try:
-                if self.operation_system == 'windows':
-                    return "{}\\lib\\apps\\{}\\{}\\service.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
-                else:
-                    return "{}/lib/apps/{}/{}/service.dart".format(
-                        self.path_flutter, self.app_name_lower,
-                        self.model_name_lower)
+                return Path("{}/lib/apps/{}/{}/service.dart".format(
+                    self.path_flutter, self.app_name_lower,
+                    self.model_name_lower))
             except Exception as error:
-                print(error)
-                return None
+                self.__message(
+                    f"Erro no get_path_service_file {e}", error=True)
 
         def print_string(self):
             """Método para imprimir o object
@@ -635,8 +638,7 @@ class Command(BaseCommand):
 
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro no Mapping All Application: {error}")
-            return None, None
+                f"Ocorreu um erro no Mapping All Application: {error}", error=True)
 
     def __indexpage_parser(self, app):
         """Método para criar a página index do Model
@@ -986,21 +988,17 @@ class Command(BaseCommand):
         """Método para criar a classe auxiliar de acesso HTTP
         """
         try:
-            if self.operation_system == 'windows':
-                __dio_file = f"{self.flutter_dir}\\lib\\utils\\http_dio_request.dart"
-                content = self.__get_snippet(
-                    os.path.join(self.path_core,
-                                 "management\\commands\\snippets\\flutter\\http_request_dio.txt"))
-            else:
-                __dio_file = f"{self.flutter_dir}/lib/utils/http_dio_request.dart"
-                content = self.__get_snippet(
-                    os.path.join(self.path_core,
-                                 "management/commands/snippets/flutter/http_request_dio.txt"))
+            __dio_file = Path(
+                f"{self.flutter_dir}/lib/utils/http_dio_request.dart")
+            __dio_snippet = Path(
+                f"{self.snippet_dir}/http_request_dio.txt")
+            content = self.__get_snippet(__dio_snippet)
             content = content.replace("$project$", self.flutter_project)
             with open(__dio_file, 'w', encoding='utf-8') as http_request:
                 http_request.write(content)
         except Exception as error:
-            self.__message(f"Ocorreu um erro ao criar o Dio Request {error}")
+            self.__message(
+                f"Ocorreu um erro ao criar o Dio Request {error}", error=True)
 
     def __controller_parser(self, app):
         """Método responsável por criar o arquivo controller do Model
@@ -1212,7 +1210,7 @@ class Command(BaseCommand):
                 time.sleep(3)
         except Exception as error:
             self.__message(
-                f"Erro ao realizar o parser do model: {error}", error=True)
+                f"Erro ao realizar o build mobx: {error}", error=True)
 
     def __build_settings_controller(self):
         """
@@ -1238,7 +1236,7 @@ class Command(BaseCommand):
 
         except Exception as error:
             self.__message(
-                f"Erro ao realizar o parser do model: {error}", error=True)
+                f"Erro ao executar o __build_settings_controller: {error}", error=True)
 
     """
     #################################################################
@@ -1591,13 +1589,7 @@ class Command(BaseCommand):
             # Acessando o snippet do arquivo
             snippet = self.__get_snippet(f"{self.snippet_dir}main.txt")
 
-            # Verificando o SO
-            if self.operation_system == 'windows':
-                path_maindart = os.path.join(
-                    self.flutter_dir, 'lib\\main.dart')
-            else:
-                # Recuperando o caminho do arquivo main.dart no projeto Flutter
-                path_maindart = os.path.join(self.flutter_dir, 'lib/main.dart')
+            path_maindart = Path(f"{self.flutter_dir}/lib/main.dart")
 
             # Verificando se o arquivo está travado para parser
             if self.__check_file_is_locked(path_maindart):
