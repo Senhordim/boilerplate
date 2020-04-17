@@ -1558,8 +1558,10 @@ class Command(BaseCommand):
 
             # Adicionando os arquivos de pt.json e en.json no diretório lang
             #
-            # Recuperando o caminho do diretório
-            __lang_dir = Path(f"{self.flutter_dir}/lang/")
+            # Recuperando o caminho do diretório e dos arquivos
+            __lang_dir = Path(f"{self.flutter_dir}/lang")
+            __pt_br = Path(f"{self.flutter_dir}/lang/pt.json")
+            __en_us = Path(f"{self.flutter_dir}/lang/en.json")
 
             # Verificando se existe o diretório
             if not self.__check_dir(__lang_dir):
@@ -1567,18 +1569,18 @@ class Command(BaseCommand):
                 os.makedirs(__lang_dir)
 
             # Verificando se o arquivo do idioma pt_br exiate
-            if not self.__check_file(f"{__lang_dir}pt.json"):
+            if not self.__check_file(__pt_br):
                 snippet = self.__get_snippet(
                     f"{self.snippet_dir}pt_language.txt")
                 # Criando os arquivos JSON
-                with open(f"{__lang_dir}pt.json", 'w', encoding='utf-8') as pt_json:
+                with open(__pt_br, 'w', encoding='utf-8') as pt_json:
                     pt_json.write(snippet)
 
             # Verificando se o arquivo do idioma en_us existe.
-            if not self.__check_file(f"{__lang_dir}en.json"):
+            if not self.__check_file(__en_us):
                 snippet = self.__get_snippet(
                     f"{self.snippet_dir}en_language.txt")
-                with open(f"{__lang_dir}en.json", 'w', encoding='utf-8') as en_json:
+                with open(__en_us, 'w', encoding='utf-8') as en_json:
                     en_json.write(snippet)
 
         except Exception as error:
