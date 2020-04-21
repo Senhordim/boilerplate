@@ -1406,8 +1406,8 @@ class Command(BaseCommand):
                 try:
                     list_view = '{}:{}-list'.format(self.app_lower,
                                                     self.model_lower)
-                    fields_display = resolve(reverse(list_view)
-                                             ).func.view_class.list_display
+                    fields_display = resolve(
+                        reverse(list_view)).func.view_class.list_display
                     thead = ''
                     tline = ''
                     for item in fields_display:
@@ -1421,11 +1421,16 @@ class Command(BaseCommand):
                                 item.replace('__', '.'))
                     list_template = Path(
                         f"{self.path_template_dir}/{self.model_lower}_list.html")
-                    with fileinput.FileInput(list_template, inplace=True) as arquivo:
-                        for line in arquivo:
-                            print(line.replace(
-                                "<!--REPLACE_THEAD-->",
-                                thead), end='')
+
+                    # Recuperando o conteúdo o arquivo
+                    list_template_content = self._get_snippet(list_template)
+                    # Realizando o replace da TAG pelo conteúdo
+                    list_template_content = list_template_content.replace(
+                        "<!--REPLACE_THEAD-->", thead)
+                    # Abrindo o arquivo para alterar o conteúdo
+                    with open(list_template, 'w', encoding='utf-8') as list_file:
+                        list_file.write(list_template_content)
+
                     with fileinput.FileInput(list_template, inplace=True) as arquivo:
                         for line in arquivo:
                             print(line.replace(
