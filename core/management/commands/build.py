@@ -117,7 +117,7 @@ class Command(BaseCommand):
                 return apps.get_app_config(app_name.lower()).verbose_name.title() or app_name
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar _get_verbose_name o :{e}", error=True)
+                f"Ocorreu um erro ao executar _get_verbose_name o :{error}", error=True)
             return model_name.title()
 
     def _contain_number(self, text):
@@ -138,9 +138,9 @@ class Command(BaseCommand):
 
         try:
             return os.path.getsize(path)
-        except Exception as e:
+        except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o _get_size:{e}", error=True)
+                f"Ocorreu um erro ao executar o _get_size:{error}", error=True)
             return False
 
     def _check_dir(self, path):
@@ -155,9 +155,9 @@ class Command(BaseCommand):
 
         try:
             return os.path.isdir(path)
-        except Exception as e:
+        except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o _check_dir :{e}", error=True)
+                f"Ocorreu um erro ao executar o _check_dir :{error}", error=True)
             return False
 
     def _check_file(self, path):
@@ -172,9 +172,9 @@ class Command(BaseCommand):
 
         try:
             return os.path.isfile(path)
-        except Exception as e:
+        except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o _check_file:{e}", error=True)
+                f"Ocorreu um erro ao executar o _check_file:{error}", error=True)
             return False
 
     def __message(self, message, error=False):
@@ -207,9 +207,9 @@ class Command(BaseCommand):
                     content = arquivo.read()
                     return text_check in content
             self.__message("Arquivo não encontrado para análise.")
-        except Exception as e:
+        except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o _check_content :{e}", error=True)
+                f"Ocorreu um erro ao executar o _check_content :{error}", error=True)
             return False
 
     def _get_snippet(self, path):
@@ -228,9 +228,9 @@ class Command(BaseCommand):
                 with open(path) as arquivo:
                     return arquivo.read()
             self.__message("Arquivo não encontrado para captura.")
-        except Exception as e:
+        except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o _get_snippet :{e}", error=True)
+                f"Ocorreu um erro ao executar o _get_snippet :{error}", error=True)
             return None
 
     def _get_model(self):
@@ -242,9 +242,9 @@ class Command(BaseCommand):
         """
         try:
             return apps.get_model(self.app, self.model)
-        except:
+        except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o _get_model :{e}", error=True)
+                f"Ocorreu um erro ao executar o _get_model :{error}", error=True)
             return None
 
     def _apply_pep(self):
@@ -296,7 +296,7 @@ class Command(BaseCommand):
         try:
             self.__message(
                 "Trabalhando na configuração do template inicial da APP")
-            path = os.path.join(self.path_template_dir, "index.html")
+            path = Path(f"{self.path_template_dir}/index.html")
             if self._check_file(path):
                 self.__message("A app informada já possue o template inicial.")
                 return
@@ -312,7 +312,7 @@ class Command(BaseCommand):
                 template.write(content)
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o _manage_index_template :{e}", error=True)
+                f"Ocorreu um erro ao executar o _manage_index_template :{error}", error=True)
 
     def _manage_detail_template(self):
         """Método para criar o template de Detail do model.
@@ -322,7 +322,7 @@ class Command(BaseCommand):
             self.__message(
                 "Trabalhando na configuração do template de Detalhamento.")
             path = Path(
-                f"{self.path_template_dir}{self.model_lower}_detail.html")
+                f"{self.path_template_dir}/{self.model_lower}_detail.html")
             # Verificando se já existe o template
             if self._check_file(path):
                 self.__message(
@@ -341,7 +341,7 @@ class Command(BaseCommand):
                 template.write(content)
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o detail_template: {e}", error=True)
+                f"Ocorreu um erro ao executar o detail_template: {error}", error=True)
 
     def _manage_list_template(self):
         """Método para criar o template de List do model.
@@ -350,7 +350,7 @@ class Command(BaseCommand):
             self.__message(
                 "Trabalhando na configuração do template de Edição.")
             path = Path(
-                f"{self.path_template_dir}{self.model_lower}_list.html")
+                f"{self.path_template_dir}/{self.model_lower}_list.html")
             # Verificando se já existe o template
             if self._check_file(path):
                 self.__message(
@@ -371,7 +371,7 @@ class Command(BaseCommand):
 
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o list_template :{e}", error=True)
+                f"Ocorreu um erro ao executar o list_template :{error}", error=True)
 
     def _manage_update_template(self):
         """Método para criar o template de Update do model.
@@ -380,7 +380,7 @@ class Command(BaseCommand):
             self.__message(
                 "Trabalhando na configuração do template de Edição.")
             path = Path(
-                f"{self.path_template_dir}{self.model_lower}_update.html")
+                f"{self.path_template_dir}/{self.model_lower}_update.html")
             # Verificando se já existe o template
             if self._check_file(path):
                 self.__message(
@@ -403,7 +403,7 @@ class Command(BaseCommand):
 
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o update_template :{e}", error=True)
+                f"Ocorreu um erro ao executar o update_template :{error}", error=True)
 
     def _manage_create_template(self):
         """Método para criar o template de Create do model.
@@ -412,7 +412,7 @@ class Command(BaseCommand):
             self.__message(
                 "Trabalhando na configuração do template de Criação.")
             path = Path(
-                f"{self.path_template_dir}{self.model_lower}_create.html")
+                f"{self.path_template_dir}/{self.model_lower}_create.html")
             # Verificando se já existe o template
             if self._check_file(path):
                 self.__message(
@@ -431,7 +431,7 @@ class Command(BaseCommand):
 
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o create_template :{e}", error=True)
+                f"Ocorreu um erro ao executar o create_template :{error}", error=True)
 
     def _manage_delete_template(self):
         """Método para criar o template de Delete do model.
@@ -460,7 +460,7 @@ class Command(BaseCommand):
 
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o delete_template :{e}", error=True)
+                f"Ocorreu um erro ao executar o delete_template :{error}", error=True)
 
     def _manage_templates(self):
         """Método pai para controlar a criação do templates
@@ -471,7 +471,7 @@ class Command(BaseCommand):
             if self._check_dir(self.path_template_dir) is False:
                 self.__message("Criando o diretório dos Templates")
                 os.makedirs(self.path_template_dir)
-            # Chamando método de criação do template Index da App
+            # Chamando método de criação do template Index da Ap
             self._manage_index_template()
             # Chamando método de criação do template de detalhe.
             self._manage_detail_template()
@@ -485,7 +485,7 @@ class Command(BaseCommand):
             self._manage_update_template()
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o manage_template :{e}", error=True)
+                f"Ocorreu um erro ao executar o manage_template :{error}", error=True)
 
     """
     #################################################################
@@ -620,7 +620,7 @@ class Command(BaseCommand):
                     views.write(content_urls)
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o manage_api_url :{e}", error=True)
+                f"Ocorreu um erro ao executar o manage_api_url {error}", error=True)
 
     def _manage_api_view(self):
         """Método para configuração das Views da API
@@ -727,16 +727,14 @@ class Command(BaseCommand):
             with open(self.path_views, 'a') as api_views:
                 api_views.write("\n")
                 api_views.write(content)
-        except Exception as e:
+        except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o manage_api_view :{e}", error=True)
+                f"Ocorreu um erro ao executar o manage_api_view :{error}", error=True)
 
     def _manage_serializer(self):
         """Método para configurar o serializer do model informado.
         """
         try:
-            import pdb
-            pdb.set_trace()
             self.__message(
                 "Trabalhando na configuração do Serializer do model {}".format(self.model))
             content = self._get_snippet(Path(
@@ -1252,14 +1250,14 @@ class Command(BaseCommand):
                 #####################################################
                 """
                 # Configurando para os campos do tipo readonly serem plain text
-                if readonly is not '':
+                if readonly != '':
                     tag_result = tag_result.replace(
                         "class='", "class='form-control-plaintext ")
                 # Adicionando a classe obrigatorio aos campos required
-                if required is not '':
+                if required != '':
                     tag_result += '\n<div class="invalid-feedback">Campo Obrigatorio.</div>'
                 # Adicionando o HelpText no campo
-                if helptext is not '':
+                if helptext != '':
                     tag_result += "\n<small class='form-text text-muted'>{}</small>\n".format(
                         helptext)
                 tag_result += "{{% if form.{0}.errors  %}}{{{{ form.{0}.errors  }}}}{{% endif %}}".format(
@@ -1299,12 +1297,11 @@ class Command(BaseCommand):
             for field in iter(__fields):
                 if str(field).split('.')[2] not in ('updated_on', 'created_on', 'deleted', 'enabled', 'id'):
                     html_tag += self._render_input(field)
-            if html_tag is not '':
+            if html_tag != '':
                 # Pegando os templates create e update do Model informado
                 for temp in ['create', 'update']:
-                    list_update_create = os.path.join(
-                        self.path_template_dir, "{}_{}.html".format(
-                            self.model_lower, temp))
+                    list_update_create = Path(
+                        f"{self.path_template_dir}/{self.model_lower}_{temp}.html")
                     # Adiciona os forms no arquivo
                     with fileinput.FileInput(list_update_create, inplace=True) as arquivo:
                         for line in arquivo:
@@ -1341,9 +1338,8 @@ class Command(BaseCommand):
                             thead += '<th>{}</th>\n'.format(field_name)
                             tline += '<td>{{{{ item.{} }}}}</td>\n'.format(
                                 item.replace('__', '.'))
-                    list_template = os.path.join(
-                        self.path_template_dir, "{}_list.html".format(
-                            self.model_lower))
+                    list_template = Path(
+                        f"{self.path_template_dir}/{self.model_lower}_list.html")
                     with fileinput.FileInput(list_template, inplace=True) as arquivo:
                         for line in arquivo:
                             print(line.replace(
@@ -1439,31 +1435,31 @@ class Command(BaseCommand):
             # Pegando o diretório absoluto atual do projeto.
             self.path_root = os.getcwd()
             # Criando o path para a APP informada.
-            self.path_app = os.path.join(self.path_root, app)
+            self.path_app = Path(f"{self.path_root}/{app}")
             # Criando o path para a APP Core.
-            self.path_core = os.path.join(self.BASE_DIR, "core")
+            self.path_core = Path(f"{self.BASE_DIR}/core")
             # Criando o path para os models baseado no App informada.
-            self.path_model = os.path.join(self.path_app, "models.py")
+            self.path_model = Path(f"{self.path_app}/models.py")
             # Criando o path para os forms baseado na App informada.
-            self.path_form = os.path.join(self.path_app, "forms.py")
+            self.path_form = Path(f"{self.path_app}/forms.py")
             # Criando o path para as views baseado na App informada.
-            self.path_views = os.path.join(self.path_app, "views.py")
+            self.path_views = Path(f"{self.path_app}/views.py")
             # Criando o path para as urls baseado na App informada.
-            self.path_urls = os.path.join(self.path_app, "urls.py")
+            self.path_urls = Path(f"{self.path_app}/urls.py")
             # Criando o path para os serializers baseado na App informada.
-            self.path_serializer = os.path.join(
-                self.path_app, "serializers.py")
+            self.path_serializer = Path(f"{self.path_app}/serializers.py")
             # Criando o path para o diretório dos templates baseado na App informada.
-            self.path_template_dir = os.path.join(
-                self.path_app, "templates", self.app)
+            self.path_template_dir = Path(
+                f"{self.path_app}/templates/{self.app}")
             # Criando o path para a APP informada.
-            self.path_app = os.path.join(self.path_root, app)
+            self.path_app = Path(f"{self.path_root}/{app}")
             # Convertendo os nomes para caracteres minúsculo.
             # para serem usado nos locais que necessitem dos nomes
             # em minúsculo.
             self.app_lower = app.lower()
             # Verificando se o diretório da App informada existe
             if self._check_dir(self.path_app) is False:
+                print(self.path_app)
                 self.__message("Diretório não encontrado.")
                 return
             # Verifica se app esta instalada, pois precisa dela
