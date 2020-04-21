@@ -212,6 +212,26 @@ class Command(BaseCommand):
                 f"Ocorreu um erro ao executar o _check_content :{error}", error=True)
             return False
 
+    def __check_file_is_locked(self, path):
+        """ Método para verificar se o arquivo está travado
+        evitando assim que seja parseado novamente
+
+        Arguments:
+            path {str} -- Caminho absoluto para o arquivo a ser analisado
+
+        Returns:
+            Boolean -- Verdadeiro se contiver a palavra #FileLocked
+        """
+        try:
+            if self.__check_file(path):
+                with open(path, encoding='utf-8') as arquivo:
+                    content = arquivo.read()
+                    return "#FileLocked" in content
+        except Exception as error:
+            self.__message(
+                f"Ocorreu erro ao verificar se o arquivo está travado: {error}", error=True)
+            return true
+
     def _get_snippet(self, path):
         """Método para recuperar o texto a ser utilizado na
         configuração do novo elemento
@@ -441,7 +461,7 @@ class Command(BaseCommand):
             self.__message(
                 "Trabalhando na configuração do template de Deleção.")
             path = Path(
-                f"{self.path_template_dir}{self.model_lower}_delete.html")
+                f"{self.path_template_dir}/{self.model_lower}_delete.html")
             # Verificando se já existe o template
             if self._check_file(path):
                 self.__message(

@@ -14,8 +14,9 @@ from nuvols.core.settings import FLUTTER_APPS, SYSTEM_NAME, API_PATH
 
 
 class AppModel:
-    """Classe auxiliar para gerar os dados a serem utilizados nos métodos
-
+    """Classe auxiliar para encapsular os métodos de acesso 
+    aos snippets e templates, bem como os método e funções recorrentes
+    
     Arguments:
         path_flutter {String} -- Path do projeto Flutter
         app_name {String} -- Nome da App a ser mapeada
@@ -550,6 +551,7 @@ class Command(BaseCommand):
             self.__message(
                 f"Ocorreu erro ao verificar se o arquivo está travado: {error}", error=True)
             return true
+
     """
     #################################################################
     Área para Criar o projeto Flutter

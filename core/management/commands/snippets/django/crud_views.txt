@@ -1,3 +1,9 @@
+""" Arquivo gerado automaticamente pelo Build.
+Caso queira travar esse arquivo para não ser mais gerado pelo build 
+adicione um a # no começo da palavra FileLocked. 
+
+Dessa forma evita que códigos desenvolvidos por você sejam perdidos.
+"""
 
 # Views do Models $ModelClass$
 class $ModelClass$ListView(BaseListView):
