@@ -2,10 +2,13 @@
 a criação dos templates customizados, das views, da APIRest e dos Forms.
 """
 
-import fileinput
 import os
 import time
+import platform
+import fileinput
 import traceback
+import subprocess
+from pathlib import Path
 from optparse import make_option
 
 # Pacote responsável por pegar a instância do models baseado no nome
@@ -112,6 +115,8 @@ class Command(BaseCommand):
             if app_name is not None and model_name is None:
                 return apps.get_app_config(app_name.lower()).verbose_name.title() or app_name
         except Exception as error:
+            self.__message(
+                f"Ocorreu um erro ao executar _get_verbose_name o :{e}", error=True)
             return model_name.title()
 
     def _contain_number(self, text):
@@ -133,7 +138,8 @@ class Command(BaseCommand):
         try:
             return os.path.getsize(path)
         except Exception as e:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
+            self.__message(
+                f"Ocorreu um erro ao executar o _get_size:{e}", error=True)
             return False
 
     def _check_dir(self, path):
@@ -149,7 +155,8 @@ class Command(BaseCommand):
         try:
             return os.path.isdir(path)
         except Exception as e:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
+            self.__message(
+                f"Ocorreu um erro ao executar o _check_dir :{e}", error=True)
             return False
 
     def _check_file(self, path):
@@ -165,17 +172,21 @@ class Command(BaseCommand):
         try:
             return os.path.isfile(path)
         except Exception as e:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
+            self.__message(
+                f"Ocorreu um erro ao executar o _check_file:{e}", error=True)
             return False
 
-    def _message(self, message):
+    def __message(self, message, error=False):
         """Método para retornar mensagems ao prompt(Terminal)
 
         Arguments:
             message {str} -- Mensagem a ser exibida
         """
-
-        self.stdout.write(self.style.SUCCESS(message))
+        if error:
+            self.stdout.write(self.style.ERROR(message))
+            sys.exit()
+        else:
+            self.stdout.write(self.style.SUCCESS(message))
 
     def _check_content(self, path, text_check):
         """Método para verificar se determinado texto existe 
@@ -196,7 +207,8 @@ class Command(BaseCommand):
                     return text_check in content
             self._message("Arquivo não encontrado para análise.")
         except Exception as e:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
+            self.__message(
+                f"Ocorreu um erro ao executar o _check_content :{e}", error=True)
             return False
 
     def _get_snippet(self, path):
@@ -216,7 +228,8 @@ class Command(BaseCommand):
                     return arquivo.read()
             self._message("Arquivo não encontrado para captura.")
         except Exception as e:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
+            self.__message(
+                f"Ocorreu um erro ao executar o _get_snippet :{e}", error=True)
             return None
 
     def _get_model(self):
@@ -229,9 +242,14 @@ class Command(BaseCommand):
         try:
             return apps.get_model(self.app, self.model)
         except:
+            self.__message(
+                f"Ocorreu um erro ao executar o _get_model :{e}", error=True)
             return None
 
     def _apply_pep(self):
+        """
+        Método para aplicar as configurações da Pep8 ao documento.
+        """
         try:
             # Aplicando a PEP8 as URLs
             os.system(
@@ -283,7 +301,7 @@ class Command(BaseCommand):
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._get_snippet(
-                os.path.join(self.path_core, "management/commands/snippets/django/indextemplate.txt"))
+                Path(f"{self.path_core}management/commands/snippets/django/indextemplate.txt"))
             _title = self._get_verbose_name(
                 app_name=self.app.lower())
             content = content.replace("$titlepage$", _title)
@@ -292,7 +310,8 @@ class Command(BaseCommand):
             with open(path, 'w') as template:
                 template.write(content)
         except Exception as error:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
+            self.__message(
+                f"Ocorreu um erro ao executar o _manage_index_template :{e}", error=True)
 
     def _manage_detail_template(self):
         """Método para criar o template de Detail do model.
@@ -301,8 +320,8 @@ class Command(BaseCommand):
         try:
             self._message(
                 "Trabalhando na configuração do template de Detalhamento.")
-            path = os.path.join(self.path_template_dir,
-                                "{}_detail.html".format(self.model_lower))
+            path = Path(
+                f"{self.path_template_dir}{self.model_lower}_detail.html")
             # Verificando se já existe o template
             if self._check_file(path):
                 self._message(
@@ -310,7 +329,7 @@ class Command(BaseCommand):
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._get_snippet(
-                os.path.join(self.path_core, "management/commands/snippets/django/detailtemplate.txt"))
+                Path(f"{self.path_core}management/commands/snippets/django/detailtemplate.txt"))
             _title = self._get_verbose_name(
                 app_name=self.app.lower())
             # Interpolando o conteúdo
@@ -320,23 +339,24 @@ class Command(BaseCommand):
             with open(path, 'w') as template:
                 template.write(content)
         except Exception as error:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
+            self.__message(
+                f"Ocorreu um erro ao executar o detail_template: {e}", error=True)
 
     def _manage_list_template(self):
         """Método para criar o template de List do model.
         """
         try:
             self._message("Trabalhando na configuração do template de Edição.")
-            path = os.path.join(self.path_template_dir,
-                                "{}_list.html".format(self.model_lower))
+            path = Path(
+                f"{self.path_template_dir}{self.model_lower}_list.html")
             # Verificando se já existe o template
             if self._check_file(path):
                 self._message(
                     "O model informado já possui o template de Listagem")
                 return
             # Pegando o conteúdo do snippet para criar o template
-            content = self._get_snippet(
-                os.path.join(self.path_core, "management/commands/snippets/django/listtemplate.txt"))
+            content = self._get_snippet(Path(
+                f"{self.path_core}management/commands/snippets/django/listtemplate.txt"))
             _title = self._get_verbose_name(
                 app_name=self.app.lower(), model_name=self.model_lower)
             # Interpolando o conteúdo
@@ -348,15 +368,16 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
+            self.__message(
+                f"Ocorreu um erro ao executar o list_template :{e}", error=True)
 
     def _manage_update_template(self):
         """Método para criar o template de Update do model.
         """
         try:
             self._message("Trabalhando na configuração do template de Edição.")
-            path = os.path.join(self.path_template_dir,
-                                "{}_update.html".format(self.model_lower))
+            path = Path(
+                f"{self.path_template_dir}{self.model_lower}_update.html")
             # Verificando se já existe o template
             if self._check_file(path):
                 self._message(
@@ -364,7 +385,9 @@ class Command(BaseCommand):
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._get_snippet(
-                os.path.join(self.path_core, "management/commands/snippets/django/updatetemplate.txt"))
+                Path(
+                    f"{self.path_core}management/commands/snippets/django/updatetemplate.txt")
+            )
             _title = self._get_verbose_name(
                 app_name=self.app.lower(), model_name=self.model_lower)
             # Interpolando o conteúdo
@@ -376,7 +399,8 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
+            self.__message(
+                f"Ocorreu um erro ao executar o update_template :{e}", error=True)
 
     def _manage_create_template(self):
         """Método para criar o template de Create do model.
@@ -384,8 +408,8 @@ class Command(BaseCommand):
         try:
             self._message(
                 "Trabalhando na configuração do template de Criação.")
-            path = os.path.join(self.path_template_dir,
-                                "{}_create.html".format(self.model_lower))
+            path = Path(
+                f"{self.path_template_dir}{self.model_lower}_create.html")
             # Verificando se já existe o template
             if self._check_file(path):
                 self._message(
@@ -393,7 +417,7 @@ class Command(BaseCommand):
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._get_snippet(
-                os.path.join(self.path_core, "management/commands/snippets/django/createtemplate.txt"))
+                Path(f"{self.path_core}management/commands/snippets/django/createtemplate.txt"))
             _title = self._get_verbose_name(
                 app_name=self.app.lower(), model_name=self.model_lower)
             # Interpolando o conteúdo
@@ -403,7 +427,8 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
+            self.__message(
+                f"Ocorreu um erro ao executar o create_template :{e}", error=True)
 
     def _manage_delete_template(self):
         """Método para criar o template de Delete do model.
@@ -412,8 +437,8 @@ class Command(BaseCommand):
         try:
             self._message(
                 "Trabalhando na configuração do template de Deleção.")
-            path = os.path.join(self.path_template_dir,
-                                "{}_delete.html".format(self.model_lower))
+            path = Path(
+                f"{self.path_template_dir}{self.model_lower}_delete.html")
             # Verificando se já existe o template
             if self._check_file(path):
                 self._message(
@@ -421,7 +446,9 @@ class Command(BaseCommand):
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._get_snippet(
-                os.path.join(self.path_core, "management/commands/snippets/django/deletetemplate.txt"))
+                Path(
+                    f"{self.path_core}management/commands/snippets/django/deletetemplate.txt")
+            )
             # Interpolando o conteúdo
             content = content.replace("$app_name$", self.app_lower)
             content = content.replace("$model_name$", self.model_lower)
@@ -429,7 +456,8 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
+            self.__message(
+                f"Ocorreu um erro ao executar o delete_template :{e}", error=True)
 
     def _manage_templates(self):
         """Método pai para controlar a criação do templates
@@ -453,7 +481,8 @@ class Command(BaseCommand):
             # Chamando método de criação do template de atualização.
             self._manage_update_template()
         except Exception as error:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
+            self.__message(
+                f"Ocorreu um erro ao executar o manage_template :{e}", error=True)
 
     """
     #################################################################
@@ -469,9 +498,11 @@ class Command(BaseCommand):
             self._message(
                 "Trabalhando na configuração das Urls API do model {}".format(self.model))
             content = self._get_snippet(
-                os.path.join(self.path_core, "management/commands/snippets/django/api_router.txt"))
+                Path(
+                    f"{self.path_core}management/commands/snippets/django/api_router.txt")
+            )
             content_urls = self._get_snippet(
-                os.path.join(self.path_core, "management/commands/snippets/django/api_router_urls.txt"))
+                Path(f"{self.path_core}management/commands/snippets/django/api_router_urls.txt"))
             # Interpolando o conteúdo
             content = content.replace("$ModelName$", self.model)
             content = content.replace("$app_name$", self.app_lower)
@@ -500,7 +531,7 @@ class Command(BaseCommand):
                             imports, imports + '\n' + content), end='')
 
             elif self._check_content(self.path_urls, "app_name = \'{}\'".format(self.app)):
-                    # Atualizando arquivo com o novo conteúdo
+                # Atualizando arquivo com o novo conteúdo
                 app_name_url = "app_name = \'{}\'".format(self.app_lower)
                 with fileinput.FileInput(self.path_urls, inplace=True) as arquivo:
                     for line in arquivo:
@@ -585,13 +616,8 @@ class Command(BaseCommand):
                     views.write("\n")
                     views.write(content_urls)
         except Exception as error:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
-        # finally:
-        #     # Aplicando a PEP8 ao arquivo
-        #     os.system(
-        #         'autopep8 --in-place --aggressive --aggressive {}'
-        #         .format(self.path_urls))
-        #     os.system('isort {}'.format(self.path_urls))
+            self.__message(
+                f"Ocorreu um erro ao executar o manage_api_url :{e}", error=True)
 
     def _manage_api_view(self):
         """Método para configuração das Views da API
@@ -599,10 +625,10 @@ class Command(BaseCommand):
         try:
             self._message(
                 "Trabalhando na configuração das Views da API do model {} ".format(self.model))
-            content = self._get_snippet(os.path.join(
-                self.path_core, "management/commands/snippets/django/api_view.txt"))
-            content_urls = self._get_snippet(os.path.join(
-                self.path_core, "management/commands/snippets/django/api_urls.txt"))
+            content = self._get_snippet(
+                Path(f"{self.path_core}management/commands/snippets/django/api_view.txt"))
+            content_urls = self._get_snippet(
+                Path(f"{self.path_core}management/commands/snippets/django/api_urls.txt"))
             # Interpolando os dados
             content = content.replace("$ModelName$", self.model)
             content_urls = content_urls.replace("$ModelName$", self.model)
@@ -699,13 +725,8 @@ class Command(BaseCommand):
                 api_views.write("\n")
                 api_views.write(content)
         except Exception as e:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
-        # finally:
-        #     # Aplicando a PEP8 ao arquivo
-        #     os.system(
-        #         'autopep8 --in-place --aggressive --aggressive {}'
-        #         .format(self.path_views))
-        #     os.system('isort {}'.format(self.path_views))
+            self.__message(
+                f"Ocorreu um erro ao executar o manage_api_view :{e}", error=True)
 
     def _manage_serializer(self):
         """Método para configurar o serializer do model informado.
@@ -713,10 +734,10 @@ class Command(BaseCommand):
         try:
             self._message(
                 "Trabalhando na configuração do Serializer do model {}".format(self.model))
-            content = self._get_snippet(os.path.join(
-                self.path_core, "management/commands/snippets/django/serializer.txt"))
-            content_urls = self._get_snippet(os.path.join(
-                self.path_core, "management/commands/snippets/django/serializer_urls.txt"))
+            content = self._get_snippet(Path(
+                f"{self.path_core}management/commands/snippets/django/serializer.txt"))
+            content_urls = self._get_snippet(
+                Path(f"{self.path_core}management/commands/snippets/django/serializer_urls.txt"))
             # Interpolando os dados
             content = content.replace("$ModelName$", self.model)
             content = content.replace("$ModelClass$", self.model)
@@ -771,13 +792,8 @@ class Command(BaseCommand):
                 urls.write("\n")
                 urls.write(content)
         except:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
-        # finally:
-        #     # Aplicando a PEP8 ao arquivo
-        #     os.system(
-        #         'autopep8 --in-place --aggressive --aggressive {}'
-        #         .format(self.path_serializer))
-        #     os.system('isort {}'.format(self.path_serializer))
+            self.__message(
+                f"Ocorreu um erro ao executar o manage_serializer :{e}", error=True)
 
     """
     #################################################################
@@ -791,11 +807,11 @@ class Command(BaseCommand):
         try:
             self._message(
                 "Trabalhando na configuração do Form do model {}".format(self.model))
-            content = self._get_snippet(os.path.join(
-                self.path_core, "management/commands/snippets/django/form.txt"))
+            content = self._get_snippet(
+                Path(f"{self.path_core}management/commands/snippets/django/form.txt"))
             # Recuperando o conteúdo do snippet das urls do form
-            content_urls = self._get_snippet(os.path.join(
-                self.path_core, "management/commands/snippets/django/form_urls.txt"))
+            content_urls = self._get_snippet(
+                Path(f"{self.path_core}management/commands/snippets/django/form_urls.txt"))
             # Interpolando os dados
             content = content.replace("$ModelClass$", self.model)
             content_urls = content_urls.replace("$ModelClass$", self.model)
@@ -852,12 +868,6 @@ class Command(BaseCommand):
         except:
             self._message(
                 "OCORREU UM ERRO, VERIFIQUE SE O ARQUIVO forms.py sofreu alguma alteração")
-        # finally:
-        #     # Aplicando a PEP8 ao arquivo
-        #     os.system(
-        #         'autopep8 --in-place --aggressive --aggressive {}'
-        #         .format(self.path_form))
-        #     os.system('isort {}'.format(self.path_form))
 
     """
     #################################################################
@@ -868,18 +878,18 @@ class Command(BaseCommand):
     def _manage_views(self):
         """Método para configurar as Views para o model informado.
         """
-        __snnipet_index_template = self._get_snippet(os.path.join(
-            self.path_core, "management/commands/snippets/django/index_view.txt"))
+        __snnipet_index_template = self._get_snippet(
+            Path(f"{self.path_core}management/commands/snippets/django/index_view.txt"))
 
         try:
             self._message(
                 "Trabalhando na configuração das Views do model {}".format(self.model))
             # Recuperando o conteúdo do snippet da view
-            content = self._get_snippet(os.path.join(
-                self.path_core, "management/commands/snippets/django/crud_views.txt"))
+            content = self._get_snippet(
+                Path(f"{self.path_core}management/commands/snippets/django/crud_views.txt"))
             # Recuperando o conteúdo do snippet das urls da view
-            content_urls = self._get_snippet(os.path.join(
-                self.path_core, "management/commands/snippets/django/crud_urls.txt"))
+            content_urls = self._get_snippet(
+                Path(f"{self.path_core}management/commands/snippets/django/crud_urls.txt"))
             # Interpolando os dados
             content = content.replace("$ModelClass$", self.model)
             content = content.replace("$app_name$", self.app_lower)
@@ -909,9 +919,7 @@ class Command(BaseCommand):
                             l=_model_field.lower(), u=_model_field, s=" "*8)
                     # Parser do form modal do update
                     modal_update = self._get_snippet(
-                        os.path.join(
-                            self.path_core,
-                            "management/commands/snippets/django/crud_form_modal.txt"))
+                        Path(f"{self.path_core}management/commands/snippets/django/crud_form_modal.txt"))
                     modal_update = modal_update.replace(
                         '$ModelClass$', "{}UpdateView".format(self.model))
                     modal_update = modal_update.replace(
@@ -921,9 +929,7 @@ class Command(BaseCommand):
 
                     # Parser do form modal do create
                     modal_create = self._get_snippet(
-                        os.path.join(
-                            self.path_core,
-                            "management/commands/snippets/django/crud_form_modal.txt"))
+                        Path(f"{self.path_core}management/commands/snippets/django/crud_form_modal.txt"))
                     modal_create = modal_create.replace(
                         '$ModelClass$', "{}CreateView".format(self.model))
                     modal_create = modal_create.replace(
@@ -934,7 +940,8 @@ class Command(BaseCommand):
                     content = content.replace('$FormsModalCreate$', "")
                     content = content.replace('$FormsModalUpdate$', "")
             except Exception as error:
-                self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
+                self.stdout.write(self.style.ERROR(
+                    traceback.format_exc().splitlines()))
 
             # Verificando se o models possui a configuração dos fields_display
             try:
@@ -945,7 +952,8 @@ class Command(BaseCommand):
                 else:
                     content = content.replace('$ListFields$', "")
             except Exception as error:
-                self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
+                self.stdout.write(self.style.ERROR(
+                    traceback.format_exc().splitlines()))
 
             # Verificando se já existe a views do Index da app
             if self._check_content(self.path_views, "{}IndexTemplateView".format(self.app.title())) is False:
@@ -1024,14 +1032,8 @@ class Command(BaseCommand):
                 views.write(content)
 
         except Exception as error:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
-        # finally:
-        #     # Aplicando a PEP8 ao arquivo
-        #     os.system(
-        #         'autopep8 --in-place --aggressive --aggressive {}'
-        #         .format(self.path_views))
-        #     os.system('isort {}'.format(self.path_views))
-
+            self.stdout.write(self.style.ERROR(
+                traceback.format_exc().splitlines()))
 
     """
     #################################################################
@@ -1046,10 +1048,10 @@ class Command(BaseCommand):
             self._message(
                 "Trabalhando na configuração das Urls do model {}".format(self.model))
             content = self._get_snippet(
-                os.path.join(self.path_core, "management/commands/snippets/django/url.txt"))
+                Path(f"{self.path_core}management/commands/snippets/django/url.txt"))
             # Recuperando o conteúdo do snippet das urls da view
-            content_urls = self._get_snippet(os.path.join(
-                self.path_core, "management/commands/snippets/django/url_imports.txt"))
+            content_urls = self._get_snippet(
+                Path(f"{self.path_core}management/commands/snippets/django/url_imports.txt"))
             # Interpolando os dados
             content = content.replace("$app_name$", self.app_lower)
             content = content.replace("$app_title$", self.app_lower.title())
@@ -1148,7 +1150,7 @@ class Command(BaseCommand):
 
         try:
             content = self._get_snippet(
-                os.path.join(self.path_core, "management/commands/snippets/django/modal_form.txt"))
+                Path(f"{self.path_core}management/commands/snippets/django/modal_form.txt"))
             # Interpolando o conteúdo
             content = content.replace("$ModelName$", model)
             content = content.replace("$app_name$", app)
@@ -1172,7 +1174,7 @@ class Command(BaseCommand):
                 'NOT_PROVIDED', 'NullBooleanField', 'ImageField',
                 'PositiveIntegerField', 'PositiveSmallIntegerField',
                 'SlugField', 'SmallIntegerField', 'TextField',
-                'TimeField', 'URLField', 'UUIDField', 'ForeignKey', 
+                'TimeField', 'URLField', 'UUIDField', 'ForeignKey',
                 'OneToOneField', 'ManyToManyField', 'OptimizedImageField'
             ]
             _model = self._get_model()
@@ -1262,7 +1264,9 @@ class Command(BaseCommand):
                 print('Campo {} desconhecido'.format(field))
 
         except Exception as error:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
+            self.stdout.write(self.style.ERROR(
+                traceback.format_exc().splitlines()))
+
     """
     #################################################################
     Área dos templates HTML
@@ -1303,7 +1307,7 @@ class Command(BaseCommand):
                                 html_tag).replace(
                                     "$url_back$", '{}:{}-list'.format(
                                         self.app_lower, self.model_lower
-                                    ) ), end='')
+                                    )), end='')
                     # Adiciona os modais das foreign keys
                     with fileinput.FileInput(list_update_create, inplace=True) as arquivo:
                         for line in arquivo:
@@ -1312,7 +1316,7 @@ class Command(BaseCommand):
                                 self.html_modals).replace(
                                     "$url_back$", '{}:{}-list'.format(
                                         self.app_lower, self.model_lower
-                                    ) ), end='')
+                                    )), end='')
 
                 # Parser do template list
                 try:
@@ -1347,7 +1351,8 @@ class Command(BaseCommand):
                 except:
                     pass
         except:
-            self.stdout.write(self.style.ERROR(traceback.format_exc().splitlines()))
+            self.stdout.write(self.style.ERROR(
+                traceback.format_exc().splitlines()))
 
     '''
     Função responsável por verificar as opções passadas por parametro 
