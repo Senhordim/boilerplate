@@ -44,6 +44,61 @@ class Command(BaseCommand):
     BASE_DIR = os.path.dirname(os.path.dirname(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
+    def __init__(self):
+        super().__init__()
+        # Pegando o diretório absoluto atual do projeto.
+        self.path_root = os.getcwd()
+
+        # Criando o path para a APP Core.
+        self.path_core = os.path.join(self.BASE_DIR, "core")
+
+        # Área para recuperar os Snippets para serem utilizados nos métodos
+        self._snippet_index_template = self._get_snippet(
+            Path(f"{self.path_core}/management/commands/snippets/django/index_view.txt"))
+
+        self._snippet_crud_view = self._get_snippet(
+                Path(f"{self.path_core}/management/commands/snippets/django/crud_views.txt"))
+
+        self._snippet_crud_urls = self._get_snippet(
+                Path(f"{self.path_core}/management/commands/snippets/django/crud_urls.txt"))
+
+        self._snippet_crud_modal_template = self._get_snippet(
+                        Path(f"{self.path_core}/management/commands/snippets/django/crud_form_modal.txt"))
+
+        self._snippet_url = self._get_snippet(
+                Path(f"{self.path_core}/management/commands/snippets/django/url.txt"))
+
+        self._snippet_urls_imports = self._get_snippet(
+                Path(f"{self.path_core}/management/commands/snippets/django/url_imports.txt"))
+
+        self._snippet_modal_foreign_key = self._get_snippet(
+                Path(f"{self.path_core}/management/commands/snippets/django/modal_form.txt"))
+
+        self._snippet_api_router = self._get_snippet(
+                Path(
+                    f"{self.path_core}/management/commands/snippets/django/api_router.txt"))
+
+        self._snippet_api_routers = self._get_snippet(
+                Path(f"{self.path_core}/management/commands/snippets/django/api_router_urls.txt"))
+
+        self._snippet_api_view = self._get_snippet(
+                Path(f"{self.path_core}/management/commands/snippets/django/api_view.txt"))
+
+        self._snippet_api_urls = self._get_snippet(
+                Path(f"{self.path_core}/management/commands/snippets/django/api_urls.txt"))
+
+        self._snippet_serializer = self._get_snippet(Path(
+                f"{self.path_core}/management/commands/snippets/django/serializer.txt"))
+
+        self._snippet_serializer_url = self._get_snippet(
+                Path(f"{self.path_core}/management/commands/snippets/django/serializer_urls.txt"))
+
+        self._snippet_form = self._get_snippet(
+                Path(f"{self.path_core}/management/commands/snippets/django/form.txt"))
+
+        self._snippet_form_url = self._get_snippet(
+                Path(f"{self.path_core}/management/commands/snippets/django/form_urls.txt"))
+
     def add_arguments(self, parser):
         """Método inicial para informar quais parâmetros serão aceitos
         """
@@ -123,7 +178,8 @@ class Command(BaseCommand):
     def _contain_number(self, text):
         try:
             return any(character.isdigit() for character in text)
-        except:
+        except Exception as error:
+            self.__message(f"Ocorreu o erro : {error}", error=True)
             return False
 
     def _get_size(self, path):
@@ -139,8 +195,7 @@ class Command(BaseCommand):
         try:
             return os.path.getsize(path)
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o _get_size:{error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
             return False
 
     def _check_dir(self, path):
@@ -156,8 +211,7 @@ class Command(BaseCommand):
         try:
             return os.path.isdir(path)
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o _check_dir :{error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
             return False
 
     def _check_file(self, path):
@@ -173,8 +227,7 @@ class Command(BaseCommand):
         try:
             return os.path.isfile(path)
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o _check_file:{error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
             return False
 
     def __message(self, message, error=False):
@@ -208,8 +261,7 @@ class Command(BaseCommand):
                     return text_check in content
             self.__message("Arquivo não encontrado para análise.")
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o _check_content :{error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
             return False
 
     def __check_file_is_locked(self, path):
@@ -223,14 +275,13 @@ class Command(BaseCommand):
             Boolean -- Verdadeiro se contiver a palavra #FileLocked
         """
         try:
-            if self.__check_file(path):
+            if self._check_file(path):
                 with open(path, encoding='utf-8') as arquivo:
                     content = arquivo.read()
                     return "#FileLocked" in content
         except Exception as error:
-            self.__message(
-                f"Ocorreu erro ao verificar se o arquivo está travado: {error}", error=True)
-            return true
+            self.__message(f"Ocorreu o erro : {error}", error=True)
+            return True
 
     def _get_snippet(self, path):
         """Método para recuperar o texto a ser utilizado na
@@ -249,8 +300,7 @@ class Command(BaseCommand):
                     return arquivo.read()
             self.__message("Arquivo não encontrado para captura.")
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o _get_snippet :{error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
             return None
 
     def _get_model(self):
@@ -263,8 +313,7 @@ class Command(BaseCommand):
         try:
             return apps.get_model(self.app, self.model)
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o _get_model :{error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
             return None
 
     def _apply_pep(self):
@@ -275,33 +324,37 @@ class Command(BaseCommand):
             # Aplicando a PEP8 as URLs
             os.system(
                 'autopep8 --in-place --aggressive --aggressive {}'
-                .format(self.path_urls))
+                    .format(self.path_urls))
             os.system('isort {}'.format(self.path_urls))
-        except:
+        except Exception as error:
+            self.__message(f"Ocorreu o erro : {error}", error=True)
             pass
         try:
             # Aplicando a PEP8 as Forms
             os.system(
                 'autopep8 --in-place --aggressive --aggressive {}'
-                .format(self.path_form))
+                    .format(self.path_form))
             os.system('isort {}'.format(self.path_form))
-        except:
+        except Exception as error:
+            self.__message(f"Ocorreu o erro : {error}", error=True)
             pass
         try:
             # Aplicando a PEP8 as Views
             os.system(
                 'autopep8 --in-place --aggressive --aggressive {}'
-                .format(self.path_views))
+                    .format(self.path_views))
             os.system('isort {}'.format(self.path_views))
-        except:
+        except Exception as error:
+            self.__message(f"Ocorreu o erro : {error}", error=True)
             pass
         try:
             # Aplicando a PEP8 as Views
             os.system(
                 'autopep8 --in-place --aggressive --aggressive {}'
-                .format(self.path_serializer))
+                    .format(self.path_serializer))
             os.system('isort {}'.format(self.path_serializer))
-        except:
+        except Exception as error:
+            self.__message(f"Ocorreu o erro : {error}", error=True)
             pass
 
     """
@@ -331,8 +384,7 @@ class Command(BaseCommand):
             with open(path, 'w') as template:
                 template.write(content)
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o _manage_index_template :{error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
 
     def _manage_detail_template(self):
         """Método para criar o template de Detail do model.
@@ -360,8 +412,7 @@ class Command(BaseCommand):
             with open(path, 'w') as template:
                 template.write(content)
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o detail_template: {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
 
     def _manage_list_template(self):
         """Método para criar o template de List do model.
@@ -390,8 +441,7 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o list_template :{error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
 
     def _manage_update_template(self):
         """Método para criar o template de Update do model.
@@ -422,8 +472,7 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o update_template :{error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
 
     def _manage_create_template(self):
         """Método para criar o template de Create do model.
@@ -450,8 +499,7 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o create_template :{error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
 
     def _manage_delete_template(self):
         """Método para criar o template de Delete do model.
@@ -479,8 +527,7 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o delete_template :{error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
 
     def _manage_templates(self):
         """Método pai para controlar a criação do templates
@@ -504,8 +551,7 @@ class Command(BaseCommand):
             # Chamando método de criação do template de atualização.
             self._manage_update_template()
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o manage_template :{error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
 
     """
     #################################################################
@@ -520,12 +566,9 @@ class Command(BaseCommand):
         try:
             self.__message(
                 "Trabalhando na configuração das Urls API do model {}".format(self.model))
-            content = self._get_snippet(
-                Path(
-                    f"{self.path_core}/management/commands/snippets/django/api_router.txt")
-            )
-            content_urls = self._get_snippet(
-                Path(f"{self.path_core}/management/commands/snippets/django/api_router_urls.txt"))
+            content = self._snippet_api_router
+            content_urls = self._snippet_api_routers
+
             # Interpolando o conteúdo
             content = content.replace("$ModelName$", self.model)
             content = content.replace("$app_name$", self.app_lower)
@@ -639,8 +682,7 @@ class Command(BaseCommand):
                     views.write("\n")
                     views.write(content_urls)
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o manage_api_url {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
 
     def _manage_api_view(self):
         """Método para configuração das Views da API
@@ -648,10 +690,9 @@ class Command(BaseCommand):
         try:
             self.__message(
                 "Trabalhando na configuração das Views da API do model {} ".format(self.model))
-            content = self._get_snippet(
-                Path(f"{self.path_core}/management/commands/snippets/django/api_view.txt"))
-            content_urls = self._get_snippet(
-                Path(f"{self.path_core}/management/commands/snippets/django/api_urls.txt"))
+            content = self._snippet_api_view
+
+            content_urls = self._snippet_api_urls
             # Interpolando os dados
             content = content.replace("$ModelName$", self.model)
             content_urls = content_urls.replace("$ModelName$", self.model)
@@ -748,8 +789,7 @@ class Command(BaseCommand):
                 api_views.write("\n")
                 api_views.write(content)
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o manage_api_view :{error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
 
     def _manage_serializer(self):
         """Método para configurar o serializer do model informado.
@@ -757,10 +797,8 @@ class Command(BaseCommand):
         try:
             self.__message(
                 "Trabalhando na configuração do Serializer do model {}".format(self.model))
-            content = self._get_snippet(Path(
-                f"{self.path_core}/management/commands/snippets/django/serializer.txt"))
-            content_urls = self._get_snippet(
-                Path(f"{self.path_core}/management/commands/snippets/django/serializer_urls.txt"))
+            content = self._snippet_serializer
+            content_urls = self._snippet_serializer_url
             # Interpolando os dados
             content = content.replace("$ModelName$", self.model)
             content = content.replace("$ModelClass$", self.model)
@@ -815,8 +853,7 @@ class Command(BaseCommand):
                 urls.write("\n")
                 urls.write(content)
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o manage_serializer :{error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
 
     """
     #################################################################
@@ -830,11 +867,9 @@ class Command(BaseCommand):
         try:
             self.__message(
                 "Trabalhando na configuração do Form do model {}".format(self.model))
-            content = self._get_snippet(
-                Path(f"{self.path_core}/management/commands/snippets/django/form.txt"))
+            content = self._snippet_form
             # Recuperando o conteúdo do snippet das urls do form
-            content_urls = self._get_snippet(
-                Path(f"{self.path_core}/management/commands/snippets/django/form_urls.txt"))
+            content_urls = self._snippet_form_url
             # Interpolando os dados
             content = content.replace("$ModelClass$", self.model)
             content_urls = content_urls.replace("$ModelClass$", self.model)
@@ -888,9 +923,8 @@ class Command(BaseCommand):
             with open(self.path_form, 'a') as form:
                 form.write("\n")
                 form.write(content)
-        except:
-            self.__message(
-                "OCORREU UM ERRO, VERIFIQUE SE O ARQUIVO forms.py sofreu alguma alteração")
+        except Exception as error:
+            self.__message(f"Ocorreu o erro : {error}", error=True)
 
     """
     #################################################################
@@ -901,18 +935,15 @@ class Command(BaseCommand):
     def _manage_views(self):
         """Método para configurar as Views para o model informado.
         """
-        __snnipet_index_template = self._get_snippet(
-            Path(f"{self.path_core}/management/commands/snippets/django/index_view.txt"))
-
         try:
+            __snnipet_index_template = self._snippet_index_template
             self.__message(
                 "Trabalhando na configuração das Views do model {}".format(self.model))
             # Recuperando o conteúdo do snippet da view
-            content = self._get_snippet(
-                Path(f"{self.path_core}/management/commands/snippets/django/crud_views.txt"))
+            content = self._snippet_crud_view
             # Recuperando o conteúdo do snippet das urls da view
-            content_urls = self._get_snippet(
-                Path(f"{self.path_core}/management/commands/snippets/django/crud_urls.txt"))
+            content_urls = self._snippet_crud_urls
+
             # Interpolando os dados
             content = content.replace("$ModelClass$", self.model)
             content = content.replace("$app_name$", self.app_lower)
@@ -939,10 +970,9 @@ class Command(BaseCommand):
                             _import_forms_modal += "\nfrom {}.forms import {}Form".format(
                                 _app_field, _model_field)
                         _forms += "{s}context['form_{l}'] = {u}Form\n".format(
-                            l=_model_field.lower(), u=_model_field, s=" "*8)
+                            l=_model_field.lower(), u=_model_field, s=" " * 8)
                     # Parser do form modal do update
-                    modal_update = self._get_snippet(
-                        Path(f"{self.path_core}/management/commands/snippets/django/crud_form_modal.txt"))
+                    modal_update = self._snippet_crud_modal_template
                     modal_update = modal_update.replace(
                         '$ModelClass$', "{}UpdateView".format(self.model))
                     modal_update = modal_update.replace(
@@ -951,8 +981,7 @@ class Command(BaseCommand):
                         '$FormsModalUpdate$', modal_update)
 
                     # Parser do form modal do create
-                    modal_create = self._get_snippet(
-                        Path(f"{self.path_core}/management/commands/snippets/django/crud_form_modal.txt"))
+                    modal_create = self._snippet_crud_modal_template
                     modal_create = modal_create.replace(
                         '$ModelClass$', "{}CreateView".format(self.model))
                     modal_create = modal_create.replace(
@@ -1055,8 +1084,7 @@ class Command(BaseCommand):
                 views.write(content)
 
         except Exception as error:
-            self.stdout.write(self.style.ERROR(
-                traceback.format_exc().splitlines()))
+            self.__message(f"Ocorreu o erro : {error}", error=True)
 
     """
     #################################################################
@@ -1070,11 +1098,11 @@ class Command(BaseCommand):
         try:
             self.__message(
                 "Trabalhando na configuração das Urls do model {}".format(self.model))
-            content = self._get_snippet(
-                Path(f"{self.path_core}/management/commands/snippets/django/url.txt"))
+            content = self._snippet_url
+
             # Recuperando o conteúdo do snippet das urls da view
-            content_urls = self._get_snippet(
-                Path(f"{self.path_core}/management/commands/snippets/django/url_imports.txt"))
+            content_urls = self._snippet_urls_imports
+
             # Interpolando os dados
             content = content.replace("$app_name$", self.app_lower)
             content = content.replace("$app_title$", self.app_lower.title())
@@ -1115,7 +1143,7 @@ class Command(BaseCommand):
                         models = line.split('import')[-1].rstrip()
                         # Pega o model que o usuário deseja
                         import_model = ', ' + \
-                            content_urls.split('import')[-1].rstrip()
+                                       content_urls.split('import')[-1].rstrip()
                         # Acrescenta o model no import dos models
                         models += import_model
                         # Cria linha com os importes antigos do model e com
@@ -1156,9 +1184,9 @@ class Command(BaseCommand):
             # Atualizando o conteúdo do arquivo.
             with open(self.path_urls, 'a') as urls:
                 urls.write(content)
-        except:
-            self.__message(
-                "OCORREU UM ERRO, VERIFIQUE SE O ARQUIVO urls.py sofreu alguma alteração")
+
+        except Exception as error:
+            self.__message(f"Ocorreu o erro : {error}", error=True)
 
     """
     #################################################################
@@ -1173,8 +1201,7 @@ class Command(BaseCommand):
         """
 
         try:
-            content = self._get_snippet(
-                Path(f"{self.path_core}/management/commands/snippets/django/modal_form.txt"))
+            content = self._snippet_modal_foreign_key
             # Interpolando o conteúdo
             content = content.replace("$ModelName$", model)
             content = content.replace("$app_name$", app)
@@ -1182,7 +1209,7 @@ class Command(BaseCommand):
             content = content.replace("$field_name$", field_name)
             return content
         except Exception as error:
-            self.__message(error)
+            self.__message(f"Ocorreu o erro : {error}", error=True)
 
     def _render_input(self, field):
         try:
@@ -1206,7 +1233,7 @@ class Command(BaseCommand):
             iten["app"], iten["model"], iten["name"] = str(field).split('.')
             iten["tipo"] = (str(
                 str(type(field)).split('.')[-1:])
-                .replace("[\"", "").replace("\'>\"]", ""))
+                            .replace("[\"", "").replace("\'>\"]", ""))
             # print("Campo: {} Tipo: {}".format(iten.get("name"), iten.get("tipo")))
             # Verificando se o tipo de campos está nos tipos conhecidos
             if iten["tipo"] in types:
@@ -1247,12 +1274,13 @@ class Command(BaseCommand):
                             _foreign_key_field = '\n<div class="input-group">'
                             _foreign_key_field += "{{{{ form.{} }}}}\n".format(
                                 iten['name'])
-                            _foreign_key_field += '{{% if form.{}.field.queryset.model|has_add_permission:request %}}<button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#form{}Modal">+</button>{{% endif %}}'\
+                            _foreign_key_field += '{{% if form.{}.field.queryset.model|has_add_permission:request %}}<button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#form{}Modal">+</button>{{% endif %}}' \
                                 .format(iten['name'], field.related_model._meta.object_name)
                             _foreign_key_field += '</div>'
                             # Cria o modal da foreign
                             self.html_modals += self._render_modal_foreign_key(
-                                field.related_model._meta.object_name, iten['app'], field.related_model._meta.model_name, iten['name'])
+                                field.related_model._meta.object_name, iten['app'],
+                                field.related_model._meta.model_name, iten['name'])
                     tag_result += _foreign_key_field
 
                 elif iten["tipo"] == 'BooleanField':
@@ -1288,8 +1316,7 @@ class Command(BaseCommand):
                 print('Campo {} desconhecido'.format(field))
 
         except Exception as error:
-            self.stdout.write(self.style.ERROR(
-                traceback.format_exc().splitlines()))
+            self.__message(f"Ocorreu o erro : {error}", error=True)
 
     """
     #################################################################
@@ -1328,18 +1355,18 @@ class Command(BaseCommand):
                             print(line.replace(
                                 "<!--REPLACE_PARSER_HTML-->",
                                 html_tag).replace(
-                                    "$url_back$", '{}:{}-list'.format(
-                                        self.app_lower, self.model_lower
-                                    )), end='')
+                                "$url_back$", '{}:{}-list'.format(
+                                    self.app_lower, self.model_lower
+                                )), end='')
                     # Adiciona os modais das foreign keys
                     with fileinput.FileInput(list_update_create, inplace=True) as arquivo:
                         for line in arquivo:
                             print(line.replace(
                                 "<!--REPLACE_MODAL_HTML-->",
                                 self.html_modals).replace(
-                                    "$url_back$", '{}:{}-list'.format(
-                                        self.app_lower, self.model_lower
-                                    )), end='')
+                                "$url_back$", '{}:{}-list'.format(
+                                    self.app_lower, self.model_lower
+                                )), end='')
 
                 # Parser do template list
                 try:
@@ -1370,11 +1397,11 @@ class Command(BaseCommand):
                             print(line.replace(
                                 "<!--REPLACE_TLINE-->",
                                 tline), end='')
-                except:
+                except Exception as error:
+                    self.__message(f"Ocorreu o erro : {error}", error=True)
                     pass
-        except:
-            self.stdout.write(self.style.ERROR(
-                traceback.format_exc().splitlines()))
+        except Exception as error:
+            self.__message(f"Ocorreu o erro : {error}", error=True)
 
     '''
     Função responsável por verificar as opções passadas por parametro 
@@ -1493,7 +1520,7 @@ class Command(BaseCommand):
             # Verificando se o usuário passou o nome do model
             if options['Model']:
                 model = options['Model'] or None
-                if (self._contain_number(model) is False):
+                if self._contain_number(model) is False:
                     # Removendo os espaços em branco
                     self.model = model.strip()
                     # Verificando se existe no models.py o Model informado
@@ -1512,9 +1539,8 @@ class Command(BaseCommand):
                     self.model_lower = model.lower()
                     self.call_methods(options)
                     self.__message("Processo concluído.")
-                except LookupError:
-                    self.__message(
-                        "Esse model é abastrato. Não vão ser gerados os arquivos.")
+                except LookupError as error:
+                    self.__message(f"Ocorreu o erro : {error}", error=True)
             else:
                 # recupera todos os models da app
                 for model in self.app_instance.get_models():

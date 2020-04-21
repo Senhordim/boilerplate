@@ -550,7 +550,7 @@ class Command(BaseCommand):
         except Exception as error:
             self.__message(
                 f"Ocorreu erro ao verificar se o arquivo está travado: {error}", error=True)
-            return true
+            return True
 
     """
     #################################################################
