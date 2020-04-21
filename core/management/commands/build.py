@@ -14,6 +14,7 @@ from optparse import make_option
 
 # Pacote responsável por pegar a instância do models baseado no nome
 from django.apps import apps
+from django.utils import encoding
 from django.utils.text import capfirst
 from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand, CommandError
@@ -274,7 +275,7 @@ class Command(BaseCommand):
 
         try:
             if self._check_file(path):
-                with open(path) as arquivo:
+                with open(path, 'r', encoding='utf-8') as arquivo:
                     content = arquivo.read()
                     return text_check in content
             self.__message("Arquivo não encontrado para análise.")
@@ -294,7 +295,7 @@ class Command(BaseCommand):
         """
         try:
             if self._check_file(path):
-                with open(path, encoding='utf-8') as arquivo:
+                with open(path, 'r', encoding='utf-8') as arquivo:
                     content = arquivo.read()
                     return "#FileLocked" in content
         except Exception as error:
@@ -314,7 +315,7 @@ class Command(BaseCommand):
 
         try:
             if self._check_file(path):
-                with open(path, encoding='utf-8') as arquivo:
+                with open(path, 'r', encoding='utf-8') as arquivo:
                     return arquivo.read()
             self.__message("Arquivo não encontrado para captura.", error=True)
         except Exception as error:
@@ -388,8 +389,10 @@ class Command(BaseCommand):
             self.__message(
                 "Trabalhando na configuração do template inicial da APP")
             path = Path(f"{self.path_template_dir}/index.html")
-            if self._check_file(path):
-                self.__message("A app informada já possue o template inicial.")
+            # Verificando se o arquivo está travado para novo parser
+            if self.__check_file_is_locked(path):
+                print(
+                    f"{'|'*100}\nArquivo {self.path_serializer} travado para parser\n{'|'*100}")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._snippet_index_template
@@ -398,7 +401,7 @@ class Command(BaseCommand):
             content = content.replace("$titlepage$", _title)
             content = content.replace("$title$", _title)
             content = content.replace("$app_name$", self.app_lower)
-            with open(path, 'w') as template:
+            with open(path, 'w', encoding='utf-8') as template:
                 template.write(content)
         except Exception as error:
             self.__message(f"Ocorreu o erro : {error}", error=True)
@@ -412,10 +415,10 @@ class Command(BaseCommand):
                 "Trabalhando na configuração do template de Detalhamento.")
             path = Path(
                 f"{self.path_template_dir}/{self.model_lower}_detail.html")
-            # Verificando se já existe o template
-            if self._check_file(path):
-                self.__message(
-                    "O model informado já possui o template de Detalhamento")
+            # Verificando se o arquivo está travado para novo parser
+            if self.__check_file_is_locked(path):
+                print(
+                    f"{'|'*100}\nArquivo {self.path_serializer} travado para parser\n{'|'*100}")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._snippet_detail_template
@@ -425,7 +428,7 @@ class Command(BaseCommand):
             content = content.replace("$title$", _title)
             content = content.replace("$model_name$", self.model_lower)
             content = content.replace("$app_name$", self.app_lower)
-            with open(path, 'w') as template:
+            with open(path, 'w', encoding='utf-8') as template:
                 template.write(content)
         except Exception as error:
             self.__message(f"Ocorreu o erro : {error}", error=True)
@@ -435,13 +438,13 @@ class Command(BaseCommand):
         """
         try:
             self.__message(
-                "Trabalhando na configuração do template de Edição.")
+                "Trabalhando na configuração do template de Listagem.")
             path = Path(
                 f"{self.path_template_dir}/{self.model_lower}_list.html")
-            # Verificando se já existe o template
-            if self._check_file(path):
-                self.__message(
-                    "O model informado já possui o template de Listagem")
+            # Verificando se o arquivo está travado para novo parser
+            if self.__check_file_is_locked(path):
+                print(
+                    f"{'|'*100}\nArquivo {self.path_serializer} travado para parser\n{'|'*100}")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._snippet_list_template
@@ -452,7 +455,7 @@ class Command(BaseCommand):
             content = content.replace("$label_count_item$", self.model)
             content = content.replace("$model_name$", self.model_lower)
             content = content.replace("$app_name$", self.app_lower)
-            with open(path, 'w') as template:
+            with open(path, 'w', encoding='utf-8') as template:
                 template.write(content)
 
         except Exception as error:
@@ -463,13 +466,13 @@ class Command(BaseCommand):
         """
         try:
             self.__message(
-                "Trabalhando na configuração do template de Edição.")
+                "Trabalhando na configuração do template de Atualização.")
             path = Path(
                 f"{self.path_template_dir}/{self.model_lower}_update.html")
-            # Verificando se já existe o template
-            if self._check_file(path):
-                self.__message(
-                    "O model informado já possui o template de Edição")
+            # Verificando se o arquivo está travado para novo parser
+            if self.__check_file_is_locked(path):
+                print(
+                    f"{'|'*100}\nArquivo {self.path_serializer} travado para parser\n{'|'*100}")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._snippet_update_template
@@ -480,7 +483,7 @@ class Command(BaseCommand):
             content = content.replace("$app_name$", self.app_lower)
             content = content.replace("$model_name$", self.model_lower)
 
-            with open(path, 'w') as template:
+            with open(path, 'w', encoding='utf-8') as template:
                 template.write(content)
 
         except Exception as error:
@@ -494,10 +497,10 @@ class Command(BaseCommand):
                 "Trabalhando na configuração do template de Criação.")
             path = Path(
                 f"{self.path_template_dir}/{self.model_lower}_create.html")
-            # Verificando se já existe o template
-            if self._check_file(path):
-                self.__message(
-                    "O model informado já possui o template de Criação")
+            # Verificando se o arquivo está travado para novo parser
+            if self.__check_file_is_locked(path):
+                print(
+                    f"{'|'*100}\nArquivo {self.path_serializer} travado para parser\n{'|'*100}")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._snippet_create_template
@@ -521,17 +524,17 @@ class Command(BaseCommand):
                 "Trabalhando na configuração do template de Deleção.")
             path = Path(
                 f"{self.path_template_dir}/{self.model_lower}_delete.html")
-            # Verificando se já existe o template
-            if self._check_file(path):
-                self.__message(
-                    "O model informado já possui o template de Deleção.")
+            # Verificando se o arquivo está travado para novo parser
+            if self.__check_file_is_locked(path):
+                print(
+                    f"{'|'*100}\nArquivo {self.path_serializer} travado para parser\n{'|'*100}")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._snippet_delete_template
             # Interpolando o conteúdo
             content = content.replace("$app_name$", self.app_lower)
             content = content.replace("$model_name$", self.model_lower)
-            with open(path, 'w') as template:
+            with open(path, 'w', encoding='utf-8') as template:
                 template.write(content)
 
         except Exception as error:
@@ -542,7 +545,6 @@ class Command(BaseCommand):
         """
 
         try:
-            self.__message("Trabalhando na configuração dos templates.")
             if self._check_dir(self.path_template_dir) is False:
                 self.__message("Criando o diretório dos Templates")
                 os.makedirs(self.path_template_dir)
@@ -1136,7 +1138,7 @@ class Command(BaseCommand):
             # Verificando se o arquivo de urls já existe
             if self._check_file(self.path_urls) is False:
                 # Criando o arquivo com o conteúdo da interpolação
-                with open(self.path_urls, 'w') as arquivo:
+                with open(self.path_urls, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(content_urls + '\n' + content)
                 return
 
@@ -1414,7 +1416,7 @@ class Command(BaseCommand):
                         if app_field is not None:
                             field_name = app_field.verbose_name.title(
                             ) if app_field.verbose_name else "Não Definido."
-                            thead += '<th>{}</th>\n'.format(field_name)
+                            thead += f"<th>{field_name}</th>\n"
                             tline += '<td>{{{{ item.{} }}}}</td>\n'.format(
                                 item.replace('__', '.'))
                     list_template = Path(

@@ -1,3 +1,46 @@
+<!--
+Arquivo gerado automaticamente pelo build, com o formulário HTML de atualização do objeto $title$.
+
+Caso deseje bloquear o parser nesse arquivo, basta adicionar o caracter #(cerquilha) antes da palavra a seguir
+
+FileLocked
+
+==============================================
+Exemplos de métodos AJAX consumindo a API DRJ
+
+Get (Consultar um novo registro via API)
+
+Post (Salvar um novo registro via API)
+
+{% block javascript %}
+  <script>
+    $("#IdDoElementoQueDisparaOPostParaAAPI").change(function () {
+      var form = $(this).closest("IdDoFormQueTeraOsDadosSerializadosParaEnviarAView");
+      $.ajax({
+        url: // Url da view que recebera o post e executará a ação,
+        data: form.serialize(),
+        dataType: 'json', // Formato dos dados a serem enviados.
+        // Método chamado caso o processamento tenha sido realizado com sucesso.
+        success: function (reponse) {
+          // Trabalhar os dados retornados na variável response vindos da Views
+          // console.table(response);
+        }
+        // Método chamado quando é retornado qualquer erro da API
+        error: function (xhr, errmsg, err){
+          // console.log(xhr.status + ": " + xhr.responseText);
+        }
+      });
+    });
+  </script>
+{% endblock %}
+
+Put (Atualizar um novo registro via API)
+
+Delete (Deletar um novo registro via API)
+
+================================================
+-->
+
 {% extends 'core/index_create.html' %} 
 {% load base %}
 {% block title %}$title${% endblock title %} 
