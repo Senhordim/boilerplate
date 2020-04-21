@@ -1,3 +1,11 @@
+"""
+Arquivo gerado automaticamente pelo build, contendo as classes de serializer para o
+o objeto $ModelName$.
+
+Caso deseje bloquear o parser nesse arquivo, basta adicionar o caracter #(cerquilha) antes da palavra
+
+FileLocked
+"""
 
 class $ModelName$Serializer(ModelSerializer):
     """ Class para gerenciar o serializer do model $ModelClass$ """

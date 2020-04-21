@@ -1,2 +1,11 @@
+"""
+Arquivo gerado automaticamente pelo build, contendo as rotas do objeto $ModelName$.
+
+Caso deseje bloquear o parser nesse arquivo, basta adicionar o caracter #(cerquilha) antes da palavra
+
+FileLocked
+"""
+
+
 from rest_framework import routers
 from .views import $ModelName$ViewAPI

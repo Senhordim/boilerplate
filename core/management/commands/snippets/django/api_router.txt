@@ -1,3 +1,12 @@
+"""
+Arquivo gerado automaticamente pelo build, contendo as rotas para o objeto $ModelName$.
+
+Caso deseje bloquear o parser nesse arquivo, basta adicionar o caracter #(cerquilha) antes da palavra
+
+FileLocked
+"""
+
+
 router = routers.DefaultRouter()
 # URL para a API $ModelName$
 router.register(r'$model_name$', $ModelName$ViewAPI, '$model_name$-api')
