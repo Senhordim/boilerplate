@@ -3,6 +3,7 @@ a criação dos templates customizados, das views, da APIRest e dos Forms.
 """
 
 import os
+import sys
 import time
 import platform
 import fileinput
@@ -205,7 +206,7 @@ class Command(BaseCommand):
                 with open(path) as arquivo:
                     content = arquivo.read()
                     return text_check in content
-            self._message("Arquivo não encontrado para análise.")
+            self.__message("Arquivo não encontrado para análise.")
         except Exception as e:
             self.__message(
                 f"Ocorreu um erro ao executar o _check_content :{e}", error=True)
@@ -226,7 +227,7 @@ class Command(BaseCommand):
             if self._check_file(path):
                 with open(path) as arquivo:
                     return arquivo.read()
-            self._message("Arquivo não encontrado para captura.")
+            self.__message("Arquivo não encontrado para captura.")
         except Exception as e:
             self.__message(
                 f"Ocorreu um erro ao executar o _get_snippet :{e}", error=True)
@@ -293,15 +294,15 @@ class Command(BaseCommand):
         """Método para criar o template Inicial da APP
         """
         try:
-            self._message(
+            self.__message(
                 "Trabalhando na configuração do template inicial da APP")
             path = os.path.join(self.path_template_dir, "index.html")
             if self._check_file(path):
-                self._message("A app informada já possue o template inicial.")
+                self.__message("A app informada já possue o template inicial.")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._get_snippet(
-                Path(f"{self.path_core}management/commands/snippets/django/indextemplate.txt"))
+                Path(f"{self.path_core}/management/commands/snippets/django/indextemplate.txt"))
             _title = self._get_verbose_name(
                 app_name=self.app.lower())
             content = content.replace("$titlepage$", _title)
@@ -318,18 +319,18 @@ class Command(BaseCommand):
         """
 
         try:
-            self._message(
+            self.__message(
                 "Trabalhando na configuração do template de Detalhamento.")
             path = Path(
                 f"{self.path_template_dir}{self.model_lower}_detail.html")
             # Verificando se já existe o template
             if self._check_file(path):
-                self._message(
+                self.__message(
                     "O model informado já possui o template de Detalhamento")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._get_snippet(
-                Path(f"{self.path_core}management/commands/snippets/django/detailtemplate.txt"))
+                Path(f"{self.path_core}/management/commands/snippets/django/detailtemplate.txt"))
             _title = self._get_verbose_name(
                 app_name=self.app.lower())
             # Interpolando o conteúdo
@@ -346,17 +347,18 @@ class Command(BaseCommand):
         """Método para criar o template de List do model.
         """
         try:
-            self._message("Trabalhando na configuração do template de Edição.")
+            self.__message(
+                "Trabalhando na configuração do template de Edição.")
             path = Path(
                 f"{self.path_template_dir}{self.model_lower}_list.html")
             # Verificando se já existe o template
             if self._check_file(path):
-                self._message(
+                self.__message(
                     "O model informado já possui o template de Listagem")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._get_snippet(Path(
-                f"{self.path_core}management/commands/snippets/django/listtemplate.txt"))
+                f"{self.path_core}/management/commands/snippets/django/listtemplate.txt"))
             _title = self._get_verbose_name(
                 app_name=self.app.lower(), model_name=self.model_lower)
             # Interpolando o conteúdo
@@ -375,18 +377,19 @@ class Command(BaseCommand):
         """Método para criar o template de Update do model.
         """
         try:
-            self._message("Trabalhando na configuração do template de Edição.")
+            self.__message(
+                "Trabalhando na configuração do template de Edição.")
             path = Path(
                 f"{self.path_template_dir}{self.model_lower}_update.html")
             # Verificando se já existe o template
             if self._check_file(path):
-                self._message(
+                self.__message(
                     "O model informado já possui o template de Edição")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._get_snippet(
                 Path(
-                    f"{self.path_core}management/commands/snippets/django/updatetemplate.txt")
+                    f"{self.path_core}/management/commands/snippets/django/updatetemplate.txt")
             )
             _title = self._get_verbose_name(
                 app_name=self.app.lower(), model_name=self.model_lower)
@@ -406,18 +409,18 @@ class Command(BaseCommand):
         """Método para criar o template de Create do model.
         """
         try:
-            self._message(
+            self.__message(
                 "Trabalhando na configuração do template de Criação.")
             path = Path(
                 f"{self.path_template_dir}{self.model_lower}_create.html")
             # Verificando se já existe o template
             if self._check_file(path):
-                self._message(
+                self.__message(
                     "O model informado já possui o template de Criação")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._get_snippet(
-                Path(f"{self.path_core}management/commands/snippets/django/createtemplate.txt"))
+                Path(f"{self.path_core}/management/commands/snippets/django/createtemplate.txt"))
             _title = self._get_verbose_name(
                 app_name=self.app.lower(), model_name=self.model_lower)
             # Interpolando o conteúdo
@@ -435,19 +438,19 @@ class Command(BaseCommand):
         """
 
         try:
-            self._message(
+            self.__message(
                 "Trabalhando na configuração do template de Deleção.")
             path = Path(
                 f"{self.path_template_dir}{self.model_lower}_delete.html")
             # Verificando se já existe o template
             if self._check_file(path):
-                self._message(
+                self.__message(
                     "O model informado já possui o template de Deleção.")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._get_snippet(
                 Path(
-                    f"{self.path_core}management/commands/snippets/django/deletetemplate.txt")
+                    f"{self.path_core}/management/commands/snippets/django/deletetemplate.txt")
             )
             # Interpolando o conteúdo
             content = content.replace("$app_name$", self.app_lower)
@@ -464,9 +467,9 @@ class Command(BaseCommand):
         """
 
         try:
-            self._message("Trabalhando na configuração dos templates.")
+            self.__message("Trabalhando na configuração dos templates.")
             if self._check_dir(self.path_template_dir) is False:
-                self._message("Criando o diretório dos Templates")
+                self.__message("Criando o diretório dos Templates")
                 os.makedirs(self.path_template_dir)
             # Chamando método de criação do template Index da App
             self._manage_index_template()
@@ -495,14 +498,14 @@ class Command(BaseCommand):
         """
 
         try:
-            self._message(
+            self.__message(
                 "Trabalhando na configuração das Urls API do model {}".format(self.model))
             content = self._get_snippet(
                 Path(
-                    f"{self.path_core}management/commands/snippets/django/api_router.txt")
+                    f"{self.path_core}/management/commands/snippets/django/api_router.txt")
             )
             content_urls = self._get_snippet(
-                Path(f"{self.path_core}management/commands/snippets/django/api_router_urls.txt"))
+                Path(f"{self.path_core}/management/commands/snippets/django/api_router_urls.txt"))
             # Interpolando o conteúdo
             content = content.replace("$ModelName$", self.model)
             content = content.replace("$app_name$", self.app_lower)
@@ -517,7 +520,7 @@ class Command(BaseCommand):
 
             if self._check_content(self.path_urls, " {}ViewAPI".format(self.model)):
                 # Já existe configuração de URL para a APP saindo da função
-                self._message(
+                self.__message(
                     "O model informado já possui urls da API configuradas.")
                 return
 
@@ -623,12 +626,12 @@ class Command(BaseCommand):
         """Método para configuração das Views da API
         """
         try:
-            self._message(
+            self.__message(
                 "Trabalhando na configuração das Views da API do model {} ".format(self.model))
             content = self._get_snippet(
-                Path(f"{self.path_core}management/commands/snippets/django/api_view.txt"))
+                Path(f"{self.path_core}/management/commands/snippets/django/api_view.txt"))
             content_urls = self._get_snippet(
-                Path(f"{self.path_core}management/commands/snippets/django/api_urls.txt"))
+                Path(f"{self.path_core}/management/commands/snippets/django/api_urls.txt"))
             # Interpolando os dados
             content = content.replace("$ModelName$", self.model)
             content_urls = content_urls.replace("$ModelName$", self.model)
@@ -641,7 +644,7 @@ class Command(BaseCommand):
 
             # Verificando se já tem a configuração do model
             if self._check_content(self.path_views, " {}ViewAPI".format(self.model)):
-                self._message(
+                self.__message(
                     "O model informado já possui views da API configurado.")
                 return
 
@@ -732,12 +735,14 @@ class Command(BaseCommand):
         """Método para configurar o serializer do model informado.
         """
         try:
-            self._message(
+            import pdb
+            pdb.set_trace()
+            self.__message(
                 "Trabalhando na configuração do Serializer do model {}".format(self.model))
             content = self._get_snippet(Path(
-                f"{self.path_core}management/commands/snippets/django/serializer.txt"))
+                f"{self.path_core}/management/commands/snippets/django/serializer.txt"))
             content_urls = self._get_snippet(
-                Path(f"{self.path_core}management/commands/snippets/django/serializer_urls.txt"))
+                Path(f"{self.path_core}/management/commands/snippets/django/serializer_urls.txt"))
             # Interpolando os dados
             content = content.replace("$ModelName$", self.model)
             content = content.replace("$ModelClass$", self.model)
@@ -751,7 +756,7 @@ class Command(BaseCommand):
 
             # Verificando se já existe configuração no serializers para o Models informado
             if self._check_content(self.path_serializer, "class {}Serializer".format(self.model)):
-                self._message(
+                self.__message(
                     "O model informado já possui serializer configurado.")
                 return
 
@@ -791,9 +796,9 @@ class Command(BaseCommand):
             with open(self.path_serializer, 'a') as urls:
                 urls.write("\n")
                 urls.write(content)
-        except:
+        except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o manage_serializer :{e}", error=True)
+                f"Ocorreu um erro ao executar o manage_serializer :{error}", error=True)
 
     """
     #################################################################
@@ -805,13 +810,13 @@ class Command(BaseCommand):
         """Método para configurar o Form do model informado.
         """
         try:
-            self._message(
+            self.__message(
                 "Trabalhando na configuração do Form do model {}".format(self.model))
             content = self._get_snippet(
-                Path(f"{self.path_core}management/commands/snippets/django/form.txt"))
+                Path(f"{self.path_core}/management/commands/snippets/django/form.txt"))
             # Recuperando o conteúdo do snippet das urls do form
             content_urls = self._get_snippet(
-                Path(f"{self.path_core}management/commands/snippets/django/form_urls.txt"))
+                Path(f"{self.path_core}/management/commands/snippets/django/form_urls.txt"))
             # Interpolando os dados
             content = content.replace("$ModelClass$", self.model)
             content_urls = content_urls.replace("$ModelClass$", self.model)
@@ -825,7 +830,7 @@ class Command(BaseCommand):
 
             # Verificando se já existe configuração no forms para o Models informado
             if self._check_content(self.path_form, "class {}Form".format(self.model)):
-                self._message("O model informado já possui form configurado.")
+                self.__message("O model informado já possui form configurado.")
                 return
 
             # Verificando se tem a importação do BaseForm
@@ -866,7 +871,7 @@ class Command(BaseCommand):
                 form.write("\n")
                 form.write(content)
         except:
-            self._message(
+            self.__message(
                 "OCORREU UM ERRO, VERIFIQUE SE O ARQUIVO forms.py sofreu alguma alteração")
 
     """
@@ -879,17 +884,17 @@ class Command(BaseCommand):
         """Método para configurar as Views para o model informado.
         """
         __snnipet_index_template = self._get_snippet(
-            Path(f"{self.path_core}management/commands/snippets/django/index_view.txt"))
+            Path(f"{self.path_core}/management/commands/snippets/django/index_view.txt"))
 
         try:
-            self._message(
+            self.__message(
                 "Trabalhando na configuração das Views do model {}".format(self.model))
             # Recuperando o conteúdo do snippet da view
             content = self._get_snippet(
-                Path(f"{self.path_core}management/commands/snippets/django/crud_views.txt"))
+                Path(f"{self.path_core}/management/commands/snippets/django/crud_views.txt"))
             # Recuperando o conteúdo do snippet das urls da view
             content_urls = self._get_snippet(
-                Path(f"{self.path_core}management/commands/snippets/django/crud_urls.txt"))
+                Path(f"{self.path_core}/management/commands/snippets/django/crud_urls.txt"))
             # Interpolando os dados
             content = content.replace("$ModelClass$", self.model)
             content = content.replace("$app_name$", self.app_lower)
@@ -919,7 +924,7 @@ class Command(BaseCommand):
                             l=_model_field.lower(), u=_model_field, s=" "*8)
                     # Parser do form modal do update
                     modal_update = self._get_snippet(
-                        Path(f"{self.path_core}management/commands/snippets/django/crud_form_modal.txt"))
+                        Path(f"{self.path_core}/management/commands/snippets/django/crud_form_modal.txt"))
                     modal_update = modal_update.replace(
                         '$ModelClass$', "{}UpdateView".format(self.model))
                     modal_update = modal_update.replace(
@@ -929,7 +934,7 @@ class Command(BaseCommand):
 
                     # Parser do form modal do create
                     modal_create = self._get_snippet(
-                        Path(f"{self.path_core}management/commands/snippets/django/crud_form_modal.txt"))
+                        Path(f"{self.path_core}/management/commands/snippets/django/crud_form_modal.txt"))
                     modal_create = modal_create.replace(
                         '$ModelClass$', "{}CreateView".format(self.model))
                     modal_create = modal_create.replace(
@@ -972,7 +977,7 @@ class Command(BaseCommand):
 
             # Verificando se já existe configuração da views para o Models informado
             if self._check_content(self.path_views, "class {}ListView".format(self.model)):
-                self._message(
+                self.__message(
                     "O model informado já possui as views configuradas.")
                 return
 
@@ -1045,13 +1050,13 @@ class Command(BaseCommand):
         """Método para configurar as URLS do model informado.
         """
         try:
-            self._message(
+            self.__message(
                 "Trabalhando na configuração das Urls do model {}".format(self.model))
             content = self._get_snippet(
-                Path(f"{self.path_core}management/commands/snippets/django/url.txt"))
+                Path(f"{self.path_core}/management/commands/snippets/django/url.txt"))
             # Recuperando o conteúdo do snippet das urls da view
             content_urls = self._get_snippet(
-                Path(f"{self.path_core}management/commands/snippets/django/url_imports.txt"))
+                Path(f"{self.path_core}/management/commands/snippets/django/url_imports.txt"))
             # Interpolando os dados
             content = content.replace("$app_name$", self.app_lower)
             content = content.replace("$app_title$", self.app_lower.title())
@@ -1073,7 +1078,8 @@ class Command(BaseCommand):
 
             if self._check_content(self.path_urls, " {}ListView".format(self.model)):
                 # Já existe configuração de URL para a APP saindo da função
-                self._message("O model informado já possui urls configuradas.")
+                self.__message(
+                    "O model informado já possui urls configuradas.")
                 return
 
             # Verificando se tem a importação do BaseForm
@@ -1133,7 +1139,7 @@ class Command(BaseCommand):
             with open(self.path_urls, 'a') as urls:
                 urls.write(content)
         except:
-            self._message(
+            self.__message(
                 "OCORREU UM ERRO, VERIFIQUE SE O ARQUIVO urls.py sofreu alguma alteração")
 
     """
@@ -1150,7 +1156,7 @@ class Command(BaseCommand):
 
         try:
             content = self._get_snippet(
-                Path(f"{self.path_core}management/commands/snippets/django/modal_form.txt"))
+                Path(f"{self.path_core}/management/commands/snippets/django/modal_form.txt"))
             # Interpolando o conteúdo
             content = content.replace("$ModelName$", model)
             content = content.replace("$app_name$", app)
@@ -1158,7 +1164,7 @@ class Command(BaseCommand):
             content = content.replace("$field_name$", field_name)
             return content
         except Exception as error:
-            self._message(error)
+            self.__message(error)
 
     def _render_input(self, field):
         try:
@@ -1277,13 +1283,13 @@ class Command(BaseCommand):
         """Método para renderizar os campos do models 
         para tags HTML
         """
-        self._message(
+        self.__message(
             "Trabalhando na configuração do parserhtml do model {}".format(self.model))
         try:
             # Rercuperando uma instancia do models informado
             model = self._get_model()
             if model == None:
-                self._message("Favor declarar a app no settings.")
+                self.__message("Favor declarar a app no settings.")
                 return
             self._manage_templates()
             html_tag = ""
@@ -1364,11 +1370,11 @@ class Command(BaseCommand):
     def call_methods(self, options):
         # Verificando se foram passados parâmetros opcionais
         if options['templates']:
-            self._message("Trabalhando apenas os templates.")
+            self.__message("Trabalhando apenas os templates.")
             self._manage_templates()
             return
         elif options['api']:
-            self._message("Trabalhando apenas a api.")
+            self.__message("Trabalhando apenas a api.")
             # Chamando o método para tratar o serializer
             self._manage_serializer()
             # Chamando o método para tratar as views da API
@@ -1378,7 +1384,7 @@ class Command(BaseCommand):
             self._apply_pep()
             return
         elif options['url']:
-            self._message("Trabalhando apenas as urls.")
+            self.__message("Trabalhando apenas as urls.")
             # Chamando o método para tratar as urls
             self._manage_url()
             # Chamado o método para tratar as urls da API
@@ -1386,13 +1392,13 @@ class Command(BaseCommand):
             self._apply_pep()
             return
         elif options['forms']:
-            self._message("Trabalhando apenas os forms.")
+            self.__message("Trabalhando apenas os forms.")
             # Chamando o método para tratar os form
             self._manage_form()
             self._apply_pep()
             return
         elif options['views']:
-            self._message("Trabalhando apenas as views.")
+            self.__message("Trabalhando apenas as views.")
             # Chamando o método para tratar as views
             self._manage_views()
             self._apply_pep()
@@ -1424,7 +1430,7 @@ class Command(BaseCommand):
         validação da passagem de parâmetro.
         """
         # Verificando se o usuário passou o nome da app
-        self._message("Gerando os arquivos da app")
+        self.__message("Gerando os arquivos da app")
         # Pagando o nome da App passada por parâmetro
         app = options['App'] or None
         if (self._contain_number(app) is False):
@@ -1458,12 +1464,12 @@ class Command(BaseCommand):
             self.app_lower = app.lower()
             # Verificando se o diretório da App informada existe
             if self._check_dir(self.path_app) is False:
-                self._message("Diretório não encontrado.")
+                self.__message("Diretório não encontrado.")
                 return
             # Verifica se app esta instalada, pois precisa dela
             # para recuperar as instancias dos models
             if apps.is_installed(self.app_lower) is False:
-                self._message(
+                self.__message(
                     "Você deve colocar sua app no INSTALLED_APPS do settings.")
                 return
             # Criando uma instancia da app
@@ -1476,22 +1482,22 @@ class Command(BaseCommand):
                     self.model = model.strip()
                     # Verificando se existe no models.py o Model informado
                     if self._check_content(self.path_model, 'class {}'.format(self.model)) is False:
-                        self._message("Model informado não encontrado.")
+                        self.__message("Model informado não encontrado.")
                         return
                 try:
                     # Verifica se o model está na app informada
                     # Se o model for abstract ela retornará uma exceção LookupError
                     self.app_instance.get_model(self.model)
-                    self._message(
+                    self.__message(
                         "Gerando arquivos para o model {}".format(self.model))
                     # Convertendo os nomes para caracteres minúsculo.
                     # para serem usado nos locais que necessitem dos nomes
                     # em minúsculo.
                     self.model_lower = model.lower()
                     self.call_methods(options)
-                    self._message("Processo concluído.")
+                    self.__message("Processo concluído.")
                 except LookupError:
-                    self._message(
+                    self.__message(
                         "Esse model é abastrato. Não vão ser gerados os arquivos.")
             else:
                 # recupera todos os models da app
@@ -1499,7 +1505,7 @@ class Command(BaseCommand):
                     model = model.__name__
                     # Removendo os espaços em branco
                     self.model = model.strip()
-                    self._message(
+                    self.__message(
                         "Gerando arquivos para o model {}".format(self.model))
                     # Convertendo os nomes para caracteres minúsculo.
                     # para serem usado nos locais que necessitem dos nomes
@@ -1507,7 +1513,7 @@ class Command(BaseCommand):
                     self.model_lower = model.lower()
                     # Chama os métodos de geração de arquivos
                     self.call_methods(options)
-                    self._message(
+                    self.__message(
                         "Processo concluído para o model {}.".format(self.model))
-                self._message("Processo concluído.")
+                self.__message("Processo concluído.")
                 return
