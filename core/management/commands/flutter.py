@@ -226,14 +226,22 @@ class AppModel:
             __instance = apps.get_app_config(self.app_name_lower)
             __model = __instance.get_model(model)
             return issubclass(__model, Base)
-        except Exception as error:            
+        except Exception as error:
             return false
 
-    def get_app_model_name(self):
+    def get_app_model_name(self, title_case=False):
         """Método para retornar uma String com o nome da App e do Model no formato
         NomeAppNomeModel.
+
+        Arguments:
+            title_case {Boolean} -- Determina se o return deve ser NomeAppNomeModel ou nomeAppNomeModel
+
+        Returns:
+            String -- String no formato NomeAppModel ou nomeAppModel
         """
         try:
+            if title_case is True:
+                return f"{self.app_name.title()}{self.model_name}"
             return f"{self.app_name}{self.model_name}"
         except Exception as error:
             return None
@@ -1059,7 +1067,7 @@ class Command(BaseCommand):
             # Recuperando o snnipet do controller
             content = self.__get_snippet(f"{self.snippet_dir}controller.txt")
             content = content.replace(
-                "$ModelClassController$", app.get_app_model_name())
+                "$ModelClassController$", app.get_app_model_name(title_case=True))
             content = content.replace("$ModelClass$", app.model_name)
             content = content.replace("$ModelClassCamelCase$",
                                       self.__to_camel_case(app.model_name, True))
