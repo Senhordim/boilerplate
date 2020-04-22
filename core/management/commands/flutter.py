@@ -1161,14 +1161,15 @@ class Command(BaseCommand):
                 __app, __model, __name = str(field).split('.')
                 __name_dart = self.__to_camel_case(__name)
 
-                # Verificando se o name começa com idXPTO para
-                if __name_dart.startswith(f"id{app.model_name_lower}"):
-                    __name_dart = "id"
+                # Verificando se o nome é id_nome_app ou apenas ID para não parsear
+                if __name_dart in [f"id{app.model_name_lower}", "id"]:
+                    continue
 
                 field_type = (str(str(type(field)).split('.')[-1:])
                               .replace("[\"", "").replace("\'>\"]", ""))
                 attribute = self._tipos_flutter[self._tipos_originais.index(
                     field_type)]
+
                 content_atributes += "{} {};\n  ".format(
                     attribute, __name_dart)
                 content_string_return += "{}: ${}\\n".format(
