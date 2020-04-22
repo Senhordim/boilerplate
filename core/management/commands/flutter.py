@@ -16,7 +16,7 @@ from nuvols.core.settings import FLUTTER_APPS, SYSTEM_NAME, API_PATH
 class AppModel:
     """Classe auxiliar para encapsular os métodos de acesso 
     aos snippets e templates, bem como os método e funções recorrentes
-    
+
     Arguments:
         path_flutter {String} -- Path do projeto Flutter
         app_name {String} -- Nome da App a ser mapeada
@@ -300,7 +300,7 @@ class Command(BaseCommand):
     BASE_DIR = os.path.dirname(os.path.dirname(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-    _tipos_originais = ['AutoField', 'BLANK_CHOICE_DASH',
+    _tipos_originais = ['SmallAutoField', 'AutoField', 'BLANK_CHOICE_DASH',
                         'BigAutoField', 'BigIntegerField',
                         'BinaryField', 'BooleanField',
                         'CharField', 'CommaSeparatedIntegerField',
@@ -317,7 +317,7 @@ class Command(BaseCommand):
                         'TimeField', 'URLField', 'UUIDField',
                         'ForeignKey', 'OneToOneField']
 
-    _tipos_flutter = ['int', 'BLANK_CHOICE_DASH', 'int', 'int', 'String',
+    _tipos_flutter = ['int', 'int', 'BLANK_CHOICE_DASH', 'int', 'int', 'String',
                       'bool', 'String', 'String', 'DateTime', 'DateTime',
                       'double', 'int', 'String', 'String', 'String', 'String',
                       'String', 'String', 'double', 'String', 'String', 'int',
@@ -325,7 +325,7 @@ class Command(BaseCommand):
                       'String', 'int', 'String', 'DateTime', 'String',
                       'String', 'int', 'int']
 
-    _tipos_sqlite = ['INT', 'BLANK_CHOICE_DASH', 'BIGINT', 'BIGINT', 'TEXT',
+    _tipos_sqlite = ['INT', 'INT', 'BLANK_CHOICE_DASH', 'BIGINT', 'BIGINT', 'TEXT',
                      'BOOLEAN', 'TEXT', 'TEXT', 'DATE', 'DATETIME', 'DOUBLE',
                      'INT', 'TEXT', 'TEXT', 'TEXT', 'TEXT', 'TEXT', 'TEXT',
                      'FLOAT', 'TEXT', 'TEXT', 'INT', 'TEXT', 'TEXT', 'BOOLEAN',
@@ -962,12 +962,14 @@ class Command(BaseCommand):
                     field_type)]
                 data_type = self._tipos_sqlite[self._tipos_originais.index(
                     field_type)]
-                content_parameters += "final {0}Column = '{0}'" \
-                                      ";\n  ".format(__name)
-                if (__name == 'id'):
+                if (__name.startswith('id')):
+                    content_parameters += "final idColumn = '{0}'" \
+                        ";\n  ".format(__name)
                     content_database += '{}"$idColumn INTEGER PRIMARY KEY,' \
                                         '"\n'.format(" " * 23)
                 else:
+                    content_parameters += "final {0}Column = '{0}'" \
+                        ";\n  ".format(__name)
                     content_database += '{2}"${0}Column {1},"\n'.format(
                         __name, data_type, " " * 23)
 
@@ -1315,7 +1317,7 @@ class Command(BaseCommand):
                     __config_snippet = __config_snippet.replace(
                         "$DjangoAPIPath$", API_PATH)
                     with open(self.config_file, "w", encoding='utf-8') as config:
-                        config.write(__config_snippet )
+                        config.write(__config_snippet)
 
             # Verificando se o arquivo já existe
             if self.__check_file(self.util_file) is False:
