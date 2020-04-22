@@ -52,7 +52,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
   // Criando os controladores do Form
   final _form$ModelClass$ = GlobalKey<FormState>();
 
-  $Atributes$
+  $Attributes$
 
   @override
   void initState() {
@@ -186,14 +186,14 @@ $AttributesData$
   
 void _clearForm(){
     // Método para limpar os dados do fomulário após enviar os dados
-    $ClearData$
-  }
+$ClearData$
+}
 
   void _put() async {
     // Método para enviar a requisição de inserção de dados para a API
     try{
       // Recuperando os valores do controller
-      $GetValuesControllers$
+$GetValuesControllers$
 
       // Invocando o método do Controller para atualizar
       _$Model$Controller.$Model$Model = _$Model$;

@@ -25,199 +25,218 @@ class AppModel:
         model_name {String} -- Nome do model a ser mapeado (default: {None})
     """
 
-    try:
-        def __init__(self, path_flutter, app_name, model_name=None):
-            try:
-                # Atribuindo o caminho do projeto Flutter
-                self.path_flutter = path_flutter
-                # Atributo para armazenar o generator dos models da App
-                self.models = None
+    def __init__(self, path_flutter, app_name, model_name=None):
+        try:
+            # Atribuindo o caminho do projeto Flutter
+            self.path_flutter = path_flutter
+            # Atributo para armazenar o generator dos models da App
+            self.models = None
 
-                # Atributo para armazenar o model informado
-                self.model = None
+            # Atributo para armazenar o model informado
+            self.model = None
 
-                # Atributo para guardar o nome da App
-                self.app_name = str(app_name).strip()
-                self.app_name_lower = self.app_name.lower()
+            # Atributo para guardar o nome da App
+            self.app_name = str(app_name).strip()
+            self.app_name_lower = self.app_name.lower()
 
-                # Recuperando a app informada
-                self.app = apps.get_app_config(self.app_name_lower)
+            # Recuperando a app informada
+            self.app = apps.get_app_config(self.app_name_lower)
 
-                # Atributo para guardar o nome do model
-                self.model_name = str(model_name).strip()
-                self.model_name_lower = self.model_name.lower()
+            # Atributo para guardar o nome do model
+            self.model_name = str(model_name).strip()
+            self.model_name_lower = self.model_name.lower()
 
-                # Verificando se foi informado o nome do model
-                if model_name is not None:
-                    # Recuperando o model baseado no nome
-                    self.model = self.app.get_model(self.model_name)
-                else:
-                    # Não foi informado o model
-                    # Gerando os models dessa app
-                    self.models = ((x, x.__name__.strip(),
-                                    x.__name__.strip().lower()) for x in self.app.get_models())
-
-                # Verificando o sistema operacional
-                # O retorno pode ser windows ou linux
-                self.operation_system = platform.system().lower()
-
-            except Exception as error:
-                raise error
-
-        def get_path_app_dir(self):
-            """Método para retornar o path da app no projeto Flutter
-
-            Returns:
-                String -- Caminho do diretório da app no projeto Flutter
-            """
-            try:
-                return Path("{}/lib/apps/{}".format(
-                    self.path_flutter, self.app_name_lower))
-            except Exception as error:
-                self.__message(f"Erro no get_path_app_dir: {e}", error=True)
-
-        def get_path_app_model_dir(self):
-            """Método para retornar o path do model no projeto Flutter
-
-            Returns:
-                String -- Caminho do diretório do model no projeto Flutter
-            """
-            try:
-                return Path("{}/lib/apps/{}/{}".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower))
-            except Exception as error:
-                self.__message(
-                    f"Erro no get_path_app_model_dir {e}", error=True)
-
-        def get_path_pages_dir(self):
-            """Método para retornar o path do diretório pages
-
-            Returns:
-                String -- Caminho do diretório pages no projeto Flutter
-            """
-            try:
-                return Path("{}/lib/apps/{}/{}/pages/".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower))
-            except Exception as error:
-                self.__message(f"Erro no get_path_pages_dir {e}", error=True)
-
-        def get_path_files_pages(self):
-            """Método para retornar os arquivos das páginas no projeto Flutter
-
-            Returns:
-                String's -- Caminho de cada arquivo das páginas na create, detail, index, list e update
-            """
-            try:
-                __create = Path("{}/lib/apps/{}/{}/pages/create.dart".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower))
-                __detail = Path("{}/lib/apps/{}/{}/pages/detail.dart".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower))
-                __index = Path("{}/lib/apps/{}/{}/pages/index.dart".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower))
-                __list = Path("{}/lib/apps/{}/{}/pages/list.dart".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower))
-                __update = Path("{}/lib/apps/{}/{}/pages/update.dart".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower))
-
-                return __create, __detail, __index, __list, __update
-            except Exception as error:
-                self.__message(
-                    f"Erro no get_path_files_pages: {e}", error=True)
-
-        def get_path_data_file(self):
-            """Método para recuperar o caminho do arquivo data.dart
-
-            Returns:
-                String -- Caminho do arquivo data.dart
-            """
-            try:
-                return Path("{}/lib/apps/{}/{}/data.dart".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower))
-            except Exception as error:
-                self.__message(f"Erro no get_path_data_file: {e}", error=True)
-
-        def get_path_model_file(self):
-            """Método para recuperar o caminho do arquivo model.dart
-
-            Returns:
-                String -- Caminho do arquivo model.dart
-            """
-            try:
-                return Path("{}/lib/apps/{}/{}/model.dart".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower))
-            except Exception as error:
-                self.__message(f"Erro no get_path_model_file {e}", error=True)
-
-        def get_path_controller_file(self):
-            """Método para recuperar o caminho para o arquivo controller.dart
-            da app
-
-            Returns:
-                String -- Caminho do arquivo controller.dart
-            """
-            try:
-                return Path("{}/lib/apps/{}/{}/controller.dart".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower))
-            except expression as identifier:
-                self.__message(
-                    f"Erro no get_path_controller_file {e}", error=True)
-
-        def get_path_service_file(self):
-            """Método para recuperar o caminho do arquivo service.dart
-
-            Returns:
-                String -- Caminho do arquivo service.dart
-            """
-            try:
-                return Path("{}/lib/apps/{}/{}/service.dart".format(
-                    self.path_flutter, self.app_name_lower,
-                    self.model_name_lower))
-            except Exception as error:
-                self.__message(
-                    f"Erro no get_path_service_file {e}", error=True)
-
-        def print_string(self):
-            """Método para imprimir o object
-            """
-            print("App: {} Name: {} - {}".format(
-                self.app, self.app_name, self.app_name_lower))
-            print("Model: {} Name: {} - {}".format(
-                self.model, self.model_name, self.model_name_lower))
-            print("")
-            print("Caminhos:")
-            print(f"Diretório App {self.get_path_app_dir()}")
-            print(f"Diretório Model {self.get_path_app_model_dir()}")
-            print(f"Diretório Pages {self.get_path_pages_dir()}")
-            print(f"Data {self.get_path_data_file()}")
-            print(f"Model {self.get_path_model_file()}")
-            print(f"Controller {self.get_path_controller_file()}")
-            print(f"Service {self.get_path_service_file()}")
-            c, d, i, l, u = self.get_path_files_pages()
-            print("")
-            print("Pages \nCreate: {}\nDetail: {}\nIndex: {}\nList: {}\nUpdate: {}".format(
-                c, d, i, l, u
-            ))
-
-            print("Models (Generator)")
-            if self.models is not None:
-                for __model in self.models:
-                    print("Model: {} Name: {} - {}".format(
-                        __model[0], __model[1], __model[2]))
+            # Verificando se foi informado o nome do model
+            if model_name is not None:
+                # Recuperando o model baseado no nome
+                self.model = self.app.get_model(self.model_name)
             else:
-                print("None")
+                # Não foi informado o model
+                # Gerando os models dessa app
+                self.models = ((x, x.__name__.strip(),
+                                x.__name__.strip().lower()) for x in self.app.get_models())
 
-    except Exception as error:
-        print(error)
+            # Verificando o sistema operacional
+            # O retorno pode ser windows ou linux
+            self.operation_system = platform.system().lower()
+
+        except Exception as error:
+            raise error
+
+    def get_path_app_dir(self):
+        """Método para retornar o path da app no projeto Flutter
+
+        Returns:
+            String -- Caminho do diretório da app no projeto Flutter
+        """
+        try:
+            return Path("{}/lib/apps/{}".format(
+                self.path_flutter, self.app_name_lower))
+        except Exception as error:
+            self.__message(f"Erro no get_path_app_dir: {e}", error=True)
+
+    def get_path_app_model_dir(self):
+        """Método para retornar o path do model no projeto Flutter
+
+        Returns:
+            String -- Caminho do diretório do model no projeto Flutter
+        """
+        try:
+            return Path("{}/lib/apps/{}/{}".format(
+                self.path_flutter, self.app_name_lower,
+                self.model_name_lower))
+        except Exception as error:
+            self.__message(
+                f"Erro no get_path_app_model_dir {e}", error=True)
+
+    def get_path_pages_dir(self):
+        """Método para retornar o path do diretório pages
+
+        Returns:
+            String -- Caminho do diretório pages no projeto Flutter
+        """
+        try:
+            return Path("{}/lib/apps/{}/{}/pages/".format(
+                self.path_flutter, self.app_name_lower,
+                self.model_name_lower))
+        except Exception as error:
+            self.__message(f"Erro no get_path_pages_dir {e}", error=True)
+
+    def get_path_files_pages(self):
+        """Método para retornar os arquivos das páginas no projeto Flutter
+
+        Returns:
+            String's -- Caminho de cada arquivo das páginas na create, detail, index, list e update
+        """
+        try:
+            __create = Path("{}/lib/apps/{}/{}/pages/create.dart".format(
+                self.path_flutter, self.app_name_lower,
+                self.model_name_lower))
+            __detail = Path("{}/lib/apps/{}/{}/pages/detail.dart".format(
+                self.path_flutter, self.app_name_lower,
+                self.model_name_lower))
+            __index = Path("{}/lib/apps/{}/{}/pages/index.dart".format(
+                self.path_flutter, self.app_name_lower,
+                self.model_name_lower))
+            __list = Path("{}/lib/apps/{}/{}/pages/list.dart".format(
+                self.path_flutter, self.app_name_lower,
+                self.model_name_lower))
+            __update = Path("{}/lib/apps/{}/{}/pages/update.dart".format(
+                self.path_flutter, self.app_name_lower,
+                self.model_name_lower))
+
+            return __create, __detail, __index, __list, __update
+        except Exception as error:
+            self.__message(
+                f"Erro no get_path_files_pages: {e}", error=True)
+
+    def get_path_data_file(self):
+        """Método para recuperar o caminho do arquivo data.dart
+
+        Returns:
+            String -- Caminho do arquivo data.dart
+        """
+        try:
+            return Path("{}/lib/apps/{}/{}/data.dart".format(
+                self.path_flutter, self.app_name_lower,
+                self.model_name_lower))
+        except Exception as error:
+            self.__message(f"Erro no get_path_data_file: {e}", error=True)
+
+    def get_path_model_file(self):
+        """Método para recuperar o caminho do arquivo model.dart
+
+        Returns:
+            String -- Caminho do arquivo model.dart
+        """
+        try:
+            return Path("{}/lib/apps/{}/{}/model.dart".format(
+                self.path_flutter, self.app_name_lower,
+                self.model_name_lower))
+        except Exception as error:
+            self.__message(f"Erro no get_path_model_file {e}", error=True)
+
+    def get_path_controller_file(self):
+        """Método para recuperar o caminho para o arquivo controller.dart
+        da app
+
+        Returns:
+            String -- Caminho do arquivo controller.dart
+        """
+        try:
+            return Path("{}/lib/apps/{}/{}/controller.dart".format(
+                self.path_flutter, self.app_name_lower,
+                self.model_name_lower))
+        except expression as identifier:
+            self.__message(
+                f"Erro no get_path_controller_file {e}", error=True)
+
+    def get_path_service_file(self):
+        """Método para recuperar o caminho do arquivo service.dart
+
+        Returns:
+            String -- Caminho do arquivo service.dart
+        """
+        try:
+            return Path("{}/lib/apps/{}/{}/service.dart".format(
+                self.path_flutter, self.app_name_lower,
+                self.model_name_lower))
+        except Exception as error:
+            self.__message(
+                f"Erro no get_path_service_file {e}", error=True)
+
+    def print_string(self):
+        """Método para imprimir o object
+        """
+        print("App: {} Name: {} - {}".format(
+            self.app, self.app_name, self.app_name_lower))
+        print("Model: {} Name: {} - {}".format(
+            self.model, self.model_name, self.model_name_lower))
+        print("")
+        print("Caminhos:")
+        print(f"Diretório App {self.get_path_app_dir()}")
+        print(f"Diretório Model {self.get_path_app_model_dir()}")
+        print(f"Diretório Pages {self.get_path_pages_dir()}")
+        print(f"Data {self.get_path_data_file()}")
+        print(f"Model {self.get_path_model_file()}")
+        print(f"Controller {self.get_path_controller_file()}")
+        print(f"Service {self.get_path_service_file()}")
+        c, d, i, l, u = self.get_path_files_pages()
+        print("")
+        print("Pages \nCreate: {}\nDetail: {}\nIndex: {}\nList: {}\nUpdate: {}".format(
+            c, d, i, l, u
+        ))
+
+        print("Models (Generator)")
+        if self.models is not None:
+            for __model in self.models:
+                print("Model: {} Name: {} - {}".format(
+                    __model[0], __model[1], __model[2]))
+        else:
+            print("None")
+
+    def check_inherited_base(self, model):
+        """ Método para verificar se o model herda de Base
+
+        Returns:
+            Bool -- True se herdar e False se não herdar
+        """
+        try:
+            # Criando uma instancia da app
+            __instance = apps.get_app_config(self.app_name_lower)
+            __model = __instance.get_model(model)
+            return issubclass(__model, Base)
+        except Exception as error:            
+            return false
+
+    def get_app_model_name(self):
+        """Método para retornar uma String com o nome da App e do Model no formato
+        NomeAppNomeModel.
+        """
+        try:
+            return f"{self.app_name}{self.model_name}"
+        except Exception as error:
+            return None
 
 
 class Command(BaseCommand):
@@ -706,6 +725,7 @@ class Command(BaseCommand):
         """
         Método para recuperar a estrutura dos atributos dos field 
         para as páginas de create e update
+
         Arguments:
             attibute {String} -- String com o tipo de atributo a ser rederizado
 
@@ -716,32 +736,36 @@ class Command(BaseCommand):
         try:
             __attribute = ''
             if attribute == 'int':
-                __attribute = '{0}_{1}.{2} = int.tryParse(_{1}Form{3}.text ?? 0);\n'.format(
-                    ' ' * 6,
-                    self.__to_camel_case(model_name, True),
-                    name, name_title)
+                if f"id{model_name.lower()}" == name.lower():
+                    __attribute = '{0}_{1}.id = int.tryParse(_{1}Form{2}.text ?? 0);\n'.format(
+                        ' ' * 16, self.__to_camel_case(model_name, True), name_title)
+                else:
+                    __attribute = '{0}_{1}.{2} = int.tryParse(_{1}Form{3}.text ?? 0);\n'.format(
+                        ' ' * 16,
+                        self.__to_camel_case(model_name, True),
+                        name, name_title)
 
             elif attribute == 'double':
                 __attribute = '{0}_{1}.{2} = double.tryParse(_{1}Form{3}.text ?? 0.0);\n'.format(
-                    ' ' * 6,
+                    ' ' * 16,
                     self.__to_camel_case(model_name, True),
                     name, name_title)
 
             elif attribute == 'bool':
                 __attribute = '{0}_{1}.{2} = _{1}Form{3}.text ?? true;\n'.format(
-                    ' ' * 6,
+                    ' ' * 16,
                     self.__to_camel_case(model_name, True),
                     name, name_title)
 
             elif attribute == 'DateTime':
                 __attribute = '{0}_{1}.{2} = _{1}Form{3}.text != ""? Util.convertDate(_{1}Form{3}.text) : null;\n'.format(
-                    ' ' * 6,
+                    ' ' * 16,
                     self.__to_camel_case(model_name, True),
                     name, name_title)
 
             else:
                 __attribute = '{0}_{1}.{2} = _{1}Form{3}.text ?? "";\n'.format(
-                    ' ' * 6,
+                    ' ' * 16,
                     self.__to_camel_case(model_name, True),
                     name, name_title)
         except Exception as error:
@@ -763,12 +787,16 @@ class Command(BaseCommand):
         __controllers_data = ''
         try:
             if attribute == 'int':
-                # Recuperando os valores dos controller e passando para os atributos da classe.
-                __controllers_data = '{0}_{1}.{2} = int.tryParse(_{1}Form{3}.text ?? 0);\n'.format(
-                    ' ' * 6,
-                    self.__to_camel_case(model_name, True),
-                    name, name_title
-                )
+                if f"id{model_name.lower()}" == name.lower():
+                    __controllers_data = '{0}_{1}.id = int.tryParse(_{1}Form{2}.text ?? 0);\n'.format(
+                        ' ' * 6, self.__to_camel_case(model_name, True), name_title)
+                else:
+                    # Recuperando os valores dos controller e passando para os atributos da classe.
+                    __controllers_data = '{0}_{1}.{2} = int.tryParse(_{1}Form{3}.text ?? 0);\n'.format(
+                        ' ' * 6,
+                        self.__to_camel_case(model_name, True),
+                        name, name_title
+                    )
             elif attribute == 'double':
                 # Recuperando os valores dos controller e passando para os atributos da classe.
                 __controllers_data = '{0}_{1}.{2} = double.tryParse(_{1}Form{3}.text ?? 0.0);\n'.format(
@@ -864,10 +892,16 @@ class Command(BaseCommand):
 
                 attributes_data += self.__get_attributes_data(
                     attribute, app.model_name, __name, __nameTitle)
+
                 get_controllers_data += self.__get_controllers_data(
                     attribute, app.model_name, __name, __nameTitle)
 
-                clear_data += '            {}.clear();\n'.format(controller)
+                clear_data += '    {}.clear();\n'.format(controller)
+
+                # Verificando se o campo é o ID da classe para retornar apenas ID
+                if __name.startswith(f"id{app.model_name_lower}"):
+                    __name = "id"
+
                 edited_attributes += '      {}.text = _{}.{}.toString();\n'.format(
                     controller, self.__to_camel_case(app.model_name, True), __name)
 
@@ -881,7 +915,7 @@ class Command(BaseCommand):
             content = content.replace(
                 "$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
             content = content.replace("$project$", self.flutter_project)
-            content = content.replace("$Atributes$", content_attributes)
+            content = content.replace("$Attributes$", content_attributes)
             content = content.replace("$Form$", text_fiels)
             content = content.replace("$AttributesData$", attributes_data)
             content = content.replace("$ClearData$", clear_data)
@@ -1024,6 +1058,8 @@ class Command(BaseCommand):
 
             # Recuperando o snnipet do controller
             content = self.__get_snippet(f"{self.snippet_dir}controller.txt")
+            content = content.replace(
+                "$ModelClassController$", app.get_app_model_name())
             content = content.replace("$ModelClass$", app.model_name)
             content = content.replace("$ModelClassCamelCase$",
                                       self.__to_camel_case(app.model_name, True))
@@ -1105,6 +1141,11 @@ class Command(BaseCommand):
             for field in iter(app.model._meta.fields):
                 __app, __model, __name = str(field).split('.')
                 __name_dart = self.__to_camel_case(__name)
+
+                # Verificando se o name começa com idXPTO para
+                if __name_dart.startswith(f"id{app.model_name_lower}"):
+                    __name_dart = "id"
+
                 field_type = (str(str(type(field)).split('.')[-1:])
                               .replace("[\"", "").replace("\'>\"]", ""))
                 attribute = self._tipos_flutter[self._tipos_originais.index(
@@ -1177,6 +1218,15 @@ class Command(BaseCommand):
             content = content.replace("$ParserFromJson$", content_from_json)
             content = content.replace("$ParserToMap$", content_to_map)
             content = content.replace("$project$", self.flutter_project)
+
+            # Verificando o tipo da classe para criar ou não o construtor
+            # com os atributos do Base
+            if app.check_inherited_base(__model):
+                content = content.replace(
+                    "$ConstructorModelClass$", f"/// Construtor da Classe\n  {app.model_name}Model(){{this.createdOn = null;\nthis.updatedOn = null;\nthis.enabled = true;\nthis.deleted = false;}}")
+            else:
+                content = content.replace(
+                    "$ConstructorModelClass$", f"/// Construtor da Classe\n  {app.model_name}Model();")
 
             # Verificando se o arquivo existe
             if not self.__check_file(__model_file):

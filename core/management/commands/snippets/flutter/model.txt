@@ -17,13 +17,7 @@ class $ModelClass$Model {
   int idSqLite;
   $AttributeClass$
 
-  /// Construtor da Classe
-  $ModelClass$Model(){
-    this.createdOn = null;
-    this.updatedOn = null;
-    this.enabled = true;
-    this.deleted = false;
-  }
+  $ConstructorModelClass$
   
   /// Sobscrevendo o método toString para retornar todos os atributos da classe.
   @override
