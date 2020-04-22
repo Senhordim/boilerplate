@@ -15,6 +15,7 @@ import '../../../utils/util.dart';
 
 class $ModelClass$Model {
   int idSqLite;
+  int id;
   $AttributeClass$
 
   $ConstructorModelClass$

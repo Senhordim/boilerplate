@@ -1005,8 +1005,11 @@ class Command(BaseCommand):
             # Criando os atributos da classe Flutter
             content_parameters = "  final String {0}Table = " \
                                  "'{0}Table';\n  ".format(app.model_name_lower)
-            content_database = '"CREATE TABLE ${}Table ("\n'.format(
-                app.model_name_lower)
+            # Adicionando a coluna ID
+            content_parameters += "\nfinal id = 'id';\n"
+
+            content_database = '"CREATE TABLE ${}Table ("\n{}'.format(
+                app.model_name_lower, '"id INT," \n')
 
             # Recuperando o model
             for field in iter(app.model._meta.fields):
@@ -1018,16 +1021,10 @@ class Command(BaseCommand):
                     field_type)]
                 data_type = self._tipos_sqlite[self._tipos_originais.index(
                     field_type)]
-                if (__name.startswith('id')):
-                    content_parameters += "final idColumn = '{0}'" \
-                        ";\n  ".format(__name)
-                    content_database += '{}"$idColumn INTEGER PRIMARY KEY,' \
-                                        '"\n'.format(" " * 23)
-                else:
-                    content_parameters += "final {0}Column = '{0}'" \
-                        ";\n  ".format(__name)
-                    content_database += '{2}"${0}Column {1},"\n'.format(
-                        __name, data_type, " " * 23)
+                content_parameters += "final {0}Column = '{0}'" \
+                    ";\n  ".format(__name)
+                content_database += '{2}"${0}Column {1},"\n'.format(
+                    __name, data_type, " " * 23)
 
             content_database += '{}")"'.format(" " * 23)
 

@@ -82,7 +82,7 @@ class $ModelClass$Data {
   Future<$ModelClass$Model> detail(int id) async {
     try {
       Database _db = await db;
-      var _result = await _db.query($Model$Table, where: "$idColumn = ?", whereArgs: [id]);
+      var _result = await _db.query($Model$Table, where: "$id = ?", whereArgs: [id]);
       return _result.isNotEmpty 
           ? $ModelClass$Model.fromJson(_result.first) 
           : Null;
@@ -96,7 +96,7 @@ class $ModelClass$Data {
     try {
       Database _db = await db;
       return await _db.update($Model$Table,
-          $Model$.toJson(), where: "$idColumn = ?", whereArgs: [$Model$.id]);
+          $Model$.toJson(), where: "$id = ?", whereArgs: [$Model$.id]);
     } catch (error, exception) {
       return throw {"error": error, "message": exception};
     }
@@ -106,7 +106,7 @@ class $ModelClass$Data {
   Future<int> delete(int id) async {
     try {
       Database _db = await db;
-      return await _db.delete($Model$Table, where: "$idColumn = ?", whereArgs: [id]);
+      return await _db.delete($Model$Table, where: "$id = ?", whereArgs: [id]);
     } catch (error, exception) {
       return throw {"error": error, "message": exception};
     }    
