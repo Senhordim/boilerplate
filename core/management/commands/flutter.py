@@ -661,7 +661,8 @@ class Command(BaseCommand):
                     # import 'apps/animal/especie/controller.dart';
                     __imports_controllers += f"import 'apps/{__app.lower()}/{__model.lower()}/controller.dart';\n"
                     # Construindo os registros dos controllers
-                    __controllers_models += f"getIt.registerSingleton<{__model}Controller>({__model}Controller());\n    "
+                    __controller_model = f"{__app.title()}{__model}"
+                    __controllers_models += f"getIt.registerSingleton<{__controller_model}Controller>({__controller_model}Controller());\n    "
 
             return __imports_pages, __imports_controllers, __controllers_models, __list_pages
 
@@ -690,6 +691,9 @@ class Command(BaseCommand):
                 "$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
             content = content.replace(
                 "$project$", self.flutter_project.lower())
+
+            content = content.replace(
+                "$ModelClassController$", app.get_app_model_name(title_case=True))
 
             with open(__indexpage_file, 'w', encoding='utf-8') as page:
                 page.write(content)
@@ -721,6 +725,9 @@ class Command(BaseCommand):
             content = content.replace(
                 "$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
             content = content.replace("$project$", self.flutter_project)
+
+            content = content.replace(
+                "$ModelClassController$", app.get_app_model_name(title_case=True))
 
             with open(__listpage_file, 'w', encoding='utf-8') as page:
                 page.write(content)
@@ -931,6 +938,9 @@ class Command(BaseCommand):
             content = content.replace(
                 "$GetValuesControllers$", get_controllers_data)
 
+            content = content.replace(
+                "$ModelClassController$", app.get_app_model_name(title_case=True))
+
             with open(__createpage_file, 'w', encoding='utf-8') as page:
                 page.write(content)
 
@@ -963,6 +973,9 @@ class Command(BaseCommand):
             content = content.replace("$model$", app.model_name_lower)
             content = content.replace("$ModelClass$", app.model_name)
             content = content.replace("$project$", self.flutter_project)
+
+            content = content.replace(
+                "$ModelClassController$", app.get_app_model_name(title_case=True))
 
             with open(__detailpage_file, 'w', encoding='utf-8') as page:
                 page.write(content)

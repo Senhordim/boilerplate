@@ -81,7 +81,7 @@ class $ModelClass$Service {
 
     try {
       HttpRequestDio _dio = HttpRequestDio(url);
-      var data = await _dio.putHttp($ModelClassCamelCase$.toJson(), $ModelClassCamelCase$.id);
+      var data = await _dio.putHttp($ModelClassCamelCase$.toJson(), $ModelClassCamelCase$.id.toString());
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
@@ -121,7 +121,7 @@ class $ModelClass$Service {
 
     try {
       HttpRequestDio _dio = HttpRequestDio(url);
-      var data = await _dio.deleteHttp($ModelClassCamelCase$.toJson(), $ModelClassCamelCase$.id);
+      var data = await _dio.deleteHttp($ModelClassCamelCase$.toJson(), $ModelClassCamelCase$.id.toString());
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }

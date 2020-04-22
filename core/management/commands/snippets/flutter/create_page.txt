@@ -43,7 +43,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
   List<ReactionDisposer> _disposers = [];
 
   // Instanciando o controller via get_it
-  $ModelClass$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClass$Controller>();
+  $ModelClassController$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClassController$Controller>();
 
   // Instanciando o model
   $ModelClass$Model _$Model$ = $ModelClass$Model();

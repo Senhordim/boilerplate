@@ -33,7 +33,7 @@ class _$ModelClass$IndexPageState extends State<$ModelClass$IndexPage>
   AnimationController _animationController;
 
   // Instanciando o controller via get_it
-  $ModelClass$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClass$Controller>();
+  $ModelClassController$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClassController$Controller>();
 
   // Instanciando o model
   $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model();

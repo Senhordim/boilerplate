@@ -41,7 +41,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
   List<$ModelClass$Model> _$Model$List = List<$ModelClass$Model>();
 
   // Instanciando o controller via get_it
-  $ModelClass$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClass$Controller>();
+  $ModelClassController$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClassController$Controller>();
 
   @override
   void initState() {
