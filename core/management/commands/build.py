@@ -1424,18 +1424,19 @@ class Command(BaseCommand):
 
                     # Recuperando o conteúdo o arquivo
                     list_template_content = self._get_snippet(list_template)
-                    # Realizando o replace da TAG pelo conteúdo
+
+                    # Realizando o replace da TAG pelo conteúdo do título da lista
                     list_template_content = list_template_content.replace(
                         "<!--REPLACE_THEAD-->", thead)
+
+                    # Realizando o replace da TAG pelo conteúdo da linha do Listvew
+                    list_template_content = list_template_content.replace(
+                        "<!--REPLACE_TLINE-->", tline)
+
                     # Abrindo o arquivo para alterar o conteúdo
                     with open(list_template, 'w', encoding='utf-8') as list_file:
                         list_file.write(list_template_content)
 
-                    with fileinput.FileInput(list_template, inplace=True) as arquivo:
-                        for line in arquivo:
-                            print(line.replace(
-                                "<!--REPLACE_TLINE-->",
-                                tline), end='')
                 except Exception as error:
                     self.__message(f"Ocorreu o erro : {error}", error=True)
         except Exception as error:
