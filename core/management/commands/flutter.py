@@ -651,11 +651,12 @@ class Command(BaseCommand):
                 # Percorrendo os models da App
                 for model in __current_app.models:
                     __model = model[1]
-                    __imports_pages += "import 'apps/{}/{}/pages/list.dart';\n".format(
-                        __app, __model.lower()
+                    __imports_pages += "import 'apps/{}/{}/pages/list.dart' as {};\n".format(
+                        __app, __model.lower(
+                        ), f"{__app.title()}{__model}"
                     )
-                    __list_pages += "Itens(title: '{}', icon: FontAwesomeIcons.folderOpen, uri: {}ListPage()),\n".format(
-                        model[0]._meta.verbose_name, __model
+                    __list_pages += "Itens(title: '{}', icon: FontAwesomeIcons.folderOpen, uri: {}.{}ListPage()),\n".format(
+                        model[0]._meta.verbose_name, f"{__app.title()}{__model}", __model
                     )
                     # Construindo os imports dos controller
                     # import 'apps/animal/especie/controller.dart';
