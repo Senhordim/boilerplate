@@ -194,7 +194,8 @@ class Command(BaseCommand):
                     app_label=app_name.lower(), model=model_name.lower())
                 return _model.model_class()._meta.verbose_name.title()
             if app_name is not None and model_name is None:
-                return apps.get_app_config(app_name.lower()).verbose_name.title() or app_name
+                __app_config = apps.get_app_config(app_name.lower())
+                return __app_config.verbose_name.title() or app_name
         except Exception as error:
             self.__message(
                 f"Ocorreu um erro ao executar _get_verbose_name o :{error}")
