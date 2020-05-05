@@ -164,6 +164,12 @@ class Command(BaseCommand):
             dest='renderhtml',
             help='Renderirzar os fields do models para HTML'
         )
+        parser.add_argument(
+            '--format',
+            action='store_true',
+            dest='format',
+            help='Aplicar PEP8 nos arquivos'
+        )
 
     """
     #################################################################
@@ -598,7 +604,7 @@ class Command(BaseCommand):
                 return
 
             # Verificando se já existe o router = routers.DefaultRouter()
-            if self._check_content(self.path_urls, "router = routers.DefaultRouter()"):
+            if self._check_content(self.path_urls, "router = routers.DefaultRouter()") is False:
                 content = content.split("\n", 1)[1]
                 imports = 'router = routers.DefaultRouter()'
                 with fileinput.FileInput(self.path_urls, inplace=True) as arquivo:
@@ -606,7 +612,7 @@ class Command(BaseCommand):
                         print(line.replace(
                             imports, imports + '\n' + content), end='')
 
-            elif self._check_content(self.path_urls, "app_name = \'{}\'".format(self.app)):
+            elif self._check_content(self.path_urls, "app_name = \'{}\'".format(self.app))  is False:
                 # Atualizando arquivo com o novo conteúdo
                 app_name_url = "app_name = \'{}\'".format(self.app_lower)
                 with fileinput.FileInput(self.path_urls, inplace=True) as arquivo:
@@ -615,7 +621,7 @@ class Command(BaseCommand):
                             app_name_url, app_name_url + '\n' + content), end='')
 
             # Verificando se tem a importação do rest_framework
-            if self._check_content(self.path_urls, "from rest_framework import routers"):
+            if self._check_content(self.path_urls, "from rest_framework import routers")  is False:
                 content_urls = content_urls.split("\n")[1]
                 # Abre o arquivo do form
                 arquivo = open(self.path_urls, "r", encoding='utf-8')
@@ -671,7 +677,7 @@ class Command(BaseCommand):
                 arquivo.writelines(data)
                 # fecha o arquivo
                 arquivo.close()
-                if self._check_content(self.path_urls, "from django.urls import"):
+                if self._check_content(self.path_urls, "from django.urls import")  is False:
                     imports = 'from django.urls import path, include'
                     with fileinput.FileInput(self.path_urls, inplace=True) as arquivo:
                         for line in arquivo:
@@ -681,7 +687,7 @@ class Command(BaseCommand):
                     with open(self.path_urls, 'a', encoding='utf-8') as views:
                         views.write("\n")
                         views.write(content_urls)
-            elif self._check_content(self.path_urls, "from django.urls import"):
+            elif self._check_content(self.path_urls, "from django.urls import")  is False:
                 imports = 'from django.urls import path, include'
                 with fileinput.FileInput(self.path_urls, inplace=True) as arquivo:
                     for line in arquivo:
@@ -720,7 +726,7 @@ class Command(BaseCommand):
                 return
 
             # Verificando se já foi importado o model
-            if not self._check_content(self.path_views, self.model):
+            if self._check_content(self.path_views, self.model) is False:
                 content_models = content_urls.split("\n")[5]
                 # Abre o arquivo do form
                 arquivo = open(self.path_views, "r", encoding='utf-8')
@@ -1463,7 +1469,6 @@ class Command(BaseCommand):
             self._manage_api_view()
             # Chamado o método para tratar as urls da API
             self._manage_api_url()
-            self._apply_pep()
             return
         elif options['url']:
             self.__message("Trabalhando apenas as urls.")
@@ -1471,21 +1476,21 @@ class Command(BaseCommand):
             self._manage_url()
             # Chamado o método para tratar as urls da API
             self._manage_api_url()
-            self._apply_pep()
             return
         elif options['forms']:
             self.__message("Trabalhando apenas os forms.")
             # Chamando o método para tratar os form
             self._manage_form()
-            self._apply_pep()
             return
         elif options['views']:
             self.__message("Trabalhando apenas as views.")
             # Chamando o método para tratar as views
             self._manage_views()
-            self._apply_pep()
         elif options['renderhtml']:
             self._manage_render_html()
+            return
+        elif options['format']:
+            self._apply_pep()
             return
         else:
             # Chamando o método para tratar os form
@@ -1504,7 +1509,6 @@ class Command(BaseCommand):
             self._manage_templates()
             # Chamando o método para gerar os formulários
             self._manage_render_html()
-            self._apply_pep()
             return
 
     def handle(self, *args, **options):
