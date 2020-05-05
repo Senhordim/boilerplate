@@ -191,14 +191,14 @@ class Command(BaseCommand):
                 return apps.get_app_config(app_name.lower()).verbose_name.title() or app_name
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar _get_verbose_name o :{error}", error=True)
+                f"Ocorreu um erro ao executar _get_verbose_name o :{error}")
             return model_name.title()
 
     def _contain_number(self, text):
         try:
             return any(character.isdigit() for character in text)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
             return False
 
     def _get_size(self, path):
@@ -214,7 +214,7 @@ class Command(BaseCommand):
         try:
             return os.path.getsize(path)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
             return False
 
     def _check_dir(self, path):
@@ -230,7 +230,7 @@ class Command(BaseCommand):
         try:
             return os.path.isdir(path)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
             return False
 
     def _check_file(self, path):
@@ -246,7 +246,7 @@ class Command(BaseCommand):
         try:
             return os.path.isfile(path)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
             return False
 
     def __message(self, message, error=False):
@@ -280,7 +280,7 @@ class Command(BaseCommand):
                     return text_check in content
             self.__message("Arquivo não encontrado para análise.")
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
             return False
 
     def __check_file_is_locked(self, path):
@@ -299,7 +299,7 @@ class Command(BaseCommand):
                     content = arquivo.read()
                     return "#FileLocked" in content
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
             return True
 
     def _get_snippet(self, path):
@@ -317,9 +317,9 @@ class Command(BaseCommand):
             if self._check_file(path):
                 with open(path, 'r', encoding='utf-8') as arquivo:
                     return arquivo.read()
-            self.__message("Arquivo não encontrado para captura.", error=True)
+            self.__message("Arquivo não encontrado para captura.")
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
             return None
 
     def _get_model(self):
@@ -332,7 +332,7 @@ class Command(BaseCommand):
         try:
             return apps.get_model(self.app, self.model)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
             return None
 
     def _apply_pep(self):
@@ -346,7 +346,7 @@ class Command(BaseCommand):
                 .format(self.path_urls))
             os.system('isort {}'.format(self.path_urls))
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
             pass
         try:
             # Aplicando a PEP8 as Forms
@@ -355,7 +355,7 @@ class Command(BaseCommand):
                 .format(self.path_form))
             os.system('isort {}'.format(self.path_form))
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
             pass
         try:
             # Aplicando a PEP8 as Views
@@ -364,7 +364,7 @@ class Command(BaseCommand):
                 .format(self.path_views))
             os.system('isort {}'.format(self.path_views))
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
             pass
         try:
             # Aplicando a PEP8 as Views
@@ -373,7 +373,7 @@ class Command(BaseCommand):
                 .format(self.path_serializer))
             os.system('isort {}'.format(self.path_serializer))
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
             pass
 
     """
@@ -404,7 +404,7 @@ class Command(BaseCommand):
             with open(path, 'w', encoding='utf-8') as template:
                 template.write(content)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
 
     def _manage_detail_template(self):
         """Método para criar o template de Detail do model.
@@ -431,7 +431,7 @@ class Command(BaseCommand):
             with open(path, 'w', encoding='utf-8') as template:
                 template.write(content)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
 
     def _manage_list_template(self):
         """Método para criar o template de List do model.
@@ -459,7 +459,7 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
 
     def _manage_update_template(self):
         """Método para criar o template de Update do model.
@@ -487,7 +487,7 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
 
     def _manage_create_template(self):
         """Método para criar o template de Create do model.
@@ -513,7 +513,7 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
 
     def _manage_delete_template(self):
         """Método para criar o template de Delete do model.
@@ -538,7 +538,7 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
 
     def _manage_templates(self):
         """Método pai para controlar a criação do templates
@@ -561,7 +561,7 @@ class Command(BaseCommand):
             # Chamando método de criação do template de atualização.
             self._manage_update_template()
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
 
     """
     #################################################################
@@ -692,7 +692,7 @@ class Command(BaseCommand):
                     views.write("\n")
                     views.write(content_urls)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
 
     def _manage_api_view(self):
         """Método para configuração das Views da API
@@ -799,7 +799,7 @@ class Command(BaseCommand):
                 api_views.write("\n")
                 api_views.write(content)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
 
     def _manage_serializer(self):
         """Método para configurar o serializer do model informado.
@@ -869,7 +869,7 @@ class Command(BaseCommand):
                 urls.write("\n")
                 urls.write(content)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
 
     """
     #################################################################
@@ -946,7 +946,7 @@ class Command(BaseCommand):
                 form.write("\n")
                 form.write(content)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
 
     """
     #################################################################
@@ -1014,7 +1014,7 @@ class Command(BaseCommand):
                     content = content.replace('$FormsModalCreate$', "")
                     content = content.replace('$FormsModalUpdate$', "")
             except Exception as error:
-                self.__message(f"Ocorreu o erro: {e}", error=True)
+                self.__message(f"Ocorreu o erro: {e}")
 
             # Verificando se o models possui a configuração dos fields_display
             try:
@@ -1104,7 +1104,7 @@ class Command(BaseCommand):
                 views.write(content)
 
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
 
     """
     #################################################################
@@ -1219,7 +1219,7 @@ class Command(BaseCommand):
                 urls.write(content)
 
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
 
     """
     #################################################################
@@ -1242,7 +1242,7 @@ class Command(BaseCommand):
             content = content.replace("$field_name$", field_name)
             return content
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
 
     def _render_input(self, field):
         try:
@@ -1347,7 +1347,7 @@ class Command(BaseCommand):
                 print('Campo {} desconhecido'.format(field))
 
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
 
     """
     #################################################################
@@ -1363,7 +1363,7 @@ class Command(BaseCommand):
             # Rercuperando uma instancia do models informado
             model = self._get_model()
             if model == None:
-                self.__message("Favor declarar a app no settings.", error=True)
+                self.__message("Favor declarar a app no settings.")
                 return
             self._manage_templates()
             html_tag = ""
@@ -1438,9 +1438,9 @@ class Command(BaseCommand):
                         list_file.write(list_template_content)
 
                 except Exception as error:
-                    self.__message(f"Ocorreu o erro : {error}", error=True)
+                    self.__message(f"Ocorreu o erro : {error}")
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}", error=True)
+            self.__message(f"Ocorreu o erro : {error}")
 
     '''
     Função responsável por verificar as opções passadas por parametro 
@@ -1546,13 +1546,13 @@ class Command(BaseCommand):
             # Verificando se o diretório da App informada existe
             if self._check_dir(self.path_app) is False:
                 print(self.path_app)
-                self.__message("Diretório não encontrado.", error=True)
+                self.__message("Diretório não encontrado.")
                 return
             # Verifica se app esta instalada, pois precisa dela
             # para recuperar as instancias dos models
             if apps.is_installed(self.app_lower) is False:
                 self.__message(
-                    "Você deve colocar sua app no INSTALLED_APPS do settings.", error=True)
+                    "Você deve colocar sua app no INSTALLED_APPS do settings.")
                 return
             # Criando uma instancia da app
             self.app_instance = apps.get_app_config(self.app_lower)
@@ -1565,7 +1565,7 @@ class Command(BaseCommand):
                     # Verificando se existe no models.py o Model informado
                     if self._check_content(self.path_model, 'class {}'.format(self.model)) is False:
                         self.__message(
-                            "Model informado não encontrado.", error=True)
+                            "Model informado não encontrado.")
                         return
                 try:
                     # Verifica se o model está na app informada
@@ -1579,7 +1579,7 @@ class Command(BaseCommand):
                     self.model_lower = model.lower()
                     self.call_methods(options)
                 except LookupError as error:
-                    self.__message(f"Ocorreu o erro : {error}", error=True)
+                    self.__message(f"Ocorreu o erro : {error}")
             else:
                 # recupera todos os models da app
                 for model in self.app_instance.get_models():

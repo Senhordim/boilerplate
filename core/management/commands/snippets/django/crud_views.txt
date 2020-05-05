@@ -1,11 +1,3 @@
-"""
-Arquivo gerado automaticamente pelo build, contendo as views do objeto $ModelName$.
-
-Caso deseje bloquear o parser nesse arquivo, basta adicionar o caracter #(cerquilha) antes da palavra
-
-FileLocked
-"""
-
 
 # Views do Models $ModelClass$
 class $ModelClass$ListView(BaseListView):
