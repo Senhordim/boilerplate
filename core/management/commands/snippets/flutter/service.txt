@@ -16,7 +16,7 @@
 
 import 'model.dart';
 import '../../../utils/config.dart';
-import '../../../utils/http_dio_request.dart';
+import '../../../utils/custom_dio.dart';
 import '../../../utils/process.controller.dart';
 
 import 'package:get_it/get_it.dart';

@@ -1048,9 +1048,9 @@ class Command(BaseCommand):
         """
         try:
             __dio_file = Path(
-                f"{self.flutter_dir}/lib/utils/http_dio_request.dart")
+                f"{self.flutter_dir}/lib/utils/custom_dio.dart")
             __dio_snippet = Path(
-                f"{self.snippet_dir}/http_request_dio.txt")
+                f"{self.snippet_dir}/custom_dio.txt")
             content = self.__get_snippet(__dio_snippet)
             content = content.replace("$project$", self.flutter_project)
             with open(__dio_file, 'w', encoding='utf-8') as http_request:
