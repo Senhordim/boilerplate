@@ -31,8 +31,8 @@ class $ModelClass$Service {
   /// Método para retornar todos os $ModelClass$ da API
   Future<List<$ModelClass$Model>> fetchAll() async {
     List<$ModelClass$Model> _itens = List<$ModelClass$Model>();
-    String _url = "${Config.uri}$Model$-list/?format=json";
-    String _uri = "${Config.uri}$App$/$Model$/?format=json";
+    String _url = "$Model$-list/?format=json";
+    String _uri = "$App$/$Model$/?format=json";
     
     // Verificando a configuração de qual endereço utilizar
     String url = Config.usingURL == true? _url: _uri;
