@@ -61,6 +61,19 @@ class HttpRequestDio {
     }
   }
 
+    Future<dynamic> patchHttp(data) async {
+    try {
+      Response _response = await _dio.put(_url, data: data);
+      if (_response.statusCode == 200) {
+        _success(_response);
+        return _response.data;
+      }
+      return null;
+    } on DioError catch (error) {
+        _error(error.message, error.response);
+    }
+  }
+
   Future<dynamic> deleteHttp(data, String id) async {
     try {
       Response _response = await _dio.delete(_url, data: data);
