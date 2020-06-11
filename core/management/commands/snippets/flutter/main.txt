@@ -274,18 +274,31 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 /// Classe dos itens do ListView
-class Itens{
+class Itens {
   final String title;
   final IconData icon;
   final Widget uri;
+  final Image imageIcon;
 
-  Itens({
-    this.title,
-    this.icon,
-    this.uri,
-  });
+  Itens({this.title, this.icon, this.uri, this.imageIcon});
 
-    static List<Itens> list = <Itens> [$ListPages$];
+  List<Itens> list = [];
 
-    Widget geturi() => this.uri;
+  void make(BuildContext context) {
+    list.add(Itens(
+        title: 'arquivo importacao',
+        icon: null,
+        imageIcon: Image.asset("assets/icons/icons8-calendar-500.png",
+            width: MediaQuery.of(context).size.width / 4, color: Colors.red),
+        uri: Container()));
+    list.add(Itens(
+        title: 'grupo layout',
+        icon: FontAwesomeIcons.folderOpen,
+        uri: Container()));
+    list.add(Itens(
+        title: 'mapeamento layout',
+        icon: FontAwesomeIcons.folderOpen,
+        uri: Container()));
+  }
+  Widget geturi() => this.uri;
 }

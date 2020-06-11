@@ -17,7 +17,8 @@ Widget customMainCardButton(icon, label,
     cardBackgroundColorBegin,
     cardBackgroundColorEnd,
     boxShadowColor,
-    cardBorderColor}) {
+    cardBorderColor,
+    image}) {
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
     decoration: BoxDecoration(
@@ -46,7 +47,8 @@ Widget customMainCardButton(icon, label,
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 6),
             child: Center(
-              child: Icon(icon, color: iconColor, size: 42),
+              child:
+                  icon != null ? Icon(icon, color: iconColor, size: 42) : image,
             ),
           ),
           Center(
@@ -461,7 +463,11 @@ Widget customButtonOutline(
     Color textColor,
     Color borderColor,
     Icon iconButton,
-    bool rounded = false}) {
+    bool rounded = false,
+    bool processing = false,
+    double circularProgressIndicatorSize = 28,
+    double circularProgressIndicatorStrokeWidth = 4.0,
+    Color circularProgressIndicatorBgColor = Colors.blue}) {
   try {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -481,11 +487,19 @@ Widget customButtonOutline(
             SizedBox(
               width: 4.0,
             ),
-            Text(
-              label,
-              style:
-                  TextStyle(color: textColor ?? Theme.of(context).primaryColor),
-            ),
+            processing
+                ? Container(
+                    height: circularProgressIndicatorSize,
+                    width: circularProgressIndicatorSize,
+                    child: CircularProgressIndicator(
+                      strokeWidth: circularProgressIndicatorStrokeWidth,
+                      valueColor: new AlwaysStoppedAnimation<Color> (circularProgressIndicatorBgColor),
+                    ))
+                : Text(
+                    label,
+                    style: TextStyle(
+                        color: textColor ?? Theme.of(context).primaryColor),
+                  ),
           ],
         ),
         onPressed: onPress,
