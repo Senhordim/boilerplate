@@ -18,14 +18,18 @@ Widget customMainCardButton(icon, label,
     cardBackgroundColorEnd,
     boxShadowColor,
     cardBorderColor,
-    image}) {
+    image,
+    double textSize, textWeight = FontWeight.w600}) {
   return Container(
-    margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+    margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
     decoration: BoxDecoration(
       border: Border.all(color: cardBorderColor),
       boxShadow: [
         BoxShadow(
-            color: boxShadowColor, offset: Offset(2.0, 2.0), blurRadius: 3.0)
+          color: boxShadowColor,
+          offset: Offset(2.0, 2.0),
+          blurRadius: 3.0,
+        )
       ],
       gradient: LinearGradient(
         begin: Alignment.topCenter,
@@ -38,29 +42,28 @@ Widget customMainCardButton(icon, label,
       ),
       borderRadius: BorderRadius.circular(8.0),
     ),
-    child: Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 6),
-            child: Center(
-              child:
-                  icon != null ? Icon(icon, color: iconColor, size: 42) : image,
-            ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 6),
+          child: Center(
+            child:
+                icon != null ? Icon(icon, color: iconColor, size: 42) : image,
           ),
-          Center(
-            child: Text(
-              '$label',
-              style: TextStyle(
-                  color: textColor, fontWeight: FontWeight.w600, fontSize: 14),
-              textAlign: TextAlign.center,
-            ),
-          )
-        ],
-      ),
+        ),
+        Center(
+          child: Text(
+            '$label',
+            style: TextStyle(
+                color: textColor,
+                fontWeight: textWeight,
+                fontSize: textSize ?? 14),
+            textAlign: TextAlign.center,
+          ),
+        )
+      ],
     ),
   );
 }

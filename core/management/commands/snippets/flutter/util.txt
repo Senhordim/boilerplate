@@ -135,4 +135,29 @@ class Util {
       throw error;
     }
   }
+
+  /// Método Estatico para retornar o tamanho da tela do device
+  ///   
+  ///  Parameters:
+  ///      context
+  ///      fator de proporção
+  /// 
+  ///  Return:
+  ///      Double
+  static getProportionScreenWidth(BuildContext context, double proportion){
+    return MediaQuery.of(context).size.width * proportion;
+  }
+  
+  /// Método Estatico para retornar o tamanho da tela do device
+  ///   
+  ///  Parameters:
+  ///      context
+  ///      fator de proporção
+  /// 
+  ///  Return:
+  ///      Double
+  static getProportionScreenHeight(BuildContext context, double proportion){
+    return MediaQuery.of(context).size.height * proportion;
+  }
+
 }
