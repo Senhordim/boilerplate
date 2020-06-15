@@ -34,3 +34,15 @@ try:
     DOC_APPS = settings.DOC_APPS
 except:
     pass
+
+try:
+    from django.conf import settings
+    LOGIN_REDIRECT_URL = settings.LOGIN_REDIRECT_URL
+except expression as identifier:
+    pass
+
+try:
+    from django.conf import settings
+    LOGOUT_REDIRECT_URL = settings.LOGOUT_REDIRECT_URL
+except expression as identifier:
+    pass
