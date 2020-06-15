@@ -89,46 +89,46 @@ class AppModel:
             self.__message(
                 f"Erro no get_path_app_model_dir {e}", error=True)
 
-    def get_path_pages_dir(self):
-        """Método para retornar o path do diretório pages
+    def get_path_views_dir(self):
+        """Método para retornar o path do diretório views
 
         Returns:
-            String -- Caminho do diretório pages no projeto Flutter
+            String -- Caminho do diretório views no projeto Flutter
         """
         try:
-            return Path("{}/lib/apps/{}/{}/pages/".format(
+            return Path("{}/lib/apps/{}/{}/views/".format(
                 self.path_flutter, self.app_name_lower,
                 self.model_name_lower))
         except Exception as error:
-            self.__message(f"Erro no get_path_pages_dir {e}", error=True)
+            self.__message(f"Erro no get_path_views_dir {e}", error=True)
 
-    def get_path_files_pages(self):
+    def get_path_files_views(self):
         """Método para retornar os arquivos das páginas no projeto Flutter
 
         Returns:
             String's -- Caminho de cada arquivo das páginas na create, detail, index, list e update
         """
         try:
-            __create = Path("{}/lib/apps/{}/{}/pages/create.dart".format(
+            __create = Path("{}/lib/apps/{}/{}/views/create.dart".format(
                 self.path_flutter, self.app_name_lower,
                 self.model_name_lower))
-            __detail = Path("{}/lib/apps/{}/{}/pages/detail.dart".format(
+            __detail = Path("{}/lib/apps/{}/{}/views/detail.dart".format(
                 self.path_flutter, self.app_name_lower,
                 self.model_name_lower))
-            __index = Path("{}/lib/apps/{}/{}/pages/index.dart".format(
+            __index = Path("{}/lib/apps/{}/{}/views/index.dart".format(
                 self.path_flutter, self.app_name_lower,
                 self.model_name_lower))
-            __list = Path("{}/lib/apps/{}/{}/pages/list.dart".format(
+            __list = Path("{}/lib/apps/{}/{}/views/list.dart".format(
                 self.path_flutter, self.app_name_lower,
                 self.model_name_lower))
-            __update = Path("{}/lib/apps/{}/{}/pages/update.dart".format(
+            __update = Path("{}/lib/apps/{}/{}/views/update.dart".format(
                 self.path_flutter, self.app_name_lower,
                 self.model_name_lower))
 
             return __create, __detail, __index, __list, __update
         except Exception as error:
             self.__message(
-                f"Erro no get_path_files_pages: {e}", error=True)
+                f"Erro no get_path_files_views: {e}", error=True)
 
     def get_path_data_file(self):
         """Método para recuperar o caminho do arquivo data.dart
@@ -196,14 +196,14 @@ class AppModel:
         print("Caminhos:")
         print(f"Diretório App {self.get_path_app_dir()}")
         print(f"Diretório Model {self.get_path_app_model_dir()}")
-        print(f"Diretório Pages {self.get_path_pages_dir()}")
+        print(f"Diretório views {self.get_path_views_dir()}")
         print(f"Data {self.get_path_data_file()}")
         print(f"Model {self.get_path_model_file()}")
         print(f"Controller {self.get_path_controller_file()}")
         print(f"Service {self.get_path_service_file()}")
-        c, d, i, l, u = self.get_path_files_pages()
+        c, d, i, l, u = self.get_path_files_views()
         print("")
-        print("Pages \nCreate: {}\nDetail: {}\nIndex: {}\nList: {}\nUpdate: {}".format(
+        print("views \nCreate: {}\nDetail: {}\nIndex: {}\nList: {}\nUpdate: {}".format(
             c, d, i, l, u
         ))
 
@@ -638,10 +638,10 @@ class Command(BaseCommand):
 
     def __mapping_all_application(self):
         try:
-            __imports_pages = ""
+            __imports_views = ""
             __imports_controllers = ""
             __controllers_models = ""
-            __list_pages = ""
+            __list_views = ""
             __current_app = None
 
             for app in FLUTTER_APPS:
@@ -651,11 +651,11 @@ class Command(BaseCommand):
                 # Percorrendo os models da App
                 for model in __current_app.models:
                     __model = model[1]
-                    __imports_pages += "import 'apps/{}/{}/pages/list.dart' as {};\n".format(
+                    __imports_views += "import 'apps/{}/{}/views/list.dart' as {};\n".format(
                         __app, __model.lower(
                         ), f"{__app.title()}{__model}"
                     )
-                    __list_pages += "Itens(title: '{}', icon: FontAwesomeIcons.folderOpen, uri: {}.{}ListPage()),\n".format(
+                    __list_views += "Itens(title: '{}', icon: FontAwesomeIcons.folderOpen, uri: {}.{}ListPage()),\n".format(
                         model[0]._meta.verbose_name, f"{__app.title()}{__model}", __model
                     )
                     # Construindo os imports dos controller
@@ -665,7 +665,7 @@ class Command(BaseCommand):
                     __controller_model = f"{__app.title()}{__model}"
                     __controllers_models += f"getIt.registerSingleton<{__controller_model}Controller>({__controller_model}Controller());\n    "
 
-            return __imports_pages, __imports_controllers, __controllers_models, __list_pages
+            return __imports_views, __imports_controllers, __controllers_models, __list_views
 
         except Exception as error:
             self.__message(
@@ -679,7 +679,7 @@ class Command(BaseCommand):
         """
         try:
             # Recuperando o arquivo a ser editado
-            __indexpage_file = Path(f"{app.get_path_pages_dir()}/index.dart")
+            __indexpage_file = Path(f"{app.get_path_views_dir()}/index.dart")
 
             # Verificando se o arquivo está travado para parser
             if self.__check_file_is_locked(__indexpage_file):
@@ -711,7 +711,7 @@ class Command(BaseCommand):
         """
         try:
             # Recuperando o arquivo a ser editado
-            __listpage_file = Path(f"{app.get_path_pages_dir()}/list.dart")
+            __listpage_file = Path(f"{app.get_path_views_dir()}/list.dart")
 
             # Verificando se o arquivo está travado para parser
             if self.__check_file_is_locked(__listpage_file):
@@ -852,7 +852,7 @@ class Command(BaseCommand):
             if createpage is True:
                 # Recuperando o arquivo da página de criação
                 __createpage_file = Path(
-                    f"{app.get_path_pages_dir()}/create.dart")
+                    f"{app.get_path_views_dir()}/create.dart")
                 content = self.__get_snippet(
                     f"{self.snippet_dir}create_page.txt")
 
@@ -862,7 +862,7 @@ class Command(BaseCommand):
             else:
                 # Recuperando o arquivo da página de edição
                 __createpage_file = Path(
-                    f"{app.get_path_pages_dir()}/update.dart")
+                    f"{app.get_path_views_dir()}/update.dart")
                 content = self.__get_snippet(
                     f"{self.snippet_dir}update_page.txt")
 
@@ -957,7 +957,7 @@ class Command(BaseCommand):
         """
         try:
             # Recuperando o arquivo a ser editado
-            __detailpage_file = Path(f"{app.get_path_pages_dir()}/detail.dart")
+            __detailpage_file = Path(f"{app.get_path_views_dir()}/detail.dart")
 
             # Verificando se o arquivo está travado para parser
             if self.__check_file_is_locked(__detailpage_file):
@@ -984,6 +984,31 @@ class Command(BaseCommand):
         except Exception as error:
             self.__message(
                 f"Ocorreu um erro ao gerar a página da Detail {error}", error=True)
+
+    def __widget_parser(self, app):
+        """Método para criar o widget do Model
+
+        Arguments:
+            app {AppModel} -- Instância da classe AppModel
+        """
+        try:
+            # Recuperando o arquivo a ser editado
+            __widget_file = Path(f"{app.get_path_views_dir()}/widget.dart")
+
+            # Verificando se o arquivo está travado para parser
+            if self.__check_file_is_locked(__widget_file):
+                return
+
+            # Realizando replace dos dados
+            content = self.__get_snippet(f"{self.snippet_dir}widget.txt")
+            content = content.replace("$ModelClass$", app.model_name)
+
+            with open(__widget_file, 'w', encoding='utf-8') as page:
+                page.write(content)
+
+        except Exception as error:
+            self.__message(
+                f"Ocorreu um erro ao gerar a página da Widget {error}", error=True)
 
     def __data_parser(self, app):
         """Método responsável por criar o arquivo de data baseado na App e no Models
@@ -1498,13 +1523,13 @@ class Command(BaseCommand):
 
             # Recuperando os caminhos dos diretório e arquivos do Model
             __model_dir = __source_class.get_path_app_model_dir()
-            __pages_dir = __source_class.get_path_pages_dir()
+            __views_dir = __source_class.get_path_views_dir()
             __data_file = __source_class.get_path_data_file()
             __model_file = __source_class.get_path_model_file()
             __service_file = __source_class.get_path_service_file()
             __controller_file = __source_class.get_path_controller_file()
 
-            __pages = __source_class.get_path_files_pages()
+            __views = __source_class.get_path_files_views()
 
             # Verificando se o diretório base do Model já existe
             if not self.__check_dir(__model_dir):
@@ -1513,30 +1538,30 @@ class Command(BaseCommand):
                     f"Criando diretório source do {__app_name}.{__model_name}")
                 os.makedirs(__model_dir)
 
-            # Verificando se o diretório pages do Model já existe
-            if not self.__check_dir(__pages_dir):
+            # Verificando se o diretório views do Model já existe
+            if not self.__check_dir(__views_dir):
                 # Diretório inexistente
-                os.makedirs(__pages_dir)
+                os.makedirs(__views_dir)
 
                 # Criando os arquivos dart das páginas
-                if __pages is not None:
-                    with open(__pages[0], 'w', encoding='utf-8') as pagina:
+                if __views is not None:
+                    with open(__views[0], 'w', encoding='utf-8') as pagina:
                         pagina.write(
                             f"// Create Page {__app_name} {__model_name}")
 
-                    with open(__pages[1], 'w', encoding='utf-8') as pagina:
+                    with open(__views[1], 'w', encoding='utf-8') as pagina:
                         pagina.write(
                             f"// Detail Page {__app_name} {__model_name}")
 
-                    with open(__pages[2], 'w', encoding='utf-8') as pagina:
+                    with open(__views[2], 'w', encoding='utf-8') as pagina:
                         pagina.write(
                             f"// Index Page {__app_name} {__model_name}")
 
-                    with open(__pages[3], 'w', encoding='utf-8') as pagina:
+                    with open(__views[3], 'w', encoding='utf-8') as pagina:
                         pagina.write(
                             f"// List Page {__app_name} {__model_name}")
 
-                    with open(__pages[4], 'w', encoding='utf-8') as pagina:
+                    with open(__views[4], 'w', encoding='utf-8') as pagina:
                         pagina.write(
                             f"// Update Page {__app_name} {__model_name}")
 
@@ -1573,6 +1598,9 @@ class Command(BaseCommand):
 
             # Realizando o parser da página de listagem
             self.__listpage_parser(__source_class)
+            
+            # Realizando o parser do widget
+            self.__widget_parser(__source_class)
 
             # Realizando o parser da página de criação
             self.__create_update_page_parser(__source_class, False)
@@ -1671,24 +1699,24 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(path_maindart):
                 return
 
-            # Pegando os imports das pages e dos controller
-            __import_pages, __import_controllers, __register_controller, __pages = self.__mapping_all_application()
+            # Pegando os imports das views e dos controller
+            __import_views, __import_controllers, __register_controller, __views = self.__mapping_all_application()
 
-            # Adicionando a APP configuracao ao import dos controllers das pages e ao register
+            # Adicionando a APP configuracao ao import dos controllers das views e ao register
             __import_controllers += f"import 'apps/configuracao/controller.dart';"
-            __import_pages += f"import 'apps/configuracao/index.page.dart';\n"
+            __import_views += f"import 'apps/configuracao/index.page.dart';\n"
             __register_controller += "getIt.registerSingleton<SettingsController>(SettingsController());"
 
-            if __import_pages is None or __import_controllers is None:
+            if __import_views is None or __import_controllers is None:
                 return
 
             snippet = snippet.replace('$project$', self.flutter_project)
             snippet = snippet.replace(
                 '$RegisterControllers$', __register_controller)
-            snippet = snippet.replace('$ImportPages$', __import_pages)
+            snippet = snippet.replace('$ImportViews$', __import_views)
             snippet = snippet.replace(
                 '$ImportController$', __import_controllers)
-            snippet = snippet.replace('$ListPages$', __pages)
+            snippet = snippet.replace('$Listviews$', __views)
 
             # Alterando o conteúdo do arquivo main.dart original
             with open(path_maindart, 'w', encoding='utf-8') as main_dart:

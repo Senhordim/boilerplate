@@ -17,7 +17,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-$ImportPages$
+$ImportViews$
 $ImportController$
 
 // Variável para controlar o idioma padrão da App
@@ -174,20 +174,20 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: const EdgeInsets.all(4.0),
         child: GridView.count(
           crossAxisCount: 2,
-          children: List.generate(Itens.list.length, (index) {
+          children: List.generate(Itens().list.length, (index) {
             return Center(
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(context, 
                     MaterialPageRoute(
                       builder: (context) =>
-                        Itens.list[index].geturi(),
+                        Itens().list[index].geturi(),
                       ),
                     );
                 },
                 child: customMainCardButton(
-                  Itens.list[index].icon,
-                  Itens.list[index].title,
+                  Itens().list[index].icon,
+                  Itens().list[index].title,
                   iconColor: _controller.lightTheme == true
                       ? CustomTheme.mainCardLightIconColor
                       : CustomTheme.mainCardDarkIconColor,

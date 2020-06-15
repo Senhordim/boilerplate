@@ -38,7 +38,7 @@ class $ModelClass$Service {
     String url = Config.usingURL == true? _url: _uri;
 
     try {
-      HttpRequestDio _dio = HttpRequestDio(url);
+      CustomDio _dio = CustomDio(url);
       var data = await _dio.getHttp();
       if (data != null) {
         for (var item in data){
@@ -60,7 +60,7 @@ class $ModelClass$Service {
     String url = Config.usingURL == true? _url: _uri;
 
     try {
-      HttpRequestDio _dio = HttpRequestDio(url);
+      CustomDio _dio = CustomDio(url);
       var data = await _dio.getHttp();
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
@@ -80,7 +80,7 @@ class $ModelClass$Service {
     String url = Config.usingURL == true? _url: _uri;
 
     try {
-      HttpRequestDio _dio = HttpRequestDio(url);
+      CustomDio _dio = CustomDio(url);
       var data = await _dio.putHttp($ModelClassCamelCase$.toJson(), $ModelClassCamelCase$.id.toString());
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
@@ -100,7 +100,7 @@ class $ModelClass$Service {
     String url = Config.usingURL == true? _url: _uri;
 
     try {
-      HttpRequestDio _dio = HttpRequestDio(url);
+      CustomDio _dio = CustomDio(url);
       var data = await _dio.postHttp($ModelClassCamelCase$.toJson());
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
@@ -120,7 +120,7 @@ class $ModelClass$Service {
     String url = Config.usingURL == true? _url: _uri;
 
     try {
-      HttpRequestDio _dio = HttpRequestDio(url);
+      CustomDio _dio = CustomDio(url);
       var data = await _dio.deleteHttp($ModelClassCamelCase$.toJson(), $ModelClassCamelCase$.id.toString());
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
