@@ -26,7 +26,7 @@ class CustomDio extends DioForNative {
         // 'Authorization': 'Bearer ' + token ?? Config.DRFToken,
       };
     } catch (e) {
-      DebugPrint.error("Erro ao executar o makeHeadersAuthentication: $e");
+      
     }
     this.options.headers = headersMap;
     return headersMap;
