@@ -28,6 +28,7 @@ dependencies:
   shared_preferences: ^0.5.3+4 #Lib para acessar o SharedPreferences do device.
   flutter_launcher_icons: ^0.7.3 #Lib para gerar o ícone do aplicativo para quando for submetido para as lojas.
   font_awesome_flutter: ^8.5.0 #Lib para utilização dos ícones do site Font Awesome.
+  sembast: ^2.4.4+3 #Banco de dados NoSQL
 
   flutter_localizations: #Lib para trabalhar com internacionalização dos textos fixos da app. Ex:. Label de um button
       sdk: flutter
