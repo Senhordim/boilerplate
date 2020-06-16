@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-
 import 'dart:developer' as developer;
-
 
 class Config {
   // Constante contendo o endereço padrão de acesso à API
   static const uri = "$DjangoAPIPath$";
 
   // Constante contendo o Token de acesso à API
-    //TODO: Setar o valor do Token
+  //TODO: Setar o valor do Token
   static const DRFToken = "Token 128ad486de8ffb2c8def82e46a71adcacdb45df1";
 
   // Constante com a URL do média no projeto Django
@@ -41,7 +39,7 @@ class DebugPrint {
       _error += "\n${error.toUpperCase()}\n";
       _error += "##########\n";
       _error += "**********";
-      developer.log("****\n$_error\n****", name: 'Error:');
+      developer.log("erro", name: 'Error:', error: "****\n$_error\n****");
     }
   }
 }
