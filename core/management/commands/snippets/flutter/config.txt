@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'dart:developer' as developer;
+
+
 class Config {
   // Constante contendo o endereço padrão de acesso à API
   static const uri = "$DjangoAPIPath$";
@@ -17,12 +20,29 @@ class Config {
 
   // Constante para determinar se deve ser utilizada
   // no service a constante _url ou _uri
-  static const bool usingURL = false;
+  static const bool usingURL = false;  
+  
 }
 
-class DebugPrint{
-  static void imprimir(String texto){
-    print(texto);
+class DebugPrint {
+  // Constante para determinar quando estamos em desenvolvimento ou producao
+  static const bool debuggingMode = true;
+
+  static void imprimir(String texto) {
+    if (debuggingMode) {
+      developer.log(texto.toLowerCase(), name: 'Debug:');
+    }
+  }
+
+  static void error(String error) {
+    if (debuggingMode) {
+      String _error = "**********\n";
+      _error += "##########\n";
+      _error += "\n${error.toUpperCase()}\n";
+      _error += "##########\n";
+      _error += "**********";
+      developer.log("****\n$_error\n****", name: 'Error:');
+    }
   }
 }
 
