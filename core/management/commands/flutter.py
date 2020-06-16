@@ -1027,38 +1027,9 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(__data_file):
                 return
 
-            # Criando os atributos da classe Flutter
-            content_parameters = "  final String {0}Table = " \
-                                 "'{0}Table';\n  ".format(app.model_name_lower)
-            # Adicionando a coluna ID
-            content_parameters += "\nfinal id = 'id';\n"
-
-            content_database = '"CREATE TABLE ${}Table ("\n{}'.format(
-                app.model_name_lower, '"id INT," \n')
-
-            # Recuperando o model
-            for field in iter(app.model._meta.fields):
-                __app, __model, __name = str(field).split('.')
-                __name = self.__to_camel_case(__name.lower())
-                field_type = (str(str(type(field)).split('.')[-1:])
-                              .replace("[\"", "").replace("\'>\"]", ""))
-                attribute = self._tipos_flutter[self._tipos_originais.index(
-                    field_type)]
-                data_type = self._tipos_sqlite[self._tipos_originais.index(
-                    field_type)]
-                content_parameters += "final {0}Column = '{0}'" \
-                    ";\n  ".format(__name)
-                content_database += '{2}"${0}Column {1},"\n'.format(
-                    __name, data_type, " " * 23)
-
-            content_database += '{}")"'.format(" " * 23)
-
             # Alterando o conteúdo do Snippet com dados do model
             content = content.replace("$ModelClass$", app.model_name)
-            content = content.replace("$ParametersTable$", content_parameters)
-            content = content.replace("$CreateTable$", content_database)
-            content = content.replace("$Model$", app.model_name_lower)
-            content = content.replace("$App$", app.app_name_lower)
+            content = content.replace("$modelClass$", app.model_name_lower)
             content = content.replace("$project$", self.flutter_project)
 
             with open(__data_file, 'w', encoding='utf-8') as data_helper:
@@ -1173,6 +1144,7 @@ class Command(BaseCommand):
             content_string_return = ""
             content_from_json = ""
             content_to_map = ""
+            content_constructor = ""
 
             # Recuperando o arquivo do model.dart
             __model_file = app.get_path_model_file()
@@ -1200,27 +1172,29 @@ class Command(BaseCommand):
                 content_string_return += "{}: ${}\\n".format(
                     __name_dart.upper(), __name_dart)
 
+                content_constructor += "this.{},\n".format(__name_dart)
+
                 # Verificando se o campo é do tipo Datetime para fazer a conversão
                 if str(attribute) == "DateTime":
-                    content_from_json += "{1} = Util.convertDate(json['{2}']) ?? \"\";\n        ".format(
+                    content_from_json += "{1}: Util.convertDate(json['{2}']) == null ? null : json['{2}'],\n        ".format(
                         __model.lower(), __name_dart, __name)
                 elif str(attribute) == "bool":
                     if __name_dart.lower() == "enabled":
-                        content_from_json += "{1} = json['{2}'] ?? true;\n        ".format(
+                        content_from_json += "{1}: json['{2}'] == null ? true : json['{2}'] ,\n        ".format(
                             __model.lower(), __name_dart, __name)
                     elif __name_dart.lower() == "deleted":
-                        content_from_json += "{1} = json['{2}'] ?? false;\n        ".format(
+                        content_from_json += "{1}: json['{2}'] == null ? false : json['{2}'],\n        ".format(
                             __model.lower(), __name_dart, __name)
                     else:
-                        content_from_json += "{1} = json['{2}'] ?? true;\n        ".format(
+                        content_from_json += "{1}: json['{2}'] == null ? true : json['{2}'],\n        ".format(
                             __model.lower(), __name_dart, __name)
                 else:
                     # Verificando se o campo é do tipo FK para retornar null caso o valor não venha da API
                     if __name_dart.startswith("fk"):
-                        content_from_json += "{1} = json['{2}'] ?? 0;\n        ".format(
+                        content_from_json += "{1}: json['{2}'] == null ? 0 : json['{2}'],\n        ".format(
                             __model.lower(), __name_dart, __name)
                     else:
-                        content_from_json += "{1} = json['{2}'] ?? \"\";\n        ".format(
+                        content_from_json += "{1}: json['{2}'] == null ? \"\" : json['{2}'],\n        ".format(
                             __model.lower(), __name_dart, __name)
 
                 # Tratando os dados do content_to_map usados na função Map
@@ -1230,29 +1204,29 @@ class Command(BaseCommand):
                         content_to_map += "'{0}': this.{1}.toString(),\n        ".format(
                             __name, __name_dart)
                     else:
-                        content_to_map += '\'{0}\': Util.stringDateTimeSplit(this.{1}, returnType: "dt"), \n'.format(
+                        content_to_map += '\'{0}\': this.{1} != null? Util.stringDateTimeSplit(this.{1}, returnType: "dt"): null, \n'.format(
                             __name, __name_dart)
                     continue
                 if str(field_type) == "DateField":
-                    content_to_map += '\'{0}\': Util.stringDateTimeSplit(this.{1}, returnType: "d"), \n'.format(
+                    content_to_map += '\'{0}\': this.{1} != null ?Util.stringDateTimeSplit(this.{1}, returnType: "d"): null, \n'.format(
                         __name, __name_dart)
                     continue
                 if str(field_type) == "TimeField":
-                    content_to_map += '\'{0}\': Util.stringDateTimeSplit(this.{1}, returnType: "t"), \n'.format(
+                    content_to_map += '\'{0}\': this.{1} != null ?Util.stringDateTimeSplit(this.{1}, returnType: "t"): null, \n'.format(
                         __name, __name_dart)
                     continue
                 if str(attribute) == "bool":
                     if __name_dart.lower() == "enabled":
-                        content_to_map += "'{0}': this.{1} ?? true,\n        ".format(
+                        content_to_map += "'{0}': this.{1} != null? this.{1}: true,\n        ".format(
                             __name, __name_dart)
                     elif __name_dart.lower() == "deleted":
-                        content_to_map += "'{0}': this.{1} ?? false,\n        ".format(
+                        content_to_map += "'{0}': this.{1} != null? this.{1}: false,\n        ".format(
                             __name, __name_dart)
                     else:
-                        content_to_map += "'{0}': this.{1} ?? true,\n        ".format(
+                        content_to_map += "'{0}': this.{1} != null? this.{1}: true,\n        ".format(
                             __name, __name_dart)
                     continue
-                content_to_map += "'{0}': this.{1} ?? \"\",\n        ".format(
+                content_to_map += "'{0}': this.{1} != null? this.{1}: \"\",\n        ".format(
                     __name, __name_dart)
 
             # Alterando o conteúdo do Snippet com dados do model
@@ -1263,15 +1237,16 @@ class Command(BaseCommand):
             content = content.replace("$ParserFromJson$", content_from_json)
             content = content.replace("$ParserToMap$", content_to_map)
             content = content.replace("$project$", self.flutter_project)
+            content = content.replace("$ConstructorModelClass$", content_constructor)
 
             # Verificando o tipo da classe para criar ou não o construtor
             # com os atributos do Base
-            if app.check_inherited_base(__model):
-                content = content.replace(
-                    "$ConstructorModelClass$", f"/// Construtor da Classe\n  {app.model_name}Model(){{this.createdOn = null;\nthis.updatedOn = null;\nthis.enabled = true;\nthis.deleted = false;}}")
-            else:
-                content = content.replace(
-                    "$ConstructorModelClass$", f"/// Construtor da Classe\n  {app.model_name}Model();")
+            # if app.check_inherited_base(__model):
+            #     content = content.replace(
+            #         "$ConstructorModelClass$", f"/// Construtor da Classe\n  {app.model_name}Model(){{this.createdOn = null;\nthis.updatedOn = null;\nthis.enabled = true;\nthis.deleted = false;}}")
+            # else:
+            #     content = content.replace(
+            #         "$ConstructorModelClass$", f"/// Construtor da Classe\n  {app.model_name}Model();")
 
             # Verificando se o arquivo existe
             if not self.__check_file(__model_file):

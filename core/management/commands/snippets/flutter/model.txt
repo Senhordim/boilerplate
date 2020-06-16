@@ -11,39 +11,47 @@
 /// pelo manage do Django adicione um # antes da palavra abaixo
 /// FileLocked
 
+import 'dart:convert';
+
+
 import '../../../utils/util.dart';
 
-class $ModelClass$Model {
-  int idSqLite;
+class $ModelClass$Model {  
   int id;
+  String nextUrl;
+  String previousUrl;
   $AttributeClass$
 
-  $ConstructorModelClass$
-  
+
+  $ModelClass$Model({
+    this.id,
+    this.nextUrl, 
+    this.previousUrl,
+    $ConstructorModelClass$
+  });
+
+  factory $ModelClass$Model.fromJson(String str) => $ModelClass$Model.fromMap(json.decode(str));
+
+  String toJson() => json.encode(toMap());
+
+  factory $ModelClass$Model.fromMap(Map<String, dynamic> json) => $ModelClass$Model(
+      nextUrl: json["nextUrl"] == null ? null : json["nextUrl"],
+      previousUrl: json["previousUrl"] == null ? null : json["previousUrl"],
+
+      $ParserFromJson$
+  );
+
+  Map<String, dynamic> toMap() => {
+      "nextUrl": nextUrl == null ? null : nextUrl,
+      "previousUrl": previousUrl == null ? null : previousUrl,
+        $ParserToMap$
+
+  };
+ 
   /// Sobscrevendo o método toString para retornar todos os atributos da classe.
   @override
   String toString() {
     return "$StringReturn$";
-  }
-
-  /// Métodos da classe
-  $ModelClass$Model.fromJson(Map<String, dynamic> json) {
-    try {
-      $ParserFromJson$
-    } catch (error, exception) {
-      throw {"error": error, "message": exception};
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    try {
-      Map<String, dynamic> data = {
-        $ParserToMap$
-      };
-      return data;
-    } catch (error, exception) {
-      return throw {"error": error, "message": exception};
-    }
   }
 
 }

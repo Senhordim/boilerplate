@@ -20,8 +20,7 @@ dependencies:
   url_launcher: ^5.1.3 #Lib para invocar intents dos devices como por exemplo envio de email.
   transparent_image: ^1.0.0 #Lib que disponibiliza uma imagem transparente, usada para auxiliar o download de imagens da web funcionando como placeholder.
   cached_network_image: ^2.0.0-rc #Lib para realizar cache das imagens baixadas da WEB.
-  connectivity: ^0.4.6+2 #Lib para auxiliar a checagem de conectividade do device.
-  sqflite: ^1.1.6+5 #Lib para trabalhar com SQLite.
+  connectivity: ^0.4.6+2 #Lib para auxiliar a checagem de conectividade do device.  
   crypto: ^2.1.3 #Lib de criprografia.
   google_sign_in: ^4.0.7 #Lib para autenticação com contas Google.
   image_picker: ^0.6.1+4 #Lib para realizar crop e rotação em imagens.
