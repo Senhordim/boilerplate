@@ -18,9 +18,8 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-import '../../utils/localization.dart';
 import '../../user_interface/widget.dart';
-import '../../../../utils/localization.dart';
+import '../../utils/localization.dart';
 
 import 'controller.dart';
 

@@ -13,8 +13,8 @@ import 'package:flutter/material.dart';
 
 import '../model.dart';
 import '../controller.dart';
-import '../../../user_interface/widget.dart';
 import '../../../../utils/localization.dart';
+import '../../../../user_interface/widget.dart';
 import '../../../../utils/process.controller.dart';
 
 

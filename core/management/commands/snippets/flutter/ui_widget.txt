@@ -9,6 +9,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../utils/util.dart';
 import '../utils/config.dart';
 import '../utils/localization.dart';
+import '../apps/auth/controller.dart';
 import '../apps/configuracao/controller.dart';
 
 // Constante contendo o valor da proporção da tela padrão
@@ -630,6 +631,9 @@ class HeadWidget extends StatefulWidget {
 }
 
 class _HeadWidgetState extends State<HeadWidget> {
+  // Instânciando o Controller da Autenticação
+  AuthController _authController = GetIt.I.get<AuthController>();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -645,7 +649,7 @@ class _HeadWidgetState extends State<HeadWidget> {
       ),
       child: Column(children: <Widget>[
         Text(
-          "",
+          _authController.authModel.profileName,
           style: Theme.of(context).textTheme.display1.copyWith(
                 fontWeight: FontWeight.w600,
                 wordSpacing: 0.08,

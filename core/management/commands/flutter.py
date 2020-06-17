@@ -998,6 +998,48 @@ class Command(BaseCommand):
             self.__message(
                 f"Ocorreu um erro ao gerar a página da Widget {error}", error=True)
 
+    def __create_auth_application(self):
+        """Método responsável por criar a app padrão de autenticação no projeto flutter
+
+        Args:
+            app {AppModel} -- Instância da classe AppModel
+        """
+        try:
+            # Recuperando os snippets
+            __data_snippet = self.__get_snippet(f"{self.snippet_dir}auth_data.txt")
+            __model_snippet = self.__get_snippet(f"{self.snippet_dir}auth_model.txt")
+            __service_snippet = self.__get_snippet(f"{self.snippet_dir}auth_service.txt")
+            __controller_snippet = self.__get_snippet(f"{self.snippet_dir}auth_controller.txt")
+            
+            # Gerando a app Auth
+            __auth_file = Path(f"{self.flutter_dir}/lib/apps/auth")
+            # Verificando se o diretório existe
+            if self.__check_dir(__auth_file):
+                return None
+            os.makedirs(__auth_file)
+            
+            # Escrevendo os arquivos
+            __data_file = Path("{}/lib/apps/auth/data.dart".format(self.flutter_dir))
+            __model_file = Path("{}/lib/apps/auth/model.dart".format(self.flutter_dir))
+            __service_file = Path("{}/lib/apps/auth/service.dart".format(self.flutter_dir))
+            __controller_file = Path("{}/lib/apps/auth/controller.dart".format(self.flutter_dir))
+
+            with open(__data_file, 'w', encoding='utf-8') as data_file:
+                data_file.write(__data_snippet) 
+            
+            with open(__model_file, 'w', encoding='utf-8') as model_file:
+                model_file.write(__model_snippet) 
+            
+            with open(__service_file, 'w', encoding='utf-8') as service_file:
+                service_file.write(__service_snippet) 
+            
+            with open(__controller_file, 'w', encoding='utf-8') as controller_file:
+                controller_file.write(__controller_snippet) 
+            
+
+        except Exception as error:
+            self.__message(f"Ocorreu um erro ao gerar a app de autentição {error}", error=True)
+
     def __data_parser(self, app):
         """Método responsável por criar o arquivo de data baseado na App e no Models
 
@@ -1721,6 +1763,9 @@ class Command(BaseCommand):
 
             # Gerando o class de acesso HTTP
             self.__http_dio_request()
+            
+            # Criando a app Auth
+            self.__create_auth_application()
 
             # Criando a app para gerenciar a internacionalização do projeto
             self.__localization_app()

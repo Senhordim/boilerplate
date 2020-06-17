@@ -12,9 +12,9 @@ import 'update.dart';
 import '../model.dart';
 import '../controller.dart';
 import '../../../../utils/util.dart';
-import '../../../user_interface/widget.dart';
 import '../../../../utils/localization.dart';
 import '../../../../user_interface/font.dart';
+import '../../../../user_interface/widget.dart';
 import '../../../../utils/process.controller.dart';
 
 
@@ -79,7 +79,7 @@ class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage>
     return Stack(
       children: <Widget>[
         HeadWidget(),
-        ButtonBarWidget(child: _buildPage())
+        _buildPage()
       ],
     );
   }
