@@ -60,7 +60,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
     return Scaffold(
       key: _scaffoldKey,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(       
+      appBar: AppBar(
         backgroundColor: Colors.transparent,
       ),
       body: _buildBody(),

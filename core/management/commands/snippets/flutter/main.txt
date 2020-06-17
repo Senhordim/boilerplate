@@ -56,7 +56,6 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
       statusBarColor: Colors.transparent
     ));
-
     return Observer(builder: (_) {
       return MaterialApp(
         title: '${Config.app_title}',
@@ -131,6 +130,9 @@ class _MyHomePageState extends State<MyHomePage> {
   // Declarando o inteiro para controlar qual página deve ser exibida
   int _page = 0;
 
+  // Declarando uma instancia da Classe dos items do Menu
+  Itens _itensMenuGridView = Itens();
+
   // Declarando a lista de Widgets que devem conter as páginas no caso de ser configurada
   // por meu do bottomNavigationBar
   List<Widget> _pages;
@@ -144,9 +146,8 @@ class _MyHomePageState extends State<MyHomePage> {
   /// da 
   @override
   void initState(){
-    /// Iniciando a lista de Widgets com as páginas da via ButtonNavigationBar
-    // _pages = [];
-    // _currentPage = _pages[_page];
+    _itensMenuGridView.make();
+    super.initState();
   }
 
   @override
@@ -172,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return [
       IconButton(
         icon: Icon(Icons.settings),
-        tooltip: 'Configurações',
+        tooltip: AppLocalizations.of(context).translate("page_label_configuration"),
         onPressed: () {
           Navigator.push(
             context, 
@@ -181,28 +182,26 @@ class _MyHomePageState extends State<MyHomePage> {
         }),
     ];
   }
-
-  /// Widget para criar o GridView contendo os Cards de acesso rápido
   Widget _buildGridView(context) {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: GridView.count(
+    return Stack(children: <Widget>[
+      HeadWidget(),
+      ButtonBarWidget(
+        gridButton: GridView.count(
           crossAxisCount: 2,
-          children: List.generate(Itens().list.length, (index) {
+          children: List.generate(_itensMenuGridView.list.length, (index) {
             return Center(
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(context, 
+                  Navigator.push(
+                    context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                        Itens().list[index].geturi(),
-                      ),
-                    );
+                      builder: (context) => _itensMenuGridView.list[index].geturi(),
+                    ),
+                  );
                 },
                 child: customMainCardButton(
-                  Itens().list[index].icon,
-                  Itens().list[index].title,
+                  _itensMenuGridView.list[index].icon,
+                  _itensMenuGridView.list[index].title,
                   iconColor: _controller.lightTheme == true
                       ? CustomTheme.mainCardLightIconColor
                       : CustomTheme.mainCardDarkIconColor,
@@ -226,8 +225,8 @@ class _MyHomePageState extends State<MyHomePage> {
             );
           }),
         ),
-      ),
-    );
+      )
+    ]);
   }
 
   /// Widget para criar o BottomNavigationBar. Caso o valor do bottomNavigationEnable
@@ -299,20 +298,21 @@ class Itens {
 
   List<Itens> list = [];
 
-  void make(BuildContext context) {
+  void make() {
+    // Exemplo de inserção de uma imagem do Assets como Card
+    // list.add(Itens(
+    //     title: 'arquivo importacao',
+    //     icon: null,
+    //     imageIcon: Image.asset("assets/icons/icons8-calendar-500.png",
+    //         width: MediaQuery.of(context).size.width / 4, color: Colors.red),
+    //     uri: Container()));
     list.add(Itens(
-        title: 'arquivo importacao',
-        icon: null,
-        imageIcon: Image.asset("assets/icons/icons8-calendar-500.png",
-            width: MediaQuery.of(context).size.width / 4, color: Colors.red),
-        uri: Container()));
-    list.add(Itens(
-        title: 'grupo layout',
+        title: 'Item 01',
         icon: FontAwesomeIcons.folderOpen,
         uri: Container()));
     list.add(Itens(
-        title: 'mapeamento layout',
-        icon: FontAwesomeIcons.folderOpen,
+        title: 'Item 02',
+        icon: FontAwesomeIcons.addressBook,
         uri: Container()));
   }
   Widget geturi() => this.uri;

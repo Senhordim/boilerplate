@@ -104,7 +104,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
     return Stack(
       children: <Widget>[
         HeadWidget(),
-        _buildPage(),      
+        _buildPage(),
       ],
     );
   }

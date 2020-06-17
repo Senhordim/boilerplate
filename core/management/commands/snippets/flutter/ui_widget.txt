@@ -637,7 +637,7 @@ class _HeadWidgetState extends State<HeadWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinit,
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 42, horizontal: 12),
       height: Util.getProportionScreenWidth(context, _proportionScreenDefault),
       decoration: BoxDecoration(
