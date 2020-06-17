@@ -88,17 +88,37 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: customAppBarTitle(
-          context, 
-          '${Config.app_title}',
+      extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          centerTitle: true,
+          //title: customAppBarTitle(
+          //  context, 
+          //  widget.title,
+          // ),
+          actions: _buildActions(),
+          backgroundColor: Colors.transparent
         ),
-      ),
-      body: _createBody(context),
+        body: _buildBody(),
     );
   }
 
-  Widget _createBody(context) {
+  /// Widget para criar as ações da AppBar
+  List<Widget> _buildAction(BuildContext context){
+    return [
+      IconButton(
+        icon: Icon(Icons.settings),
+        tooltip: 'Configurações',
+        onPressed: () {
+          Navigator.push(
+            context, 
+            MaterialPageRoute(builder: (_) => SettingsIndexPage()),
+          );
+        }),
+    ];
+  }
+
+  /// Widget para criar o corpo da views
+  Widget _buildBody(context) {
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: new BoxConstraints(

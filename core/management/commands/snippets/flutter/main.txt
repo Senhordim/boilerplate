@@ -149,12 +149,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     // Verificando se a será pelo navigationButton
       return Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
-          title: customAppBarTitle(
-            context, 
-            widget.title,
-          ),
+          //title: customAppBarTitle(
+          //  context, 
+          //  widget.title,
+          // ),
           actions: _buildAction(context),
+          backgroundColor: Colors.transparent,
         ),
         body: _buildGridView(context),
         bottomNavigationBar: _buildBottomNavigationBar(context)

@@ -4,11 +4,18 @@ import 'dart:ui';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
+import '../utils/util.dart';
 import '../utils/config.dart';
 import '../utils/localization.dart';
 import '../apps/configuracao/controller.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import '../apps/autenticacao/controller.dart';
+
+// Constante contendo o valor da proporção da tela padrão
+// utilizado para calcular altura do Head da página e da 
+// margem superior da barra de botões
+const double _proportionScreenDefault = 0.55;
 
 /// Widget para gerar os "botões" da tela inicial de acesso rápido
 Widget customMainCardButton(icon, label,
@@ -611,4 +618,67 @@ customErrorSnackbar(String message, {int secondsDuration = 4}) {
     backgroundColor: Color(0xfffFF6961),
     duration: Duration(seconds: secondsDuration),
   );
+}
+
+///
+/// [Área para os widgets do cabeçalho da página/views e da barra de botões]
+///
+
+/// Head da tela inicial
+class HeadWidget extends StatefulWidget {
+  @override
+  _HeadWidgetState createState() => _HeadWidgetState();
+}
+
+class _HeadWidgetState extends State<HeadWidget> {
+
+  AutenticacaoController _autenticacaoController =
+      GetIt.I.get<AutenticacaoController>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 42, horizontal: 12),
+      height: Util.getProportionScreenWidth(context, _proportionScreenDefault),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).primaryColor,
+            Theme.of(context).accentColor,
+          ],
+        ),
+      ),
+      child: Column(children: <Widget>[
+        Text(
+          _autenticacaoController.alunoModel.nome,
+          style: Theme.of(context).textTheme.display1.copyWith(
+                fontWeight: FontWeight.w600,
+                wordSpacing: 0.08,
+              ),
+        ),
+      ]),
+    );
+  }
+}
+
+/// Barra de botões da tela inicial
+class ButtonBarWidget extends StatefulWidget {
+  final Widget gridButton;
+  const ButtonBarWidget({
+    Key key,
+    this.gridButton,
+  }) : super(key: key);
+
+  @override
+  _ButtonBarWidgetState createState() => _ButtonBarWidgetState();
+}
+
+class _ButtonBarWidgetState extends State<ButtonBarWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.only(
+            top: Util.getProportionScreenWidth(context, _proportionScreenDefault) - 125),
+        child: widget.gridButton);
+  }
 }

@@ -47,6 +47,38 @@ class _$ModelClass$IndexPageState extends State<$ModelClass$IndexPage>
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+        key: _scaffoldKey,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          centerTitle: true,
+          //title: customAppBarTitle(
+          //  context, 
+          //  widget.title,
+          // ),
+          actions: _buildActions(),
+          backgroundColor: Colors.transparent
+        ),
+        body: _buildBody(),    
+    );
+  }
+
+  /// Widget para criar as ações da AppBar
+  List<Widget> _buildAction(BuildContext context){
+    return [
+      IconButton(
+        icon: Icon(Icons.settings),
+        tooltip: 'Configurações',
+        onPressed: () {
+          Navigator.push(
+            context, 
+            MaterialPageRoute(builder: (_) => SettingsIndexPage()),
+          );
+        }),
+    ];
+  }
+
+  Widget _buildBody() {
     return Container();
   }
 

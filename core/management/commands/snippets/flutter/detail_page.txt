@@ -58,10 +58,15 @@ class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage>
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: customAppBarTitle(
-          context, '${Config.app_title}',
-        ),
+        centerTitle: true,
+        //title: customAppBarTitle(
+        //  context, 
+        //  widget.title,
+        // ),
+        actions: _buildActions(),
+        backgroundColor: Colors.transparent
       ),
       body: _buildBody(context),
       floatingActionButton: FloatingActionButton(
@@ -74,6 +79,21 @@ class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage>
         },
       ),
     );
+  }
+
+  /// Widget para criar as ações da AppBar
+  List<Widget> _buildAction(BuildContext context){
+    return [
+      IconButton(
+        icon: Icon(Icons.settings),
+        tooltip: 'Configurações',
+        onPressed: () {
+          Navigator.push(
+            context, 
+            MaterialPageRoute(builder: (_) => SettingsIndexPage()),
+          );
+        }),
+    ];
   }
 
   Widget _buildBody(context) {
