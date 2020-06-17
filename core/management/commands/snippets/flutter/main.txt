@@ -15,6 +15,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'utils/config.dart';
 import 'utils/localization.dart';
 import 'user_interface/font.dart';
+import 'apps/auth/controller.dart';
 import 'user_interface/widget.dart';
 import 'utils/process.controller.dart';
 
@@ -31,6 +32,9 @@ void main() {
 
     // Registrando o controller do ProcessController
     getIt.registerSingleton<ProcessController>(ProcessController());
+
+    // Registrando o controller do Auth
+    getIt.registerSingleton<AuthController>(AuthController());
 
     /// Registrando os controllers dos Models utiliznado o getIt
     $RegisterControllers$

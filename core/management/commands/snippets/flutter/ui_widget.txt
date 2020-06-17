@@ -637,6 +637,7 @@ class _HeadWidgetState extends State<HeadWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinit,
       padding: const EdgeInsets.symmetric(vertical: 42, horizontal: 12),
       height: Util.getProportionScreenWidth(context, _proportionScreenDefault),
       decoration: BoxDecoration(
@@ -647,9 +648,11 @@ class _HeadWidgetState extends State<HeadWidget> {
           ],
         ),
       ),
-      child: Column(children: <Widget>[
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
         Text(
-          _authController.authModel.profileName,
+          _authController.profileName,
           style: Theme.of(context).textTheme.display1.copyWith(
                 fontWeight: FontWeight.w600,
                 wordSpacing: 0.08,

@@ -76,6 +76,15 @@ abstract class _AuthControllerBase with Store {
   @observable
   AuthModel authLocalModel;
 
+  /// Método para recuperar o profileName do usuário logado
+  String get profileName{
+    if(this.authModel != null){
+      return this.authModel.profileName;
+    }else{
+      return "";
+    }
+  }
+
   /// Declarando os actions padrões do AuthController.
   
   /// Action responsável pelo retorno da lista de elementos da API.

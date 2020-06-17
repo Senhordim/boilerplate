@@ -51,5 +51,5 @@ class AuthModel {
         "token": token == null ? null : token,
     };
 
-    String get profileName => this.login.isNotEmpty? this.login.trim(): "";
+    String get profileName => this.profileName;
 }
