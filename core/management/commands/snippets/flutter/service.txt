@@ -112,7 +112,7 @@ class $ModelClass$Service {
   }
 
   /// Método para exclui os $ModelClass$ da API
-  Future<$ModelClass$Model> delete($ModelClass$Model $ModelClassCamelCase$) async {
+  Future<bool> delete($ModelClass$Model $ModelClassCamelCase$) async {
     String _url = "${Config.uri}$Model$-delete/${$ModelClassCamelCase$.id}/?format=json";
     String _uri = "${Config.uri}$App$/$Model$/${$ModelClassCamelCase$.id}/?format=json";
 
@@ -123,12 +123,15 @@ class $ModelClass$Service {
       CustomDio _dio = CustomDio(url);
       var data = await _dio.deleteHttp($ModelClassCamelCase$.toJson(), $ModelClassCamelCase$.id.toString());
       if (data != null) {
-        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
+        _success("ok");
+        return true;
       }
+      return false;
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+      return false;
     }
-    return _$ModelClassCamelCase$;
+      return false;
   }
 
   /// Métodos para tratar o retorno do processamento

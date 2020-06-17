@@ -156,7 +156,10 @@ abstract class _$ModelClass$ControllerBase with Store {
     try{
       _processController.processing = true;
       // Recuperando o detalhe de um determinado $ModelClass$ da API. 
-      $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.delete($ModelClassCamelCase$Model);
+      bool _result = await _$ModelClassCamelCase$Service.delete($ModelClassCamelCase$Model);
+      if(_result){
+        _success("ok");
+      }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
     }finally{
