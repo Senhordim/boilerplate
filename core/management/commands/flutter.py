@@ -651,7 +651,7 @@ class Command(BaseCommand):
                 # Percorrendo os models da App
                 for model in __current_app.models:
                     __model = model[1]
-                    __imports_views += "import 'apps/{}/{}/views/list.dart' as {};\n".format(
+                    __imports_views += "import 'apps/{}/{}/views/list.dart' as {}Views;\n".format(
                         __app, __model.lower(
                         ), f"{__app.title()}{__model}"
                     )
@@ -660,10 +660,10 @@ class Command(BaseCommand):
                     )
                     # Construindo os imports dos controller
                     # import 'apps/animal/especie/controller.dart';
-                    __imports_controllers += f"import 'apps/{__app.lower()}/{__model.lower()}/controller.dart';\n"
+                    __imports_controllers += f"import 'apps/{__app.lower()}/{__model.lower()}/controller.dart' as {__app.title()}{__model.title()}Controller;\n"
                     # Construindo os registros dos controllers
-                    __controller_model = f"{__app.title()}{__model}"
-                    __controllers_models += f"getIt.registerSingleton<{__controller_model}Controller>({__controller_model}Controller());\n    "
+                    __controller_model = f"{__app.title()}{__model.title()}Controller.{__model}"
+                    __controllers_models += f"getIt.registerSingleton<{__controller_model}Controller>({__controller_model}Controller(), instanceName: '{__app.title()}{__model.title()}Controller');\n    "
 
             return __imports_views, __imports_controllers, __controllers_models, __list_views
 
@@ -692,9 +692,6 @@ class Command(BaseCommand):
                 "$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
             content = content.replace(
                 "$project$", self.flutter_project.lower())
-
-            content = content.replace(
-                "$ModelClassController$", app.get_app_model_name(title_case=True))
 
             with open(__indexpage_file, 'w', encoding='utf-8') as page:
                 page.write(content)
@@ -726,9 +723,6 @@ class Command(BaseCommand):
             content = content.replace(
                 "$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
             content = content.replace("$project$", self.flutter_project)
-
-            content = content.replace(
-                "$ModelClassController$", app.get_app_model_name(title_case=True))
 
             with open(__listpage_file, 'w', encoding='utf-8') as page:
                 page.write(content)
@@ -939,9 +933,6 @@ class Command(BaseCommand):
             content = content.replace(
                 "$GetValuesControllers$", get_controllers_data)
 
-            content = content.replace(
-                "$ModelClassController$", app.get_app_model_name(title_case=True))
-
             with open(__createpage_file, 'w', encoding='utf-8') as page:
                 page.write(content)
 
@@ -974,9 +965,6 @@ class Command(BaseCommand):
             content = content.replace("$model$", app.model_name_lower)
             content = content.replace("$ModelClass$", app.model_name)
             content = content.replace("$project$", self.flutter_project)
-
-            content = content.replace(
-                "$ModelClassController$", app.get_app_model_name(title_case=True))
 
             with open(__detailpage_file, 'w', encoding='utf-8') as page:
                 page.write(content)
@@ -1073,8 +1061,6 @@ class Command(BaseCommand):
 
             # Recuperando o snnipet do controller
             content = self.__get_snippet(f"{self.snippet_dir}controller.txt")
-            content = content.replace(
-                "$ModelClassController$", app.get_app_model_name(title_case=True))
             content = content.replace("$ModelClass$", app.model_name)
             content = content.replace("$ModelClassCamelCase$",
                                       self.__to_camel_case(app.model_name, True))

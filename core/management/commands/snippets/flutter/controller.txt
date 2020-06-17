@@ -47,11 +47,11 @@ import 'package:get_it/get_it.dart';
 
 part 'controller.g.dart';
 
-class $ModelClassController$Controller = _$ModelClassController$ControllerBase with _$$ModelClassController$Controller;
+class $ModelClass$Controller = _$ModelClass$ControllerBase with _$$ModelClass$Controller;
 
 
 /// Declarando a classe abstrata do $ModelClass$ com o Mixin de Store
-abstract class _$ModelClassController$ControllerBase with Store {
+abstract class _$ModelClass$ControllerBase with Store {
 
   // Instanciando o controller de processamento
   ProcessController _processController = GetIt.I.get<ProcessController>();
