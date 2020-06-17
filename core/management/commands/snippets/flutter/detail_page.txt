@@ -12,7 +12,6 @@ import 'update.dart';
 import '../model.dart';
 import '../controller.dart';
 import '../../../../utils/util.dart';
-import '../../../../utils/config.dart';
 import '../../../../utils/localization.dart';
 import '../../../../user_interface/font.dart';
 import '../../../../utils/process.controller.dart';
@@ -60,15 +59,9 @@ class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage>
       key: _scaffoldKey,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        centerTitle: true,
-        //title: customAppBarTitle(
-        //  context, 
-        //  widget.title,
-        // ),
-        actions: _buildActions(),
         backgroundColor: Colors.transparent
       ),
-      body: _buildBody(context),
+      body: _buildBody(),
       floatingActionButton: FloatingActionButton(
         child: Icon(
           Icons.update,
@@ -81,22 +74,7 @@ class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage>
     );
   }
 
-  /// Widget para criar as ações da AppBar
-  List<Widget> _buildAction(BuildContext context){
-    return [
-      IconButton(
-        icon: Icon(Icons.settings),
-        tooltip: 'Configurações',
-        onPressed: () {
-          Navigator.push(
-            context, 
-            MaterialPageRoute(builder: (_) => SettingsIndexPage()),
-          );
-        }),
-    ];
-  }
-
-  Widget _buildBody(context) {
+  Widget _buildBody() {
     return SingleChildScrollView(
       child: Container(
         height: MediaQuery.of(context).size.height,

@@ -17,6 +17,7 @@ import '../model.dart';
 import '../controller.dart';
 import '../../../../utils/util.dart';
 import '../../../../utils/config.dart';
+import '../../../../utils/localization.dart';
 import '../../../../user_interface/font.dart';
 import '../../../../user_interface/widget.dart';
 import '../../../../utils/process.controller.dart';
@@ -59,42 +60,15 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
     return Scaffold(
       key: _scaffoldKey,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        centerTitle: true,
-        //title: customAppBarTitle(
-        //  context, 
-        //  widget.title,
-        // ),
-        actions: _buildActions(),
-        backgroundColor: Colors.transparent,        
+      appBar: AppBar(       
+        backgroundColor: Colors.transparent,
       ),
       body: _buildBody(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {
-          _processController.clear();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => $ModelClass$AddPage(),
-            ),
-          );
-        },
+        onPressed: () {},
       ),
     );
-  }
-
-  /// Widget para criar as ações da AppBar
-  List<Widget> _buildAction(BuildContext context){
-    return [
-      IconButton(
-        icon: Icon(Icons.settings),
-        tooltip: 'Configurações',
-        onPressed: () {
-          Navigator.push(
-            context, 
-            MaterialPageRoute(builder: (_) => SettingsIndexPage()),
-          );
-        }),
-    ];
   }
 
   /// Widget para criar o body da views
@@ -107,7 +81,6 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              customTitlePage(context, _title),
               _listBuilder(),
             ],
           ),

@@ -10,7 +10,6 @@ import '../utils/util.dart';
 import '../utils/config.dart';
 import '../utils/localization.dart';
 import '../apps/configuracao/controller.dart';
-import '../apps/autenticacao/controller.dart';
 
 // Constante contendo o valor da proporção da tela padrão
 // utilizado para calcular altura do Head da página e da 
@@ -631,10 +630,6 @@ class HeadWidget extends StatefulWidget {
 }
 
 class _HeadWidgetState extends State<HeadWidget> {
-
-  AutenticacaoController _autenticacaoController =
-      GetIt.I.get<AutenticacaoController>();
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -650,7 +645,7 @@ class _HeadWidgetState extends State<HeadWidget> {
       ),
       child: Column(children: <Widget>[
         Text(
-          _autenticacaoController.alunoModel.nome,
+          "",
           style: Theme.of(context).textTheme.display1.copyWith(
                 fontWeight: FontWeight.w600,
                 wordSpacing: 0.08,

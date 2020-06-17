@@ -94,34 +94,13 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
       key: _scaffoldKey,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        centerTitle: true,
-        //title: customAppBarTitle(
-        //  context, 
-        //  widget.title,
-        // ),
-        actions: _buildActions(),
         backgroundColor: Colors.transparent
       ),
-      body: _buildBody(context),
+      body: _buildBody(),
     );
   }
-
-  /// Widget para criar as ações da AppBar
-  List<Widget> _buildAction(BuildContext context){
-    return [
-      IconButton(
-        icon: Icon(Icons.settings),
-        tooltip: 'Configurações',
-        onPressed: () {
-          Navigator.push(
-            context, 
-            MaterialPageRoute(builder: (_) => SettingsIndexPage()),
-          );
-        }),
-    ];
-  }
   
-  Widget _buildBody(context) {
+  Widget _buildBody() {
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: new BoxConstraints(
