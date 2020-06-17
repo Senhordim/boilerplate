@@ -131,11 +131,12 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
               return GestureDetector(
                 onTap: () {
                   _processController.clear();
+                  _$ModelClassCamelCase$Controller.$Model$Model = _$Model$;
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          $ModelClass$DetailPage(_$Model$),
+                          $ModelClass$DetailPage(),
                     ),
                   );
                 },

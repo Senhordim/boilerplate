@@ -19,11 +19,6 @@ import '../../../../utils/process.controller.dart';
 
 
 class $ModelClass$DetailPage extends StatefulWidget {
-  final $ModelClass$Model $Model$;
-
-  //Construtor recebendo o $Model$ enviado por parâmetro
-  $ModelClass$DetailPage(this.$Model$);
-
   @override
   _$ModelClass$DetailPageState createState() => _$ModelClass$DetailPageState();
 }
@@ -51,7 +46,7 @@ class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage>
     // Iniciando o AnimationController
     _animationController = AnimationController(vsync: this);
 
-    _$Model$ = widget.$Model$;
+    _$Model$ = _$ModelClassCamelCase$Controller.$Model$Model;
   }
 
   @override
@@ -68,8 +63,9 @@ class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage>
           Icons.update,
         ),
         onPressed: () {
+          _$ModelClassCamelCase$Controller.$Model$Model = _$Model$;
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => $ModelClass$UpdatePage(_$Model$)));
+              MaterialPageRoute(builder: (context) => $ModelClass$UpdatePage()));
         },
       ),
     );

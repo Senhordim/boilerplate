@@ -19,10 +19,6 @@ import '../../../../user_interface/widget.dart';
 import '../../../../utils/process.controller.dart';
 
 class $ModelClass$AddPage extends StatefulWidget {
-  final $ModelClass$Model $Model$;
-
-  $ModelClass$AddPage({this.$Model$});
-
   @override
   _$ModelClass$AddPageState createState() => _$ModelClass$AddPageState();
 }

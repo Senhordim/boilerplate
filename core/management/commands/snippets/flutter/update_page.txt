@@ -21,10 +21,6 @@ import '../../../../user_interface/widget.dart';
 import '../../../../utils/process.controller.dart';
 
 class $ModelClass$UpdatePage extends StatefulWidget {
-  final $ModelClass$Model $Model$;
-
-  $ModelClass$UpdatePage(this.$Model$);
-
   @override
   _$ModelClass$AddPageState createState() => _$ModelClass$AddPageState();
 }
@@ -73,7 +69,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
     _animationController = AnimationController(vsync: this);
 
     // Recuperando o objeto passado na chamada da view.
-    _$Model$ = widget.$Model$;
+    _$Model$ = _$ModelClassCamelCase$Controller.$Model$Model;
 
     $EditedAttributes$
 

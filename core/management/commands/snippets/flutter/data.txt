@@ -96,12 +96,12 @@ class $ModelClass$Data {
   ///
   /// returns:
   ///    bool -> true salvo com sucesso, false ocorreu um erro
-  Future<bool> save($ModelClass$Model $ModelClass$) async {
+  Future<bool> save($ModelClass$Model $modelClass$) async {
     try {
       _db = await initDb();
       var _store = smbt.intMapStoreFactory.store(_storeName);
-      // Salvando o dado do novo $ModelClass$
-      await _store.add(_db, $ModelClass$.toMap());
+      // Salvando o dado do novo $modelClass$
+      await _store.add(_db, $modelClass$.toMap());
       return true;
     } catch (error, exception) {
       return false;
@@ -150,11 +150,11 @@ class $ModelClass$Data {
   ///
   /// returns:
   ///    bool -> true salvo com sucesso, false ocorreu um erro
-  Future<bool> update($ModelClass$Model $ModelClass$) async {
+  Future<bool> update($ModelClass$Model $modelClass$) async {
     try {
       _db = await initDb();
       var _store = smbt.intMapStoreFactory.store(_storeName);
-      // TODO: Verificar como trabalhar com o Update      
+      // TODO: Implementar o Update
       return true;
     } catch (error, exception) {
       return false;
