@@ -16,6 +16,7 @@ import '../controller.dart';
 import '../../../../utils/util.dart';
 import '../../../../utils/config.dart';
 import '../../../../utils/localization.dart';
+import '../../../user_interface/widget.dart';
 import '../../../../user_interface/font.dart';
 import '../../../../user_interface/widget.dart';
 import '../../../../utils/process.controller.dart';
@@ -100,7 +101,16 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
     );
   }
   
-  Widget _buildBody() {
+    Widget _buildBody() {
+    return Stack(
+      children: <Widget>[
+        HeadWidget(),
+        ButtonBarWidget(child: _buildPage())
+      ],
+    );
+  }
+
+  Widget _buildPage() {
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: new BoxConstraints(

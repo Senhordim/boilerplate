@@ -97,6 +97,15 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
 
   /// Widget para criar o corpo da views
   Widget _buildBody() {
+    return Stack(
+      children: <Widget> [
+        HeadWidget(),
+        ButtonBarWidget(child: _buildPage())
+      ]
+    );
+  }
+
+  Widget _buildPage(){
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: new BoxConstraints(

@@ -17,6 +17,7 @@ import '../model.dart';
 import '../controller.dart';
 import '../../../../utils/util.dart';
 import '../../../../utils/config.dart';
+import '../../../user_interface/widget.dart';
 import '../../../../utils/localization.dart';
 import '../../../../user_interface/font.dart';
 import '../../../../user_interface/widget.dart';
@@ -71,8 +72,17 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
     );
   }
 
+    Widget _buildBody() {
+    return Stack(
+      children: <Widget>[
+        HeadWidget(),
+        ButtonBarWidget(child: _buildPage())
+      ],
+    );
+  }
+
   /// Widget para criar o body da views
-  Widget _buildBody() {
+  Widget _buildPage() {
     return Container(
       alignment: FractionalOffset.topLeft,
       child: RefreshIndicator(
