@@ -5,17 +5,18 @@
 /// pelo manage do Django adicione um # antes da palavra abaixo
 /// FileLocked
 
+import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'utils/config.dart';
 import 'utils/localization.dart';
 import 'user_interface/font.dart';
 import 'user_interface/widget.dart';
 import 'utils/process.controller.dart';
-
-import 'package:get_it/get_it.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 $ImportViews$
 $ImportController$
@@ -43,6 +44,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // Recuperando o controller SettingsController
     SettingsController _controller = GetIt.I<SettingsController>();
+
+    /// Configurando a cor da barra de status do device
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+      statusBarColor: Colors.transparent
+    ));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+      statusBarColor: Colors.transparent
+    ));
 
     return Observer(builder: (_) {
       return MaterialApp(
