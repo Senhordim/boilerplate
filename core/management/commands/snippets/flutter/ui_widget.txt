@@ -626,20 +626,47 @@ customErrorSnackbar(String message, {int secondsDuration = 4}) {
 
 /// Head da tela inicial
 class HeadWidget extends StatefulWidget {
+  final String assetImageHeadBackground;
+  final String webImageHeadBackground;
+
+  HeadWidget({
+    this.assetImageHeadBackground = "",
+    this.webImageHeadBackground = "",
+  });
+
   @override
   _HeadWidgetState createState() => _HeadWidgetState();
 }
 
 class _HeadWidgetState extends State<HeadWidget> {
+  /// Variável contendo o tipo da imagem a ser renderizada como background
+  /// iniciado com zero para o caso de não ter sido informada nenhuma imagem
+  /// no construtor do Widget. Valor 1 -> AssetsImage, 2 -> WebImage
+  int imageType = 0;
+
+  /// String contendo o caminho a ser renderizado como background do cabeçalho
+  String _urlPath;
+
   // Instânciando o Controller da Autenticação
-  AuthController _authController = GetIt.I.get<AuthController>();
+  AuthController _authController = GetIt.I<AuthController>();
+
+  @override
+  void initState() {
+    // Verificando se foi passado algum valor para o assetImageHeadBackgroud ou webImageHeadBackground
+    if (widget.assetImageHeadBackground.isNotEmpty) {
+      _urlPath = widget.assetImageHeadBackground;
+      imageType = 1;
+    } else if (widget.webImageHeadBackground.isNotEmpty) {
+      _urlPath = widget.webImageHeadBackground;
+      imageType = 2;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 42, horizontal: 12),
-      height: Util.getProportionScreenWidth(context, _proportionScreenDefault),
+        return Container(
+      height: Util.getProportionScreenWidth(context, proportionScreen),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -648,18 +675,38 @@ class _HeadWidgetState extends State<HeadWidget> {
           ],
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: <Widget>[
-        Text(
-          _authController.profileName,
-          style: Theme.of(context).textTheme.display1.copyWith(
-                fontWeight: FontWeight.w600,
-                wordSpacing: 0.08,
-              ),
-        ),
-      ]),
+          imageType == 1
+              ? Image.asset(
+                  _urlPath,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                )
+              : Container(),
+          Container(
+            color: Colors.black.withOpacity(0.22),
+            width: double.infinity,
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 36, bottom: 12, left: 12, right: 45),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Text(
+                  _autenticacaoController.alunoModel.nome,
+                  style: Theme.of(context).textTheme.headline5.copyWith(
+                      fontWeight: FontWeight.w600,
+                      wordSpacing: 0.08,
+                      color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
+  }
   }
 }
 
