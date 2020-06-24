@@ -265,6 +265,9 @@ class Command(BaseCommand):
         # Recuperando o nome do sistema operacional
         self.operation_system = platform.system().lower()
 
+        # Variável para controlar qual gerenciador de estados deve ser utilizado
+        self.state_manager_provider = True
+
         # Recuperando o Path Absoluto do projeto
         _path_project = os.getcwd()
 
@@ -400,9 +403,15 @@ class Command(BaseCommand):
             help='Gerar os arquivos do MobX'
         )
         parser.add_argument(
-            '--init',
+            '--init_provider',
             action='store_true',
-            dest='init',
+            dest='init_provider',
+            help='Gerar o projeto Flutter e executar os métodos auxiliares.'
+        )
+        parser.add_argument(
+            '--init_mobx',
+            action='store_true',
+            dest='init_mobx',
             help='Gerar o projeto Flutter e executar os métodos auxiliares.'
         )
         parser.add_argument(
@@ -623,9 +632,15 @@ class Command(BaseCommand):
                 self.__message("Atualizando o arquivo main.dart.")
                 self.__replace_main()
                 time.sleep(3)
-                # Executando o build_mox
-                self.__message("Gerando os arquivos controller.g.dart do MobX")
-                self.__build_mobx()
+
+                if self.state_manager_provider:
+                    print("Gerando com Provider")
+                    pass
+                else:
+                    print("Gerando com MobX")
+                    # Executando o build_mox
+                    self.__message("Gerando os arquivos controller.g.dart do MobX")
+                    self.__build_mobx()
         except Exception as error:
             self.__message(
                 f"Erro ao executar o __build_flutter: {error}", error=True)
@@ -1290,6 +1305,19 @@ class Command(BaseCommand):
             self.__message(
                 f"Erro ao realizar o parser do model: {error}", error=True)
 
+
+    """
+    #################################################################
+    Área para gerar os códigos do Provider
+    #################################################################
+    """
+    def __build_lint_analysis_options_file(self):
+        try:
+            with open(Path(f"{self.flutter_dir}/analysis_options.yaml"), 'w') as lint:
+                lint.write("include: package:lint/analysis_options.yaml")
+        except Exception as error:
+            self.__message(f"Ocorreu o erro {error} ao executar o __build_lint_analysis_options_file", error=True)
+
     """
     #################################################################
     Área para gerar os códigos do MobX
@@ -1301,10 +1329,8 @@ class Command(BaseCommand):
         Método para executar o comando de geração dos códigos do MobX
         """
         try:
-            # Executando o comando
-            # flutter pub run build_runner build
-            # no diretório do projeto Flutter
-            # Verifica se o projeto já foi criado
+            if self.state_manager_provider:
+                return
             if self.__check_dir(self.flutter_dir):
                 current_path = os.getcwd()
                 os.chdir(self.flutter_dir)
@@ -1365,8 +1391,11 @@ class Command(BaseCommand):
         import yaml
         try:
             __path = self.__get_yaml_file()
-            # Trabalhando com a geração do arquivo baseado no snippet
-            snippet = self.__get_snippet(f"{self.snippet_dir}yaml.txt")
+            
+            if self.state_manager_provider:
+                snippet = self.__get_snippet(f"{self.snippet_dir}yaml.provider.txt")
+            else:
+                snippet = self.__get_snippet(f"{self.snippet_dir}yaml.txt")
             snippet = snippet.replace("$AppPackage$", self.project.lower())
             snippet = snippet.replace("$AppDescription$",
                                       f"Projeto Flutter do sistema Django {self.project}")
@@ -1748,7 +1777,11 @@ class Command(BaseCommand):
         elif options['clear']:
             self.__clear_project()
             sys.exit()
-        elif options['init']:
+        elif options['init_provider'] or options['init_mobx']:
+            if options['init_provider']:
+                self.state_manager_provider = True
+            else:
+                self.state_manager_provider = False
             # Criando o Projeto
             self.__init_flutter()
 
@@ -1763,20 +1796,50 @@ class Command(BaseCommand):
 
             # Gerando o class de acesso HTTP
             self.__http_dio_request()
-            
+
             # Criando a app Auth
             self.__create_auth_application()
 
             # Criando a app para gerenciar a internacionalização do projeto
             self.__localization_app()
 
+            # Criando o lint analysis
+            self.__build_lint_analysis_options_file()
+
             # Invocando os demais métodos de geração do projeto flutter
             self.__build_flutter()
 
-            return
+            return 
+        # elif options['init_mobx']:
+        #     self.state_manager_provider = False
+        #     # Criando o Projeto
+        #     self.__init_flutter()
+
+        #     # Invocando o método para criar a app de configuração
+        #     self.__build_settings_controller()
+
+        #     # Gerando o arquivo utils
+        #     self.__create_utils()
+
+        #     # Gerando a estrutura da UserInterface
+        #     self.__create_user_interface_directories()
+
+        #     # Gerando o class de acesso HTTP
+        #     self.__http_dio_request()
+            
+        #     # Criando a app Auth
+        #     self.__create_auth_application()
+
+        #     # Criando a app para gerenciar a internacionalização do projeto
+        #     self.__localization_app()
+
+        #     # Invocando os demais métodos de geração do projeto flutter
+        #     self.__build_flutter()
+
+        #     return
         else:
             self.__message(
-                "É necessário passar pelo menos um dos parâmetros a seguir: --init, --main, --yaml, --build_mobx", error=True)
+                "É necessário passar pelo menos um dos parâmetros a seguir: --init_provider, --init_mobx, --main, --yaml, --build_mobx", error=True)
             sys.exit()
 
     def handle(self, *args, **options):

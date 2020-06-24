@@ -12,9 +12,7 @@ dependencies:
 
   cupertino_icons: ^0.1.2 #Lib com pacotes de ícones do iOS.
   dio: ^3.0.1 #Lib para acesso HTTP para consumir APIRest.
-  get_it: ^4.0.1 #Lib para injeção de dependências.
-  mobx: ^1.1.1 #Lib para controle de estado da aplicação.
-  flutter_mobx: ^1.1.0 #Lib que implementa o MobX no Flutter.
+  get_it: ^4.0.1 #Lib para injeção de dependências.  
   intl: ^0.16.0 #Lib para formatação de dados como Date e DateTime.
   date_format: ^1.0.6 #Lib para formatação trabalhando apenas com Data.
   url_launcher: ^5.1.3 #Lib para invocar intents dos devices como por exemplo envio de email.
@@ -29,6 +27,7 @@ dependencies:
   font_awesome_flutter: ^8.5.0 #Lib para utilização dos ícones do site Font Awesome.
   sembast: ^2.4.4+3 #Banco de dados NoSQL  
 
+
   flutter_localizations: #Lib para trabalhar com internacionalização dos textos fixos da app. Ex:. Label de um button
       sdk: flutter
 
@@ -36,8 +35,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   lint: ^1.2.0
-  build_runner: ^1.8.0
-  mobx_codegen: ^1.0.3
 
 flutter:
   uses-material-design: true

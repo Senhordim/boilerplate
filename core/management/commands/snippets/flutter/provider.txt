@@ -1,0 +1,19 @@
+/*
+1 - Para os providers que trabalham com processamentos assincronos devem ser utlizados os FutureProvider.
+2 - Nas telas trabalhar apenas com os consumers para reduzir o custo de processamentos.
+3 - Quando precisar registrar um Provider que não necessita alterar o UI deve ser utilizado -> Provider.of<T>(context, listen: false)
+4 - 
+5 - Example Consumer:
+    // DO THIS
+    return HumongousWidget(
+    // ...
+    child: AnotherMonstrousWidget(
+        // ...
+        child: Consumer<CartModel>(
+        builder: (context, cart, child) {
+            return Text('Total price: ${cart.totalPrice}');
+        },
+        ),
+    ),
+    );
+*/
