@@ -294,6 +294,7 @@ class Command(BaseCommand):
                 self.flutter_dir)
             self.app_configuration_page_file = f"{self.app_configuration}\\index.page.dart"
             self.app_configuration_controller_file = f"{self.app_configuration}\\controller.dart"
+            self.app_configuration_profile_file = f"{self.app_configuration}\\model.dart"
 
         else:
             self.project = _path_project.split("/")[-1:][0]
@@ -1351,18 +1352,26 @@ class Command(BaseCommand):
             if not self.__check_dir(self.app_configuration):
                 os.makedirs(self.app_configuration)
 
-                _content_page = self.__get_snippet(
-                    f"{self.snippet_dir}settings_page.txt")
-                _content_controller = self.__get_snippet(
-                    f"{self.snippet_dir}settings_controller.txt")
+                if self.state_manager_provider:
+                    _content_page = self.__get_snippet(
+                        f"{self.snippet_dir}settings_page.provider.txt")
+                    _content_controller = self.__get_snippet(
+                        f"{self.snippet_dir}settings.provider.txt")
+                    
+                    with open(self.app_configuration_profile_file, 'w', encoding='utf-8') as arquivo:
+                        arquivo.write(_content_controller)
+                    
+                else:
+                    _content_page = self.__get_snippet(
+                        f"{self.snippet_dir}settings_page.txt")
+                    _content_controller = self.__get_snippet(
+                        f"{self.snippet_dir}settings_controller.txt")
 
-                # Abrindo o arquivo da página para escrever
+                    with open(self.app_configuration_controller_file, 'w', encoding='utf-8') as arquivo:
+                        arquivo.write(_content_controller)
+
                 with open(self.app_configuration_page_file, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(_content_page)
-
-                # Abrindo o arquivo da página para escrever
-                with open(self.app_configuration_controller_file, 'w', encoding='utf-8') as arquivo:
-                    arquivo.write(_content_controller)
 
         except Exception as error:
             self.__message(

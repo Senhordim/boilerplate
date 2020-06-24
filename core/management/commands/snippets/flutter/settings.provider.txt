@@ -1,0 +1,23 @@
+import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart';
+
+/// Controller do settings da APP
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+class SettingsControllerBase extends ChangeNotifier{
+  bool lightTheme;
+
+  setTheme(bool lightTheme) {
+    try {
+      this.lightTheme = lightTheme;
+    } catch (e) {
+      debugPrint(e);
+      this.lightTheme = true;
+    }
+    notifyListeners();
+  }
+}
