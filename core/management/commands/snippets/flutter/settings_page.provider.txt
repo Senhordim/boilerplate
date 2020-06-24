@@ -6,9 +6,10 @@
 /// pelo manage do Django adicione um # antes da palavra abaixo
 /// FileLocked
 
-import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import './model.dart';
 import '../../user_interface/widget.dart';
 import '../../utils/localization.dart';
 
@@ -18,7 +19,6 @@ class SettingsIndexPage extends StatefulWidget {
 }
 
 class _SettingsIndexPageState extends State<SettingsIndexPage> {
-  // Instanciando uma chave para controle do estado do Scaffold
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -33,9 +33,10 @@ class _SettingsIndexPageState extends State<SettingsIndexPage> {
   }
 
   Widget _buildBody(){
+    final _settings = Provider.of<SettingsProvider>(context);
     return Container(
         height: 300,
-        color: _settingsController.lightTheme == true? Colors.white: Colors.black,
+        color: _settings.lightTheme == true? Colors.white: Colors.black,
       child: Center(
         child: Column(
           children: <Widget>[
@@ -48,7 +49,7 @@ class _SettingsIndexPageState extends State<SettingsIndexPage> {
                 rounded: true,
               label: "Dark",
               onPress: () {
-                _settingsController.setTheme(false);
+                _settings.setTheme(false);
               },
               context: context),
             ),
@@ -61,7 +62,7 @@ class _SettingsIndexPageState extends State<SettingsIndexPage> {
                 rounded: true,
               label: "Light",
               onPress: () {
-                _settingsController.setTheme(true);
+                _settings.setTheme(true);
               },
               context: context),
             ),

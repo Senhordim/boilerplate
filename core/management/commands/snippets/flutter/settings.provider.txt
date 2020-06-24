@@ -1,4 +1,3 @@
-import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 
 /// Controller do settings da APP
@@ -8,14 +7,14 @@ import 'package:flutter/foundation.dart';
 /// pelo manage do Django adicione um # antes da palavra abaixo
 /// FileLocked
 
-class SettingsControllerBase extends ChangeNotifier{
+class SettingsProvider extends ChangeNotifier{
   bool lightTheme;
 
   setTheme(bool lightTheme) {
     try {
       this.lightTheme = lightTheme;
     } catch (e) {
-      debugPrint(e);
+      debugPrint(e.toString());
       this.lightTheme = true;
     }
     notifyListeners();
