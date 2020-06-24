@@ -11,14 +11,14 @@ class Util {
 
   static String getRandomImage() {
     final _random = Random();
-    String _item = images[_random.nextInt(images.length)];
+    final String _item = images[_random.nextInt(images.length)];
     return _item;
   }
 
   /// Retornando a imagem default
   static String getDefaultImage() => Util()._imageDefault;
 
-  static var images = [
+  static List<String> images = [
     'https://cdn.pixabay.com/photo/2017/01/20/00/30/maldives-1993704_960_720.jpg',
     'https://cdn.pixabay.com/photo/2015/09/09/16/40/ocean-931776_960_720.jpg',
     'https://cdn.pixabay.com/photo/2018/07/14/15/27/cafe-3537801_960_720.jpg',
@@ -37,8 +37,8 @@ class Util {
   static DateTime convertStrToDate(String stringDate,
       {String stringFormat = "dd/MM/yyyy HH:mm"}) {
     try {
-      DateFormat format = new DateFormat(stringFormat);
-      DateTime data = format.parse(stringDate);
+      final DateFormat format = new DateFormat(stringFormat);
+      final DateTime data = format.parse(stringDate);
       return data;
     } catch (e) {
       return null;
@@ -68,7 +68,7 @@ class Util {
       }
       if (dateTime.toString() is String) {
         if (dateTime != null && dateTime.toString().isNotEmpty) {
-          var dataSplit = dateTime.toString().split(" ");
+          final dataSplit = dateTime.toString().split(" ");
           _data = dataSplit[0];
           _hora = dataSplit[1];
         }
@@ -85,7 +85,7 @@ class Util {
       }
       return null;
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return null;
     }
   }
@@ -110,30 +110,29 @@ class Util {
       if (stringDate.contains("-") &&
           !stringDate.contains("/") &&
           !stringDate.contains(":")) {
-        DateFormat format = DateFormat("yyyy-MM-dd");
+        final DateFormat format = DateFormat("yyyy-MM-dd");
         return format.parse(stringDate);
       }
       // Verificando se o Formato é dd/MM/YYYY HH:mm:ss
       if (stringDate.contains("/") && stringDate.contains(":")) {
         // Data e Hora passados
-        DateFormat format = new DateFormat("dd/MM/yyyy HH:mm");
+        final DateFormat format = new DateFormat("dd/MM/yyyy HH:mm");
         return format.parse(stringDate);
       }
       if (stringDate.contains("/") && !stringDate.contains(":")) {
         // Apenas Data passado
-        DateFormat format = new DateFormat("dd/MM/yyyy");
+        final DateFormat format = new DateFormat("dd/MM/yyyy");
         return format.parse(stringDate);
         // return DateTime.parse("${stringDate}T14Z");
       }
       if (!stringDate.contains("/") && stringDate.contains(":")) {
         // Apenas Hora passado
-        DateFormat format = new DateFormat("HH:mm");
+        final DateFormat format = new DateFormat("HH:mm");
         return format.parse(stringDate);
         // return DateTime.parse("1000-01-01T$stringDate");
       }
     } catch (error) {
-      print("ERROR no convertDate: $error");
-      throw error;
+      debugPrint("ERROR no convertDate: $error");
     }
   }
 
@@ -145,7 +144,7 @@ class Util {
   /// 
   ///  Return:
   ///      Double
-  static getProportionScreenWidth(BuildContext context, double proportion){
+  static double getProportionScreenWidth(BuildContext context, double proportion){
     return MediaQuery.of(context).size.width * proportion;
   }
   
@@ -157,8 +156,7 @@ class Util {
   /// 
   ///  Return:
   ///      Double
-  static getProportionScreenHeight(BuildContext context, double proportion){
+  static double getProportionScreenHeight(BuildContext context, double proportion){
     return MediaQuery.of(context).size.height * proportion;
   }
-
 }

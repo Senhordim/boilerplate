@@ -10,12 +10,24 @@ import 'package:flutter/foundation.dart';
 class SettingsProvider extends ChangeNotifier{
   bool lightTheme;
 
-  setTheme(bool lightTheme) {
+  bool get isLightTheme => lightTheme;
+
+  void setLightTheme() {
     try {
-      this.lightTheme = lightTheme;
+      lightTheme = true;
     } catch (e) {
       debugPrint(e.toString());
-      this.lightTheme = true;
+      lightTheme = true;
+    }
+    notifyListeners();
+  }
+  
+  void setDarkTheme() {
+    try {
+      lightTheme = false;
+    } catch (e) {
+      debugPrint(e.toString());
+      lightTheme = true;
     }
     notifyListeners();
   }

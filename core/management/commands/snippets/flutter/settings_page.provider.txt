@@ -49,7 +49,7 @@ class _SettingsIndexPageState extends State<SettingsIndexPage> {
                 rounded: true,
               label: "Dark",
               onPress: () {
-                _settings.setTheme(false);
+                _settings.setDarkTheme();
               },
               context: context),
             ),
@@ -62,7 +62,7 @@ class _SettingsIndexPageState extends State<SettingsIndexPage> {
                 rounded: true,
               label: "Light",
               onPress: () {
-                _settings.setTheme(true);
+                _settings.setLightTheme();
               },
               context: context),
             ),

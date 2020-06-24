@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 /// Local Data do model Auth
 ///
 /// Os Métodos padrões gerados são:
@@ -14,18 +15,14 @@
 /// FileLocked
 
 import 'package:path/path.dart';
-import 'package:sembast/sembast_io.dart' as smbt_io;
-import 'package:sembast/sembast.dart' as smbt;
 import 'package:path_provider/path_provider.dart';
+import 'package:sembast/sembast.dart' as smbt;
+import 'package:sembast/sembast_io.dart' as smbt_io;
 
 import 'model.dart';
-import '../../utils/config.dart';
-
 
 class AuthData {
-  
-  // Istanciando a classe AuthModel
-  AuthModel _authModel = AuthModel();
+  final AuthModel _authModel = AuthModel();
 
   static final AuthData _instance = AuthData.internal();
 
@@ -33,39 +30,33 @@ class AuthData {
 
   AuthData.internal();
 
-  // Iniciando o objeto DataBase
   smbt.Database _db;
 
   final String _storeName = "AuthStoreDB";
 
-  /// Método para inicialiar o banco de dados criando a tabela.  
   Future<smbt.Database> initDb() async {
     try {
       // get the application documents directory
-      var dir = await getApplicationDocumentsDirectory();
+      final dir = await getApplicationDocumentsDirectory();
       // make sure it exists
       await dir.create(recursive: true);
       // build the database path
-      var dbPath = join(dir.path, 'Help.db');
+      final dbPath = join(dir.path, 'Help.db');
       // open the database
       return await smbt_io.databaseFactoryIo.openDatabase(dbPath);
     } catch (error, exception) {
-      DebugPrint.error(
+      debugPrint(
           "Erro no método initDB -> error: $error, message: $exception");
     }
     return null;
   }
 
-  /// Método para recuperar todos os dados de Auth
-  ///
-  /// returns:
-  ///   Instância do AuthModel
   Future<List<AuthModel>> fetchAll() async {
     try {
       _db = await initDb();
-      var _store = smbt.intMapStoreFactory.store(_storeName);
-      var _data = await _store.find(_db);
-      return _data.map((snapshot){
+      final _store = smbt.intMapStoreFactory.store(_storeName);
+      final _data = await _store.find(_db);
+      return _data.map((snapshot) {
         final _result = AuthModel.fromMap(snapshot.value);
       }).toList();
     } catch (e) {
@@ -75,15 +66,11 @@ class AuthData {
     }
   }
 
-  /// Método para recuperar o primeiro registro de Auth
-  ///
-  /// returns:
-  ///   Instância do AuthModel
   Future<AuthModel> get(int id) async {
     try {
       _db = await initDb();
-      var _store = smbt.intMapStoreFactory.store(_storeName);
-      var _data = await _store.findFirst(_db);
+      final _store = smbt.intMapStoreFactory.store(_storeName);
+      final _data = await _store.findFirst(_db);
       return AuthModel.fromMap(_data.value);
     } catch (e) {
       return null;
@@ -92,71 +79,51 @@ class AuthData {
     }
   }
 
-  /// Método para salvar localmente um(a) Auth
-  ///
-  /// returns:
-  ///    bool -> true salvo com sucesso, false ocorreu um erro
   Future<bool> save(AuthModel Auth) async {
     try {
       _db = await initDb();
-      var _store = smbt.intMapStoreFactory.store(_storeName);
-      // Salvando o dado do novo Auth
+      final _store = smbt.intMapStoreFactory.store(_storeName);
       await _store.add(_db, Auth.toMap());
       return true;
-    } catch (error, exception) {
+    } catch (error) {
       return false;
     } finally {
       _db.close();
     }
   }
 
-  /// Método para deletar todos os registros do(a) Auth
-  ///
-  /// returns:
-  ///    bool -> true salvo com sucesso, false ocorreu um erro
   Future<bool> deleteAll() async {
     try {
       _db = await initDb();
-      var _store = smbt.intMapStoreFactory.store(_storeName);
-      // Apagando todos os registros anteriores
+      final _store = smbt.intMapStoreFactory.store(_storeName);
       await _store.delete(_db);
       return true;
-    } catch (error, exception) {
+    } catch (error) {
       return false;
     } finally {
       _db.close();
     }
   }
 
-  /// Método para deletar um registro do(a) #@AppName@#
-  ///
-  /// returns:
-  ///    bool -> true salvo com sucesso, false ocorreu um erro
   Future<bool> delete(int id) async {
     try {
       _db = await initDb();
-      var _store = smbt.intMapStoreFactory.store(_storeName);
-      // Apagando todos os registros anteriores
+      final _store = smbt.intMapStoreFactory.store(_storeName);
       await _store.delete(_db);
       return true;
-    } catch (error, exception) {
+    } catch (error) {
       return false;
     } finally {
       _db.close();
     }
   }
 
-  /// Método para deletar um registro do(a) #@AppName@#
-  ///
-  /// returns:
-  ///    bool -> true salvo com sucesso, false ocorreu um erro
   Future<bool> update(AuthModel Auth) async {
     try {
       _db = await initDb();
-      var _store = smbt.intMapStoreFactory.store(_storeName);
-      // TODO: Verificar como trabalhar com o Update      
+      final _store = smbt.intMapStoreFactory.store(_storeName);
       return true;
-    } catch (error, exception) {
+    } catch (error) {
       return false;
     } finally {
       _db.close();
