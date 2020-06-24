@@ -1330,8 +1330,8 @@ class Command(BaseCommand):
                     tag_result += '\n<div class="invalid-feedback">Campo Requerido.</div>'
                 # Adicionando o HelpText no campo
                 if helptext != '':
-                    tag_result += "\n<small class='form-text text-muted'>{}</small>\n".format(
-                        helptext)
+                    tag_result += "\n<small class='form-text text-muted'>{{{{ form.{0}.help_text }}}}</small>\n".format(
+                        iten['name'])
                 tag_result += "{{% if form.{0}.errors  %}}{{{{ form.{0}.errors  }}}}{{% endif %}}".format(
                     iten['name'])
                 tag_result += "</div>"
