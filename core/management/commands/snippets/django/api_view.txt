@@ -4,8 +4,6 @@ from rest_framework.viewsets import ModelViewSet
 # API do Models $ModelName$
 
 class $ModelName$ViewAPI(ModelViewSet):
-    #TODO LEMBRE DE COMENTAR O SEU CODIGO $ModelName$ViewAPI
-    """ """
     queryset = $ModelName$.objects.all()
     serializer_class = $ModelName$Serializer
 

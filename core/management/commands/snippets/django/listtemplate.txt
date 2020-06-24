@@ -1,11 +1,8 @@
 <!--
-Arquivo gerado automaticamente pelo build, com o arquivo HTML de listagem do objeto $title$.
-
-Caso deseje bloquear o parser nesse arquivo, basta adicionar o caracter #(cerquilha) antes da palavra
-
+Arquivo gerado automaticamente pelo build.
+Caso deseje bloquear o parser nesse arquivo, basta adicionar o caracter #(cerquilha) antes da palavra a seguir
 FileLocked
 -->
-
 
 {% extends 'core/index_list.html' %} 
 {% block title %}Index de $title${% endblock title %} 
