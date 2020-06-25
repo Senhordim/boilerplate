@@ -721,9 +721,11 @@ class Command(BaseCommand):
 
             # Realizando replace dos dados
             if self.state_manager_provider:
-                content = self.__get_snippet(f"{self.snippet_dir}index_page.provider.txt")
+                content = self.__get_snippet(
+                    f"{self.snippet_dir}index_page.provider.txt")
             else:
-                content = self.__get_snippet(f"{self.snippet_dir}index_page.txt")
+                content = self.__get_snippet(
+                    f"{self.snippet_dir}index_page.txt")
             content = content.replace("$ModelClass$", app.model_name)
             content = content.replace(
                 "$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
@@ -753,9 +755,11 @@ class Command(BaseCommand):
 
             # Realizando replace dos dados
             if self.state_manager_provider:
-                content = self.__get_snippet(f"{self.snippet_dir}list_page.provider.txt")
+                content = self.__get_snippet(
+                    f"{self.snippet_dir}list_page.provider.txt")
             else:
-                content = self.__get_snippet(f"{self.snippet_dir}list_page.txt")
+                content = self.__get_snippet(
+                    f"{self.snippet_dir}list_page.txt")
 
             content = content.replace("$App$", app.app_name)
             content = content.replace("$Model$", app.model_name_lower)
@@ -884,31 +888,29 @@ class Command(BaseCommand):
     def __create_update_page_parser(self, app, createpage=True):
         try:
             if createpage is True:
-                # Recuperando o arquivo da página de criação
                 __createpage_file = Path(
                     f"{app.get_path_views_dir()}/create.dart")
-                content = self.__get_snippet(
-                    f"{self.snippet_dir}create_page.txt")
+                if self.state_manager_provider:
+                    content = self.__get_snippet(
+                        f"{self.snippet_dir}create_page.provider.txt")
+                else:
+                    content = self.__get_snippet(
+                        f"{self.snippet_dir}create_page.txt")
 
-                # Verificando se o arquivo está travado para parser
                 if self.__check_file_is_locked(__createpage_file):
                     return
             else:
-                # Recuperando o arquivo da página de edição
                 __createpage_file = Path(
                     f"{app.get_path_views_dir()}/update.dart")
                 content = self.__get_snippet(
                     f"{self.snippet_dir}update_page.txt")
 
-                # Verificando se o arquivo está travado para parser
                 if self.__check_file_is_locked(__createpage_file):
                     return
 
-            # Pegando o conteúdo do Snippet do Form
             content_form = self.__get_snippet(
                 f"{self.snippet_dir}text_field.txt")
 
-            # Criando os atributos da classe Flutter
             content_attributes = ""
             text_fiels = ""
             attributes_data = ""
@@ -922,7 +924,6 @@ class Command(BaseCommand):
                     __name.title())
                 __name = self.__to_camel_case(__name.lower())
 
-                # Verificando se o field deve ser ignorado
                 if self.__ignore_base_fields(__name):
                     continue
 
@@ -948,14 +949,12 @@ class Command(BaseCommand):
 
                 clear_data += '    {}.clear();\n'.format(controller)
 
-                # Verificando se o campo é o ID da classe para retornar apenas ID
                 if __name.startswith(f"id{app.model_name_lower}"):
                     __name = "id"
 
                 edited_attributes += '      {}.text = _{}.{}.toString();\n'.format(
                     controller, self.__to_camel_case(app.model_name, True), __name)
 
-            # Interpolando o conteúdo
             content = content.replace("$app$", app.app_name_lower)
             content = content.replace("$App$", app.app_name_lower)
             content = content.replace(
@@ -1089,7 +1088,7 @@ class Command(BaseCommand):
                     controller_file.write(__controller_snippet)
                 __service_snippet = self.__get_snippet(
                     f"{self.snippet_dir}auth_service.txt")
-            
+
             with open(__service_file, 'w', encoding='utf-8') as service_file:
                 service_file.write(__service_snippet)
 
@@ -1196,16 +1195,18 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(__file):
                 print("Arquivo travado")
                 return
-            
+
             content = self.__get_snippet(f"{self.snippet_dir}provider.txt")
             content = content.replace("$ModelClass$", app.model_name)
-            content = content.replace("$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
+            content = content.replace(
+                "$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
 
             with open(__file, 'w', encoding='utf-8') as fileProvider:
                 fileProvider.write(content)
 
         except Exception as error:
-            self.__message(f"Erro ao executar o __provider_parser: {error}", error=True)
+            self.__message(
+                f"Erro ao executar o __provider_parser: {error}", error=True)
 
     def __service_parser(self, app):
         """Método responsável por criar o arquivo de service do Model
@@ -1225,7 +1226,8 @@ class Command(BaseCommand):
                 return
 
             if self.state_manager_provider:
-                content = self.__get_snippet(f"{self.snippet_dir}service.provider.txt")
+                content = self.__get_snippet(
+                    f"{self.snippet_dir}service.provider.txt")
             else:
                 content = self.__get_snippet(f"{self.snippet_dir}service.txt")
 

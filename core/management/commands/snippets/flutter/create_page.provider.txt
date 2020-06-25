@@ -1,20 +1,22 @@
-/// View/Page para criação/inserção de um $ModelClass$
+/// View/Page para criação/inserção de um Atendimento
 
 /// [Travar o arquivo]
 /// Caso deseje "travar" o arquivo para não ser parseado novamente
 /// pelo manage do Django adicione um # antes da palavra abaixo
 /// FileLocked
 
-import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
-import '../model.dart';
-import '../controller.dart';
-import '../../../../utils/util.dart';
-import '../../../../utils/localization.dart';
 import '../../../../user_interface/font.dart';
 import '../../../../user_interface/widget.dart';
+import '../../../../utils/localization.dart';
 import '../../../../utils/process.provider.dart';
+import '../../../../utils/util.dart';
+import '../model.dart';
+import '../provider.dart';
+
 
 class $ModelClass$AddPage extends StatefulWidget {
   @override
@@ -26,7 +28,6 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   ProcessProvider _processProvider = GetIt.I.get<ProcessProvider>();
   AnimationController _animationController;
-  List<ReactionDisposer> _disposers = [];
   $ModelClass$Provider _$ModelClassCamelCase$Provider = GetIt.I.get<$ModelClass$Provider>();
   $ModelClass$Model _$Model$ = $ModelClass$Model();
   final _form$ModelClass$ = GlobalKey<FormState>();
@@ -34,25 +35,13 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
 
   @override
   void initState() {
-    _disposers.add(
-      autorun((_) {
-        if (_processController.success == true) {
-          _showMessage(_processController.message);
-          _hideKeyboard(context);
-        } else if (_processController.success == false) {
-          _showMessage(AppLocalizations.of(context).translate("label_generic_error"), 
-          error: true);
-        }
-      }),
-    );
     _animationController = AnimationController(vsync: this);
     super.initState();
   }
  
   @override
   void dispose() {
-    _disposers.forEach((dispose) => dispose());
-    _processController.clear();
+    _processProvider.clear();
     super.dispose();
   }
 
@@ -104,15 +93,11 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
                         _createButton(context),
                       ]
                     ),
-                    Observer(
-                      builder: (context) {
-                        if (_processController.processing == true) {
-                          return customProcessingCardModal(context);
-                        } else {
-                          return Container();
-                        }
+                    Consumer<$ModelClass$Provider>(
+                      builder: (context, item, child) {
+                        return Container();
                       },
-                    ),
+                    )
                   ]
                 )
               ],
@@ -164,8 +149,8 @@ $AttributesData$
   void _post() async {
     try{
       $GetValuesControllers$
-      _$Model$Controller.$Model$Model = _$Model$;
-      _$Model$Controller.post();
+      _$Model$Provider.$Model$Model = _$Model$;
+      _$Model$Provider.post();
     }catch (e){
 
     }
