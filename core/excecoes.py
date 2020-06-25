@@ -1,0 +1,3 @@
+
+class ExcecaoRegistroExistente(Exception):
+    pass
