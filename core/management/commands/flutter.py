@@ -1037,7 +1037,6 @@ class Command(BaseCommand):
                 return None
             os.makedirs(__auth_file)
 
-            # Escrevendo os arquivos
             __data_file = Path(
                 "{}/lib/apps/auth/data.dart".format(self.flutter_dir))
             __model_file = Path(
@@ -1178,7 +1177,10 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(__service_file):
                 return
 
-            content = self.__get_snippet(f"{self.snippet_dir}service.txt")
+            if self.state_manager_provider:
+                content = self.__get_snippet(f"{self.snippet_dir}service.provider.txt")
+            else:
+                content = self.__get_snippet(f"{self.snippet_dir}service.txt")
 
             content = content.replace("$ModelClass$", app.model_name)
             content = content.replace("$App$", app.app_name_lower)

@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 /// Service do model Auth
 ///
 /// Os Métodos padrões gerados são:
@@ -17,6 +15,7 @@ import 'package:flutter/material.dart';
 /// FileLocked
 
 import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart';
 
 import 'model.dart';
 import '../../utils/config.dart';
@@ -27,7 +26,7 @@ class AuthService {
   // Instanciando a classe AuthModel
   AuthModel _auth = AuthModel();
 
-  final ProcessProvider _processController = GetIt.I<ProcessProvider>();
+  final ProcessProvider _processProvider = GetIt.I<ProcessProvider>();
 
   /// Método para retornar todos os Auth da API
   Future<List<AuthModel>> fetchAll() async {
@@ -113,7 +112,7 @@ class AuthService {
   /// Métodos para tratar o retorno do processamento
   void _success(String message) async {
     try {
-      _processController.withSuccess(message: message);
+      _processProvider.withSuccess(message: message);
     } catch (e) {
       debugPrint("Ocorreu um erro no método error: $e");
     }
@@ -121,7 +120,7 @@ class AuthService {
 
   void _error(String error, String exception) async {
     try {
-      _processController.withError(error: error, exception: exception);
+      _processProvider.withError(error: error, exception: exception);
     } catch (e) {
       debugPrint("Ocorreu um erro no método error: $e");
     }
