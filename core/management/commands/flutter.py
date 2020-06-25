@@ -698,8 +698,8 @@ class Command(BaseCommand):
 
             __import_provider += f"import 'apps/auth/provider.dart';\n"
             __register_provider += f"ChangeNotifierProvider<SettingsProvider>(create: (_) => SettingsProvider()),\n"
-            __register_provider += f"ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider(context)),\n"
-            __register_provider += f"ChangeNotifierProvider<ProcessProvider>(create: (_) => ProcessProvider()),\n"
+            __register_provider += f"ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),\n"
+            # __register_provider += f"ChangeNotifierProvider<ProcessProvider>(create: (_) => ProcessProvider()),\n"
         except Exception as error:
             self.__message(f"Ocorreu o erro {error} ao chamar o __register_provider", error=True)
         return __import_provider, __register_provider

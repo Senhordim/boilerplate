@@ -15,7 +15,6 @@ import 'apps/configuracao/model.dart';
 import 'home.page.dart';
 import 'utils/config.dart';
 import 'utils/localization.dart';
-import 'utils/process.provider.dart';
 
 $ImportProvider$
 

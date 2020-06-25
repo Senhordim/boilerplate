@@ -8,12 +8,10 @@ import 'config.dart';
 
 class CustomDio extends DioForNative {
   String _url;
-  BuildContext context;
 
-  CustomDio(String url, BuildContext context, [BaseOptions options]) : super(options) {
-    interceptors.add(CustomDioInterceptor(context));
+  CustomDio(String url, [BaseOptions options]) : super(options) {
+    interceptors.add(CustomDioInterceptor());
     _url = "${Config.uri}$url";
-    context = context;
   }
 
   Map<String, String> makeHeadersAuthentication(
@@ -69,11 +67,11 @@ class CustomDio extends DioForNative {
 
 class CustomDioInterceptor extends InterceptorsWrapper {
   BuildContext context;
-  ProcessProvider _processProvider;
-  
-  CustomDioInterceptor(this.context) {
-    _processProvider = Provider.of<ProcessProvider>(context);
-  }
+  // ProcessProvider _processProvider;
+  // 
+  // CustomDioInterceptor(this.context) {
+  //   _processProvider = Provider.of<ProcessProvider>(context);
+  // }
 
   @override
   Future onRequest(RequestOptions options) {
@@ -85,21 +83,25 @@ class CustomDioInterceptor extends InterceptorsWrapper {
 
   @override
   Future onResponse(Response response) {
-    _processProvider.withSuccess(
-        message: response.statusMessage,
-        statusCode: response.statusCode,
-        httpData: response.data.toString(),
-        httpHeader: response.headers.toString());
+    // _processProvider.withSuccess(
+    //     message: response.statusMessage,
+    //     statusCode: response.statusCode,
+    //     httpData: response.data.toString(),
+    //     httpHeader: response.headers.toString());
     return super.onResponse(response);
   }
 
   @override
   Future onError(DioError err) {
-    _processProvider.withError(
-        message: err.message,
-        statusCode: err.response.statusCode,
-        httpData: err.response.data.toString(),
-        httpHeader: err.response.headers.toString());
+    debugPrint(err.message);
+    debugPrint(err.response.statusCode.toString());
+    debugPrint(err.response.data.toString());
+    debugPrint(err.response.headers.toString());
+    // _processProvider.withError(
+    //     message: err.message,
+    //     statusCode: err.response.statusCode,
+    //     httpData: err.response.data.toString(),
+    //     httpHeader: err.response.headers.toString());
     return super.onError(err);
   }
 }

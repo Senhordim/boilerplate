@@ -45,7 +45,6 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
   @override
   Widget build(BuildContext context) {
     final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context, listen: false);
-    final _processProvider = Provider.of<ProcessProvider>(context);
     _$Model$ = _$ModelClassCamelCase$Provider.$Model$Model;
 
     $EditedAttributes$

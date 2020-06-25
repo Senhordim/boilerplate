@@ -23,20 +23,12 @@ import '../../utils/custom_dio.dart';
 import '../../utils/process.provider.dart';
 
 class AuthService {
-  BuildContext context;
-  ProcessProvider _processProvider;
-
   AuthModel _auth = AuthModel();
-  
-  AuthService(this.context){
-    _processProvider = Provider.of<ProcessProvider>(this.context);
-  }
-
   Future<List<AuthModel>> fetchAll() async {
     final List<AuthModel> _itens = <AuthModel>[];
     String _url = "";
     try {
-      final CustomDio _dio = CustomDio(_url, context);
+      final CustomDio _dio = CustomDio(_url);
       final data = await _dio.getHttp();
       if (data != null) {
         for (final item in data) {
@@ -52,7 +44,7 @@ class AuthService {
   Future<AuthModel> detail(AuthModel auth) async {
     String _url = "";
     try {
-      final CustomDio _dio = CustomDio(_url, context);
+      final CustomDio _dio = CustomDio(_url);
       final data = await _dio.getHttp();
       if (data != null) {
         _auth = AuthModel.fromJson(data.toString());
@@ -66,7 +58,7 @@ class AuthService {
   Future<AuthModel> put(AuthModel auth) async {
     String _url = "";
     try {
-      final CustomDio _dio = CustomDio(_url, context);
+      final CustomDio _dio = CustomDio(_url);
       final data = await _dio.putHttp(auth.toJson());
       if (data != null) {
         _auth = AuthModel.fromJson(data.toString());
@@ -80,7 +72,7 @@ class AuthService {
   Future<AuthModel> post(AuthModel auth) async {
     String _url = "";
     try {
-      final CustomDio _dio = CustomDio(_url, context);
+      final CustomDio _dio = CustomDio(_url);
       final data = await _dio.postHttp(auth.toJson());
       if (data != null) {
         _auth = AuthModel.fromJson(data.toString());
@@ -94,7 +86,7 @@ class AuthService {
   Future<AuthModel> delete(AuthModel auth) async {
     String _url = "";
     try {
-      final CustomDio _dio = CustomDio(_url, context);
+      final CustomDio _dio = CustomDio(_url);
       final data = await _dio.deleteHttp(auth.toJson());
       if (data != null) {
         _auth = AuthModel.fromJson(data.toString());
@@ -107,7 +99,7 @@ class AuthService {
 
   void _success(String message) async {
     try {
-      _processProvider.withSuccess(message: message);
+      //_processProvider.withSuccess(message: message);
     } catch (e) {
       debugPrint("Ocorreu um erro no método error: $e");
     }
@@ -115,7 +107,7 @@ class AuthService {
 
   void _error(String error, String exception) async {
     try {
-      _processProvider.withError(error: error, exception: exception);
+      // _processProvider.withError(error: error, exception: exception);
     } catch (e) {
       debugPrint("Ocorreu um erro no método error: $e");
     }

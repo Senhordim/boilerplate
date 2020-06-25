@@ -38,7 +38,6 @@ import 'service.dart';
 import '../../utils/config.dart';
 
 class AuthProvider extends ChangeNotifier {
-  BuildContext context;
   final AuthData _authData = AuthData();
   AuthService _authService;
   List<AuthModel> authList;
@@ -46,10 +45,10 @@ class AuthProvider extends ChangeNotifier {
   List<AuthModel> authLocalList;
   AuthModel authLocalModel;
 
-  AuthProvider(this.context){
-    _authService = AuthService(context);
+  AuthProvider(){
+    _authService = AuthService();
     authModel = AuthModel();
-    authList = List<AutModel>();
+    authList = List<AuthModel>();
   }
 
   String get profileName {

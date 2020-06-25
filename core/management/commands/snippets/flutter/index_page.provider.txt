@@ -37,7 +37,6 @@ class _$ModelClass$IndexPageState extends State<$ModelClass$IndexPage>
   @override
   Widget build(BuildContext context) {
     final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context, listen: false);
-    final _processProvider = Provider.of<ProcessProvider>(context);
     return Scaffold(
         key: _scaffoldKey,
         extendBodyBehindAppBar: true,

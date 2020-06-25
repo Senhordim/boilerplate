@@ -41,7 +41,6 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
   @override
   Widget build(BuildContext context) {
     final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context);
-    final _processProvider = Provider.of<ProcessProvider>(context);
     String _title = "$ModelClass$";
     return Scaffold(
       key: _scaffoldKey,
