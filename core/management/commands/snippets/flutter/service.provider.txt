@@ -22,9 +22,6 @@ import '../../../utils/custom_dio.dart';
 import '../../../utils/process.provider.dart';
 
 class $ModelClass$Service {
-  BuildContext context;
-
-  $ModelClass$Service(this.context);
 
   $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model();
 

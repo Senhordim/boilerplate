@@ -21,8 +21,18 @@ try:
     from django.conf import settings
     # Caminho para criação do Projeto Flutter
     FLUTTER_PROJECT_PATH = settings.FLUTTER_PROJECT_PATH
+except:
+    pass
+
+try:
+    from django.conf import settings
     # Apps a serem mapeadas
     FLUTTER_APPS = settings.FLUTTER_APPS
+except:
+    pass
+
+try:
+    from django.conf import settings
     # Caminho da API
     API_PATH = settings.API_PATH
 except:

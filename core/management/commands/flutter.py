@@ -694,7 +694,7 @@ class Command(BaseCommand):
                __app = __current_app.app_name
                for model in __current_app.models:
                    __import_provider += f"import 'apps/{__app.lower()}/{model[1].lower()}/provider.dart';\n"
-                   __register_provider += f"ChangeNotifierProvider<{model[1].title()}Provider>(create: (_) => {model[1].title()}Provider(context)),\n"
+                   __register_provider += f"ChangeNotifierProvider<{model[1].title()}Provider>(create: (_) => {model[1].title()}Provider()),\n"
 
             __import_provider += f"import 'apps/auth/provider.dart';\n"
             __register_provider += f"ChangeNotifierProvider<SettingsProvider>(create: (_) => SettingsProvider()),\n"

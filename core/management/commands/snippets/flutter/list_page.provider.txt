@@ -152,4 +152,8 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
       },
     );
   }
+
+  Future<void> _loadData(){
+    
+  }
 }
