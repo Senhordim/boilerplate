@@ -991,15 +991,16 @@ class Command(BaseCommand):
             app {AppModel} -- Instância da classe AppModel
         """
         try:
-            # Recuperando o arquivo a ser editado
             __detailpage_file = Path(f"{app.get_path_views_dir()}/detail.dart")
 
             # Verificando se o arquivo está travado para parser
             if self.__check_file_is_locked(__detailpage_file):
                 return
 
-            # Realizando replace dos dados
-            content = self.__get_snippet(f"{self.snippet_dir}detail_page.txt")
+            if self.state_manager_provider:
+                content = self.__get_snippet(f"{self.snippet_dir}detail_page.provider.txt")
+            else:
+                content = self.__get_snippet(f"{self.snippet_dir}detail_page.txt")
             content = content.replace("$App$", app.app_name)
             content = content.replace("$app$", app.app_name_lower)
             content = content.replace(
