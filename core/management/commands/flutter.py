@@ -670,6 +670,40 @@ class Command(BaseCommand):
     #################################################################
     """
 
+    def __build_menu_home_page_itens(self):
+        try:
+            __itens_menu = ""
+            for app in FLUTTER_APPS:
+                # AtendimentoAgendamentoViews.AgendamentoListPage()
+                # list.add(Itens(title: 'Item 01',icon: FontAwesomeIcons.folderOpen,uri: AtendimentoAgendamentoViews.AgendamentoListPage(),),);
+                __current_app = AppModel(self.flutter_project, app)
+                __app = __current_app.app_name
+                for model in __current_app.models:
+                    __model = model[1]
+                    __itens_menu += f"list.add(Itens(title: '{__model.title()}',icon: FontAwesomeIcons.folderOpen,uri: {__app.title()}{__model.title()}Views.{__model.title()}ListPage(),),);"
+            return __itens_menu
+        except Exception as error:
+            self.__message(f"Ocorreu o erro {error} ao chamar o __build_menu_home_page_itens", error=True)
+
+    def __register_provider(self):
+        try:
+            __register_provider = ""
+            __import_provider = ""
+            for app in FLUTTER_APPS:
+               __current_app = AppModel(self.flutter_project, app) 
+               __app = __current_app.app_name
+               for model in __current_app.models:
+                   __import_provider += f"import 'apps/{__app.lower()}/{model[1].lower()}/provider.dart';\n"
+                   __register_provider += f"ChangeNotifierProvider<{model[1].title()}Provider>(create: (_) => {model[1].title()}Provider(context)),\n"
+
+            __import_provider += f"import 'apps/auth/provider.dart';\n"
+            __register_provider += f"ChangeNotifierProvider<SettingsProvider>(create: (_) => SettingsProvider()),\n"
+            __register_provider += f"ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider(context)),\n"
+            __register_provider += f"ChangeNotifierProvider<ProcessProvider>(create: (_) => ProcessProvider()),\n"
+        except Exception as error:
+            self.__message(f"Ocorreu o erro {error} ao chamar o __register_provider", error=True)
+        return __import_provider, __register_provider
+
     def __mapping_all_application(self):
         try:
             __imports_views = ""
@@ -1812,15 +1846,11 @@ class Command(BaseCommand):
                 snippet = self.__get_snippet(f"{self.snippet_dir}main.txt")
 
             path_maindart = Path(f"{self.flutter_dir}/lib/main.dart")
-
-            # Verificando se o arquivo está travado para parser
             if self.__check_file_is_locked(path_maindart):
                 return
 
-            # Pegando os imports das views e dos controller
             __import_views, __import_controllers, __register_controller, __views = self.__mapping_all_application()
 
-            # Adicionando a APP configuracao ao import dos controllers das views e ao register
             __import_controllers += f"import 'apps/configuracao/model.dart';"
             __import_views += f"import 'apps/configuracao/index.page.dart';\n"
             __register_controller += "getIt.registerSingleton<SettingsController>(SettingsController());"
@@ -1832,13 +1862,32 @@ class Command(BaseCommand):
             snippet = snippet.replace(
                 '$RegisterControllers$', __register_controller)
             snippet = snippet.replace('$ImportViews$', __import_views)
-            snippet = snippet.replace(
-                '$ImportProvider$', __import_controllers)
+            if self.state_manager_provider:
+                __import, __register = self.__register_provider()
+                snippet = snippet.replace(
+                    '$ImportProvider$', __import)
+                snippet = snippet.replace(
+                    '$RegisterProviders$', __register)
+            else:
+                snippet = snippet.replace(
+                    '$ImportController$', __import_controllers)
             snippet = snippet.replace('$Listviews$', __views)
 
-            # Alterando o conteúdo do arquivo main.dart original
             with open(path_maindart, 'w', encoding='utf-8') as main_dart:
                 main_dart.write(snippet)
+
+            path_homepage = Path(f"{self.flutter_dir}/lib/home.page.dart")
+            if self.__check_file_is_locked(path_homepage):
+                return 
+            __snippet_page = self.__get_snippet(f"{self.snippet_dir}home.page.provider.txt")
+            __menu_home_page_itens = self.__build_menu_home_page_itens()
+
+            __snippet_page = __snippet_page.replace("$ImportViews$", __import_views)
+            __snippet_page = __snippet_page.replace(
+                "$ItenMenu$", __menu_home_page_itens)
+
+            with open(path_homepage, 'w', encoding='utf-8') as home_page_dart:
+                home_page_dart.write(__snippet_page)
 
         except Exception as error:
             self.__message("Error Replace Main \n{}".format(error), error=True)

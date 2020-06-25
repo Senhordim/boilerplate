@@ -30,8 +30,8 @@
 /// FileLocked
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../utils/process.provider.dart';
 import 'data.dart';
@@ -39,17 +39,26 @@ import 'model.dart';
 import 'service.dart';
 
 class $ModelClass$Provider extends ChangeNotifier {
-  ProcessProvider _processProvider = GetIt.I.get<ProcessProvider>();
+
+  BuildContext context;
   $ModelClass$Data _$ModelClassCamelCase$Data = $ModelClass$Data();
-  $ModelClass$Service _$ModelClassCamelCase$Service = $ModelClass$Service();
+  $ModelClass$Service _$ModelClassCamelCase$Service;
   List<$ModelClass$Model> $ModelClassCamelCase$List;
   $ModelClass$Model $ModelClassCamelCase$Model;
   List<$ModelClass$Model> $ModelClassCamelCase$LocalList;
   $ModelClass$Model $ModelClassCamelCase$LocalModel;
 
+  ProcessProvider _processProvider;
+
+  $ModelClass$Provider(this.context){
+    _processProvider = Provider.of<ProcessProvider>(context);
+  }
+
+
   fetchAll() async{
     try{
       $ModelClassCamelCase$List = await _$ModelClassCamelCase$Service.fetchAll();
+      _$ModelClassCamelCase$Service = $ModelClass$Service(context);
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
     }finally {

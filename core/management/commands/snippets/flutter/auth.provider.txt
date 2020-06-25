@@ -30,7 +30,7 @@
 /// pelo manage do Django adicione um # antes da palavra abaixo
 /// FileLocked
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import 'data.dart';
 import 'model.dart';
@@ -38,12 +38,19 @@ import 'service.dart';
 import '../../utils/config.dart';
 
 class AuthProvider extends ChangeNotifier {
+  BuildContext context;
   final AuthData _authData = AuthData();
-  final AuthService _authService = AuthService();
+  AuthService _authService;
   List<AuthModel> authList;
   AuthModel authModel;
   List<AuthModel> authLocalList;
   AuthModel authLocalModel;
+
+  AuthProvider(this.context){
+    _authService = AuthService(context);
+    authModel = AuthModel();
+    authList = List<AutModel>();
+  }
 
   String get profileName {
     if (authModel != null) {
@@ -55,7 +62,7 @@ class AuthProvider extends ChangeNotifier {
 
   fetchAll() async {
     try {
-      authList = List<AuthModel>.of(await _authService.fetchAll());
+      authList = await _authService.fetchAll();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
     } finally {

@@ -15,14 +15,20 @@
 /// FileLocked
 
 import 'package:flutter/cupertino.dart';
-import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 import 'model.dart';
 import '../../../utils/custom_dio.dart';
 import '../../../utils/process.provider.dart';
 
 class $ModelClass$Service {
-  final ProcessProvider _processProvider = GetIt.I<ProcessProvider>();
+  BuildContext context;
+  ProcessProvider _processProvider;
+
+  $ModelClass$Service(this.context){
+    _processProvider = Provider.of<ProcessProvider>(this.context);
+  }
+
   $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model();
 
   String _uri = "$App$/$Model$/";
@@ -30,7 +36,7 @@ class $ModelClass$Service {
   Future<List<$ModelClass$Model>> fetchAll() async {
     List<$ModelClass$Model> _itens = List<$ModelClass$Model>();
     try {
-      final CustomDio _dio = CustomDio(_uri);
+      final CustomDio _dio = CustomDio(_uri, context);
       final data = await _dio.getHttp();
       if (data != null) {
         for (var item in data){
@@ -46,7 +52,7 @@ class $ModelClass$Service {
   Future<$ModelClass$Model> detail($ModelClass$Model $ModelClassCamelCase$) async {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
-      final CustomDio _dio = CustomDio(_uri);
+      final CustomDio _dio = CustomDio(_uri, context);
       final data = await _dio.getHttp();
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
@@ -59,7 +65,7 @@ class $ModelClass$Service {
   
   Future<$ModelClass$Model> post($ModelClass$Model $ModelClassCamelCase$) async {
     try {
-      final CustomDio _dio = CustomDio(_uri);
+      final CustomDio _dio = CustomDio(_uri, context);
       final data = await _dio.postHttp($ModelClassCamelCase$.toJson());
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
@@ -73,7 +79,7 @@ class $ModelClass$Service {
   Future<$ModelClass$Model> put($ModelClass$Model $ModelClassCamelCase$) async {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
-      final CustomDio _dio = CustomDio(_uri);
+      final CustomDio _dio = CustomDio(_uri, context);
       final data = await _dio.putHttp($ModelClassCamelCase$.toJson());
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
@@ -87,7 +93,7 @@ class $ModelClass$Service {
   Future<$ModelClass$Model> patch($ModelClass$Model $ModelClassCamelCase$) async {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
-      final CustomDio _dio = CustomDio(_uri);
+      final CustomDio _dio = CustomDio(_uri, context);
       final data = await _dio.patchHttp($ModelClassCamelCase$.toJson());
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
@@ -101,7 +107,7 @@ class $ModelClass$Service {
   Future<bool> delete($ModelClass$Model $ModelClassCamelCase$) async {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
-      final CustomDio _dio = CustomDio(_uri);
+      final CustomDio _dio = CustomDio(_uri, context);
       final data = await _dio.deleteHttp($ModelClassCamelCase$.toJson());
       if (data != null) {
         _success("ok");

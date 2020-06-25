@@ -14,7 +14,7 @@
 /// pelo manage do Django adicione um # antes da palavra abaixo
 /// FileLocked
 
-import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 import 'model.dart';
@@ -23,14 +23,20 @@ import '../../utils/custom_dio.dart';
 import '../../utils/process.provider.dart';
 
 class AuthService {
+  BuildContext context;
+  ProcessProvider _processProvider;
+
   AuthModel _auth = AuthModel();
-  final ProcessProvider _processProvider = GetIt.I<ProcessProvider>();
+  
+  AuthService(this.context){
+    _processProvider = Provider.of<ProcessProvider>(this.context);
+  }
 
   Future<List<AuthModel>> fetchAll() async {
     final List<AuthModel> _itens = <AuthModel>[];
     String _url = "";
     try {
-      final CustomDio _dio = CustomDio(_url);
+      final CustomDio _dio = CustomDio(_url, context);
       final data = await _dio.getHttp();
       if (data != null) {
         for (final item in data) {
@@ -46,7 +52,7 @@ class AuthService {
   Future<AuthModel> detail(AuthModel auth) async {
     String _url = "";
     try {
-      final CustomDio _dio = CustomDio(_url);
+      final CustomDio _dio = CustomDio(_url, context);
       final data = await _dio.getHttp();
       if (data != null) {
         _auth = AuthModel.fromJson(data.toString());
@@ -60,7 +66,7 @@ class AuthService {
   Future<AuthModel> put(AuthModel auth) async {
     String _url = "";
     try {
-      final CustomDio _dio = CustomDio(_url);
+      final CustomDio _dio = CustomDio(_url, context);
       final data = await _dio.putHttp(auth.toJson());
       if (data != null) {
         _auth = AuthModel.fromJson(data.toString());
@@ -74,7 +80,7 @@ class AuthService {
   Future<AuthModel> post(AuthModel auth) async {
     String _url = "";
     try {
-      final CustomDio _dio = CustomDio(_url);
+      final CustomDio _dio = CustomDio(_url, context);
       final data = await _dio.postHttp(auth.toJson());
       if (data != null) {
         _auth = AuthModel.fromJson(data.toString());
@@ -88,7 +94,7 @@ class AuthService {
   Future<AuthModel> delete(AuthModel auth) async {
     String _url = "";
     try {
-      final CustomDio _dio = CustomDio(_url);
+      final CustomDio _dio = CustomDio(_url, context);
       final data = await _dio.deleteHttp(auth.toJson());
       if (data != null) {
         _auth = AuthModel.fromJson(data.toString());

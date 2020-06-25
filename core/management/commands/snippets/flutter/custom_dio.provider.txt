@@ -1,17 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:dio/native_imp.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart';
 import 'package:help/utils/process.provider.dart';
+import 'package:provider/provider.dart';
 
 import 'config.dart';
 
 class CustomDio extends DioForNative {
   String _url;
+  BuildContext context;
 
-  CustomDio(String url, [BaseOptions options]) : super(options) {
-    // Adicionando os interceptors
-    interceptors.add(CustomDioInterceptor());
+  CustomDio(String url, BuildContext context, [BaseOptions options]) : super(options) {
+    interceptors.add(CustomDioInterceptor(context));
     _url = "${Config.uri}$url";
+    context = context;
   }
 
   Map<String, String> makeHeadersAuthentication(
@@ -66,7 +68,13 @@ class CustomDio extends DioForNative {
 }
 
 class CustomDioInterceptor extends InterceptorsWrapper {
-  final ProcessProvider _processProvider = GetIt.I<ProcessProvider>();
+  BuildContext context;
+  ProcessProvider _processProvider;
+  
+  CustomDioInterceptor(this.context) {
+    _processProvider = Provider.of<ProcessProvider>(context);
+  }
+
   @override
   Future onRequest(RequestOptions options) {
     options.headers = {'Content-Type': 'application/json'};
