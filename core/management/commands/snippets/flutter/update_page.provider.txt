@@ -17,28 +17,33 @@ import '../../../../utils/util.dart';
 import '../model.dart';
 import '../provider.dart';
 
-
-class $ModelClass$AddPage extends StatefulWidget {
+class $ModelClass$UpdatePage extends StatefulWidget {
   @override
   _$ModelClass$AddPageState createState() => _$ModelClass$AddPageState();
 }
 
-class _$ModelClass$AddPageState extends State<$ModelClass$AddPage> 
+class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage> 
   with SingleTickerProviderStateMixin{
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _form$ModelClass$ = GlobalKey<FormState>();
+
   ProcessProvider _processProvider = GetIt.I.get<ProcessProvider>();
   AnimationController _animationController;
   $ModelClass$Provider _$ModelClassCamelCase$Provider = GetIt.I.get<$ModelClass$Provider>();
   $ModelClass$Model _$Model$ = $ModelClass$Model();
-  final _form$ModelClass$ = GlobalKey<FormState>();
+
   $Attributes$
 
   @override
   void initState() {
     _animationController = AnimationController(vsync: this);
+    _$Model$ = _$ModelClassCamelCase$Provider.$Model$Model;
+
+    $EditedAttributes$
+
     super.initState();
   }
- 
+  
   @override
   void dispose() {
     _processProvider.clear();
@@ -56,17 +61,17 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
       body: _buildBody(),
     );
   }
-
-  Widget _buildBody() {
+  
+    Widget _buildBody() {
     return Stack(
-      children: <Widget> [
+      children: <Widget>[
         HeadWidget(),
-        _buildPage()
-      ]
+        _buildPage(),
+      ],
     );
   }
 
-  Widget _buildPage(){
+  Widget _buildPage() {
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: new BoxConstraints(
@@ -82,10 +87,10 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12.0, top: 12.0),
                   child: customTitlePage(context, 
-                    'Cadastrar $ModelClass$',
+                    'Atualizar $ModelClass$',
                   ),
                 ),
-                Stack(
+                 Stack(
                   children : <Widget>[
                     Column(
                       children: <Widget>[
@@ -97,7 +102,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
                       builder: (context, item, child) {
                         return Container();
                       },
-                    )
+                    ),
                   ]
                 )
               ],
@@ -120,7 +125,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
       ),
     );
   }
-
+  
   Widget _createButton(context){
     return  Padding(
       padding: const EdgeInsets.only(top: 24.0),
@@ -132,8 +137,8 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
             onPress: () {
               if (_form$ModelClass$.currentState.validate()) {
                 setState(() {
-                    $AttributesData$
-                    _post();
+                  $AttributesData$
+                  _put();
                 });
               }
             },
@@ -141,16 +146,16 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
         ),
     );
   }
-
+  
   void _clearForm(){
     $ClearData$
   }
 
-  void _post() async {
+  void _put() async {
     try{
-      $GetValuesControllers$
+       $GetValuesControllers$
       _$Model$Provider.$Model$Model = _$Model$;
-      _$Model$Provider.post();
+      _$Model$Provider.put();
     }catch (e){
 
     }
@@ -162,10 +167,10 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
         error == false
             ? customSuccessSnackbar(message)
             : customErrorSnackbar(message),
-        );
+      );
     });
   }
-
+  
   _hideKeyboard(BuildContext context){
     FocusScope.of(context).requestFocus(FocusNode());
   }

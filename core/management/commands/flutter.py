@@ -900,10 +900,15 @@ class Command(BaseCommand):
                 if self.__check_file_is_locked(__createpage_file):
                     return
             else:
+
                 __createpage_file = Path(
                     f"{app.get_path_views_dir()}/update.dart")
-                content = self.__get_snippet(
-                    f"{self.snippet_dir}update_page.txt")
+                if self.state_manager_provider:
+                    content = self.__get_snippet(
+                        f"{self.snippet_dir}update_page.provider.txt")
+                else:
+                    content = self.__get_snippet(
+                        f"{self.snippet_dir}update_page.txt")
 
                 if self.__check_file_is_locked(__createpage_file):
                     return
