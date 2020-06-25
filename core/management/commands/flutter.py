@@ -265,6 +265,9 @@ class Command(BaseCommand):
         # Recuperando o nome do sistema operacional
         self.operation_system = platform.system().lower()
 
+        # Variável para controlar qual gerenciador de estados deve ser utilizado
+        self.state_manager_provider = True
+
         # Recuperando o Path Absoluto do projeto
         _path_project = os.getcwd()
 
@@ -283,6 +286,8 @@ class Command(BaseCommand):
                 self.flutter_dir)
             self.process_controller_file = "{}\\lib\\utils\\process.controller.dart".format(
                 self.flutter_dir)
+            self.process_provider_file = "{}\\lib\\utils\\process.provider.dart".format(
+                self.flutter_dir)
             self.snippet_dir = "{}\\{}".format(
                 self.path_core, "management\\commands\\snippets\\flutter\\")
 
@@ -291,6 +296,7 @@ class Command(BaseCommand):
                 self.flutter_dir)
             self.app_configuration_page_file = f"{self.app_configuration}\\index.page.dart"
             self.app_configuration_controller_file = f"{self.app_configuration}\\controller.dart"
+            self.app_configuration_profile_file = f"{self.app_configuration}\\model.dart"
 
         else:
             self.project = _path_project.split("/")[-1:][0]
@@ -400,9 +406,15 @@ class Command(BaseCommand):
             help='Gerar os arquivos do MobX'
         )
         parser.add_argument(
-            '--init',
+            '--init_provider',
             action='store_true',
-            dest='init',
+            dest='init_provider',
+            help='Gerar o projeto Flutter e executar os métodos auxiliares.'
+        )
+        parser.add_argument(
+            '--init_mobx',
+            action='store_true',
+            dest='init_mobx',
             help='Gerar o projeto Flutter e executar os métodos auxiliares.'
         )
         parser.add_argument(
@@ -623,9 +635,16 @@ class Command(BaseCommand):
                 self.__message("Atualizando o arquivo main.dart.")
                 self.__replace_main()
                 time.sleep(3)
-                # Executando o build_mox
-                self.__message("Gerando os arquivos controller.g.dart do MobX")
-                self.__build_mobx()
+
+                if self.state_manager_provider:
+                    print("Gerando com Provider")
+                    pass
+                else:
+                    print("Gerando com MobX")
+                    # Executando o build_mox
+                    self.__message(
+                        "Gerando os arquivos controller.g.dart do MobX")
+                    self.__build_mobx()
         except Exception as error:
             self.__message(
                 f"Erro ao executar o __build_flutter: {error}", error=True)
@@ -1006,39 +1025,57 @@ class Command(BaseCommand):
         """
         try:
             # Recuperando os snippets
-            __data_snippet = self.__get_snippet(f"{self.snippet_dir}auth_data.txt")
-            __model_snippet = self.__get_snippet(f"{self.snippet_dir}auth_model.txt")
-            __service_snippet = self.__get_snippet(f"{self.snippet_dir}auth_service.txt")
-            __controller_snippet = self.__get_snippet(f"{self.snippet_dir}auth_controller.txt")
-            
+            __data_snippet = self.__get_snippet(
+                f"{self.snippet_dir}auth_data.txt")
+            __model_snippet = self.__get_snippet(
+                f"{self.snippet_dir}auth_model.txt")
+
             # Gerando a app Auth
             __auth_file = Path(f"{self.flutter_dir}/lib/apps/auth")
             # Verificando se o diretório existe
             if self.__check_dir(__auth_file):
                 return None
             os.makedirs(__auth_file)
-            
+
             # Escrevendo os arquivos
-            __data_file = Path("{}/lib/apps/auth/data.dart".format(self.flutter_dir))
-            __model_file = Path("{}/lib/apps/auth/model.dart".format(self.flutter_dir))
-            __service_file = Path("{}/lib/apps/auth/service.dart".format(self.flutter_dir))
-            __controller_file = Path("{}/lib/apps/auth/controller.dart".format(self.flutter_dir))
+            __data_file = Path(
+                "{}/lib/apps/auth/data.dart".format(self.flutter_dir))
+            __model_file = Path(
+                "{}/lib/apps/auth/model.dart".format(self.flutter_dir))
+            __service_file = Path(
+                "{}/lib/apps/auth/service.dart".format(self.flutter_dir))
 
             with open(__data_file, 'w', encoding='utf-8') as data_file:
-                data_file.write(__data_snippet) 
-            
+                data_file.write(__data_snippet)
+
             with open(__model_file, 'w', encoding='utf-8') as model_file:
-                model_file.write(__model_snippet) 
+                model_file.write(__model_snippet)
+
+            if self.state_manager_provider:
+                __snippet = self.__get_snippet(
+                    f"{self.snippet_dir}auth.provider.txt")
+                __file = Path(
+                    "{}/lib/apps/auth/provider.dart".format(self.flutter_dir))
+                with open(__file, 'w', encoding='utf-8') as provider_file:
+                    provider_file.write(__snippet)
+                __service_snippet = self.__get_snippet(
+                    f"{self.snippet_dir}auth_service.provider.txt")
+            else:
+                __controller_snippet = self.__get_snippet(
+                    f"{self.snippet_dir}auth_controller.txt")
+                __controller_file = Path(
+                    "{}/lib/apps/auth/controller.dart".format(self.flutter_dir))
+                with open(__controller_file, 'w', encoding='utf-8') as controller_file:
+                    controller_file.write(__controller_snippet)
+                __service_snippet = self.__get_snippet(
+                    f"{self.snippet_dir}auth_service.txt")
             
             with open(__service_file, 'w', encoding='utf-8') as service_file:
-                service_file.write(__service_snippet) 
-            
-            with open(__controller_file, 'w', encoding='utf-8') as controller_file:
-                controller_file.write(__controller_snippet) 
-            
+                service_file.write(__service_snippet)
 
         except Exception as error:
-            self.__message(f"Ocorreu um erro ao gerar a app de autentição {error}", error=True)
+            self.__message(
+                f"Ocorreu um erro ao gerar a app de autentição {error}", error=True)
 
     def __data_parser(self, app):
         """Método responsável por criar o arquivo de data baseado na App e no Models
@@ -1073,10 +1110,14 @@ class Command(BaseCommand):
         """Método para criar a classe auxiliar de acesso HTTP
         """
         try:
+            if self.state_manager_provider:
+                __dio_snippet = Path(
+                    f"{self.snippet_dir}/custom_dio.provider.txt")
+            else:
+                __dio_snippet = Path(
+                    f"{self.snippet_dir}/custom_dio.txt")
             __dio_file = Path(
                 f"{self.flutter_dir}/lib/utils/custom_dio.dart")
-            __dio_snippet = Path(
-                f"{self.snippet_dir}/custom_dio.txt")
             content = self.__get_snippet(__dio_snippet)
             content = content.replace("$project$", self.flutter_project)
             with open(__dio_file, 'w', encoding='utf-8') as http_request:
@@ -1265,7 +1306,8 @@ class Command(BaseCommand):
             content = content.replace("$ParserFromJson$", content_from_json)
             content = content.replace("$ParserToMap$", content_to_map)
             content = content.replace("$project$", self.flutter_project)
-            content = content.replace("$ConstructorModelClass$", content_constructor)
+            content = content.replace(
+                "$ConstructorModelClass$", content_constructor)
 
             # Verificando o tipo da classe para criar ou não o construtor
             # com os atributos do Base
@@ -1292,6 +1334,20 @@ class Command(BaseCommand):
 
     """
     #################################################################
+    Área para gerar os códigos do Provider
+    #################################################################
+    """
+
+    def __build_lint_analysis_options_file(self):
+        try:
+            with open(Path(f"{self.flutter_dir}/analysis_options.yaml"), 'w') as lint:
+                lint.write("include: package:lint/analysis_options.yaml")
+        except Exception as error:
+            self.__message(
+                f"Ocorreu o erro {error} ao executar o __build_lint_analysis_options_file", error=True)
+
+    """
+    #################################################################
     Área para gerar os códigos do MobX
     #################################################################
     """
@@ -1301,10 +1357,8 @@ class Command(BaseCommand):
         Método para executar o comando de geração dos códigos do MobX
         """
         try:
-            # Executando o comando
-            # flutter pub run build_runner build
-            # no diretório do projeto Flutter
-            # Verifica se o projeto já foi criado
+            if self.state_manager_provider:
+                return
             if self.__check_dir(self.flutter_dir):
                 current_path = os.getcwd()
                 os.chdir(self.flutter_dir)
@@ -1325,18 +1379,26 @@ class Command(BaseCommand):
             if not self.__check_dir(self.app_configuration):
                 os.makedirs(self.app_configuration)
 
-                _content_page = self.__get_snippet(
-                    f"{self.snippet_dir}settings_page.txt")
-                _content_controller = self.__get_snippet(
-                    f"{self.snippet_dir}settings_controller.txt")
+                if self.state_manager_provider:
+                    _content_page = self.__get_snippet(
+                        f"{self.snippet_dir}settings_page.provider.txt")
+                    _content_controller = self.__get_snippet(
+                        f"{self.snippet_dir}settings.provider.txt")
 
-                # Abrindo o arquivo da página para escrever
+                    with open(self.app_configuration_profile_file, 'w', encoding='utf-8') as arquivo:
+                        arquivo.write(_content_controller)
+
+                else:
+                    _content_page = self.__get_snippet(
+                        f"{self.snippet_dir}settings_page.txt")
+                    _content_controller = self.__get_snippet(
+                        f"{self.snippet_dir}settings_controller.txt")
+
+                    with open(self.app_configuration_controller_file, 'w', encoding='utf-8') as arquivo:
+                        arquivo.write(_content_controller)
+
                 with open(self.app_configuration_page_file, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(_content_page)
-
-                # Abrindo o arquivo da página para escrever
-                with open(self.app_configuration_controller_file, 'w', encoding='utf-8') as arquivo:
-                    arquivo.write(_content_controller)
 
         except Exception as error:
             self.__message(
@@ -1365,8 +1427,12 @@ class Command(BaseCommand):
         import yaml
         try:
             __path = self.__get_yaml_file()
-            # Trabalhando com a geração do arquivo baseado no snippet
-            snippet = self.__get_snippet(f"{self.snippet_dir}yaml.txt")
+
+            if self.state_manager_provider:
+                snippet = self.__get_snippet(
+                    f"{self.snippet_dir}yaml.provider.txt")
+            else:
+                snippet = self.__get_snippet(f"{self.snippet_dir}yaml.txt")
             snippet = snippet.replace("$AppPackage$", self.project.lower())
             snippet = snippet.replace("$AppDescription$",
                                       f"Projeto Flutter do sistema Django {self.project}")
@@ -1396,8 +1462,12 @@ class Command(BaseCommand):
 
             __util_snippet = self.__get_snippet(f"{self.snippet_dir}util.txt")
 
-            __controller_snippet = self.__get_snippet(
-                f"{self.snippet_dir}process_controller.txt")
+            if self.state_manager_provider:
+                __controller_snippet = self.__get_snippet(
+                    f"{self.snippet_dir}process.provider.txt")
+            else:
+                __controller_snippet = self.__get_snippet(
+                    f"{self.snippet_dir}process_controller.txt")
 
             # Verificando se os arquivos já existem
             if self.__check_file(self.config_file) is False:
@@ -1430,13 +1500,22 @@ class Command(BaseCommand):
 
             # Criando o controller de gerenciamento do processamento
             # Verificando se o arquivo está travado para parser
-            if self.__check_file(self.process_controller_file) is False:
-                with open(self.process_controller_file, "w", encoding='utf-8') as process_controller:
-                    process_controller.write(__controller_snippet)
+            if self.state_manager_provider:
+                if self.__check_file(self.process_provider_file) is False:
+                    with open(self.process_provider_file, "w", encoding='utf-8') as process_provider:
+                        process_provider.write(__controller_snippet)
+                else:
+                    if self.__check_file_is_locked(self.process_provider_file) is False:
+                        with open(self.process_provider_file, "w", encoding='utf-8') as process_provider:
+                            process_provider.write(__controller_snippet)
             else:
-                if self.__check_file_is_locked(self.process_controller_file) is False:
+                if self.__check_file(self.process_controller_file) is False:
                     with open(self.process_controller_file, "w", encoding='utf-8') as process_controller:
                         process_controller.write(__controller_snippet)
+                else:
+                    if self.__check_file_is_locked(self.process_controller_file) is False:
+                        with open(self.process_controller_file, "w", encoding='utf-8') as process_controller:
+                            process_controller.write(__controller_snippet)
 
         except Exception as error:
             self.__message(
@@ -1460,8 +1539,16 @@ class Command(BaseCommand):
             for arquivo in ['widget', 'font']:
                 # Verificando se o arquivo existe
                 __path = Path(f"{self.ui_dir}{arquivo}.dart")
-                __snippet = self.__get_snippet(
-                    Path(f"{self.snippet_dir}ui_{ arquivo}.txt"))
+                if arquivo == "font":
+                    __snippet = self.__get_snippet(
+                        Path(f"{self.snippet_dir}ui_{ arquivo}.txt"))
+                else:
+                    if self.state_manager_provider:
+                        __snippet = self.__get_snippet(
+                            Path(f"{self.snippet_dir}ui_{ arquivo}.provider.txt"))
+                    else:
+                        __snippet = self.__get_snippet(
+                            Path(f"{self.snippet_dir}ui_{ arquivo}.txt"))
                 if self.__check_file(__path) is False:
                     # Criando o arquivo
                     with open(__path, "w", encoding='utf-8') as arq:
@@ -1601,7 +1688,7 @@ class Command(BaseCommand):
 
             # Realizando o parser da página de listagem
             self.__listpage_parser(__source_class)
-            
+
             # Realizando o parser do widget
             self.__widget_parser(__source_class)
 
@@ -1694,7 +1781,11 @@ class Command(BaseCommand):
             __imports = ""
 
             # Acessando o snippet do arquivo
-            snippet = self.__get_snippet(f"{self.snippet_dir}main.txt")
+            if self.state_manager_provider:
+                snippet = self.__get_snippet(
+                    f"{self.snippet_dir}main.provider.txt")
+            else:
+                snippet = self.__get_snippet(f"{self.snippet_dir}main.txt")
 
             path_maindart = Path(f"{self.flutter_dir}/lib/main.dart")
 
@@ -1706,7 +1797,7 @@ class Command(BaseCommand):
             __import_views, __import_controllers, __register_controller, __views = self.__mapping_all_application()
 
             # Adicionando a APP configuracao ao import dos controllers das views e ao register
-            __import_controllers += f"import 'apps/configuracao/controller.dart';"
+            __import_controllers += f"import 'apps/configuracao/model.dart';"
             __import_views += f"import 'apps/configuracao/index.page.dart';\n"
             __register_controller += "getIt.registerSingleton<SettingsController>(SettingsController());"
 
@@ -1718,7 +1809,7 @@ class Command(BaseCommand):
                 '$RegisterControllers$', __register_controller)
             snippet = snippet.replace('$ImportViews$', __import_views)
             snippet = snippet.replace(
-                '$ImportController$', __import_controllers)
+                '$ImportProvider$', __import_controllers)
             snippet = snippet.replace('$Listviews$', __views)
 
             # Alterando o conteúdo do arquivo main.dart original
@@ -1748,7 +1839,11 @@ class Command(BaseCommand):
         elif options['clear']:
             self.__clear_project()
             sys.exit()
-        elif options['init']:
+        elif options['init_provider'] or options['init_mobx']:
+            if options['init_provider']:
+                self.state_manager_provider = True
+            else:
+                self.state_manager_provider = False
             # Criando o Projeto
             self.__init_flutter()
 
@@ -1763,12 +1858,15 @@ class Command(BaseCommand):
 
             # Gerando o class de acesso HTTP
             self.__http_dio_request()
-            
+
             # Criando a app Auth
             self.__create_auth_application()
 
             # Criando a app para gerenciar a internacionalização do projeto
             self.__localization_app()
+
+            # Criando o lint analysis
+            self.__build_lint_analysis_options_file()
 
             # Invocando os demais métodos de geração do projeto flutter
             self.__build_flutter()
@@ -1776,7 +1874,7 @@ class Command(BaseCommand):
             return
         else:
             self.__message(
-                "É necessário passar pelo menos um dos parâmetros a seguir: --init, --main, --yaml, --build_mobx", error=True)
+                "É necessário passar pelo menos um dos parâmetros a seguir: --init_provider, --init_mobx, --main, --yaml, --build_mobx", error=True)
             sys.exit()
 
     def handle(self, *args, **options):

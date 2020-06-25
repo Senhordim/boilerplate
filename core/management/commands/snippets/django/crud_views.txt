@@ -12,21 +12,17 @@ class $ModelClass$ListView(BaseListView):
         return context
     
     def get_queryset(self):
-        """Subscrevendo o método queryset para 
-        filtrar os dados conforme o perfil do 
-        usuário logado
+        """Subscrevendo o queryset para
+        filtrar os dados conforme o perfil logado
         
         Returns:
             QuerySet
         """
 
-        # Chamando a query padrão da classe
         queryset = super($ModelClass$ListView, self).get_queryset()
-        # Verificando se o usuário é superuser para retornar todos os registros
         if self.request.user.is_superuser:
             return queryset
         else:
-            #TODO: Aplicar o filtro na QuerySet
             # queryset.filter()
             return queryset
 
@@ -43,7 +39,7 @@ class $ModelClass$DetailView(BaseDetailView):
         context = super($ModelClass$DetailView, self).get_context_data(**kwargs)
         return context
 
-    """ Caso seja necessário controlar o acesso do usuário ao detalhamento 
+    """ Caso deseje controlar o acesso do usuário ao detalhamento
      do item descomente esse método """
 
     #def dispatch(self, request, *args, **kwargs):

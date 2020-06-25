@@ -2,40 +2,18 @@
 a criação dos templates customizados, das views, da APIRest e dos Forms.
 """
 
+import fileinput
 import os
 import sys
-import time
-import platform
-import fileinput
-import traceback
-import subprocess
 from pathlib import Path
-from optparse import make_option
 
 # Pacote responsável por pegar a instância do models baseado no nome
 from django.apps import apps
-from django.utils import encoding
-from django.utils.text import capfirst
 from django.contrib.contenttypes.models import ContentType
-from django.core.management.base import BaseCommand, CommandError
-# Importando os tipos de fields do Django
-from django.db.models.fields import (BLANK_CHOICE_DASH, NOT_PROVIDED,
-                                     AutoField, BigAutoField, BigIntegerField,
-                                     BinaryField, BooleanField, CharField,
-                                     CommaSeparatedIntegerField, DateField,
-                                     DateTimeField, DecimalField,
-                                     DurationField, EmailField, Empty, Field,
-                                     FieldDoesNotExist, FilePathField,
-                                     FloatField, GenericIPAddressField,
-                                     IntegerField, IPAddressField,
-                                     NullBooleanField, PositiveIntegerField,
-                                     PositiveSmallIntegerField, SlugField,
-                                     SmallIntegerField, TextField, TimeField,
-                                     URLField, UUIDField)
-
-from django.db.models import ManyToManyField
+from django.core.management.base import BaseCommand
 from django.urls import resolve, reverse
-from django.utils.text import capfirst
+
+from bs4 import BeautifulSoup
 
 
 class Command(BaseCommand):
@@ -302,11 +280,16 @@ class Command(BaseCommand):
         """
         try:
             if self._check_file(path):
-                with open(path, 'r', encoding='utf-8') as arquivo:
+                with open(path, 'r') as arquivo:
                     content = arquivo.read()
-                    return "#FileLocked" in content
+                    if "#FileLocked" in content:
+                        print(
+                            f"{'|' * 100}\nArquivo {path} travado para parser\n{'|' * 100}")
+                        return True
+                    return False
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error} no __check_fil_is_locked")
+            self.__message(
+                f"Ocorreu o erro : {error} no __check_fil_is_locked")
             return True
 
     def _get_snippet(self, path):
@@ -319,7 +302,6 @@ class Command(BaseCommand):
         Returns:
             str -- Texto a ser utilizado para interpolar os dados do models
         """
-
         try:
             if self._check_file(path):
                 with open(path, 'r', encoding='utf-8') as arquivo:
@@ -342,6 +324,29 @@ class Command(BaseCommand):
             self.__message(f"Ocorreu o erro : {error}")
             return None
 
+    def __convert_no_ascii_character_html_code(self, text: str):
+        try:
+            __list_uft = ["Á", "á", "Â", "â", "À", "à", "Å", "å",
+                          "Ã", "ã", "Ä", "ä", "Æ", "æ", "É", "é",
+                          "Ê", "ê", "È", "è", "Ë", "ë", "Ð", "ð",
+                          "Í", "í", "Î", "î", "Ì", "ì", "Ï", "ï",
+                          "Õ", "õ", "Ö", "ö", "Ú", "ú", "Û", "û",
+                          "Ó", "ó", "Ô", "ô", "Ò", "ò", "Ø", "ø",
+                          "Ù", "ù", "Ü", "ü", "Ç", "ç", "Ñ", "ñ",
+                          "Ý", "ý", "“", "&lt;", "&gt;", "&", "®", "©"]
+            __list_html = ["&Aacute;", "&aacute;", "&Acirc;", "&acirc;", "&Agrave;", "&agrave;", "&Aring;", "&aring;",
+                           "&Atilde;", "&atilde;", "&Auml;", "&auml;", "&AElig;", "&aelig;", "&Eacute;", "&eacute;",
+                           "&Ecirc;", "&ecirc;", "&Egrave;", "&egrave;", "&Euml;", "&Euml;", "&ETH;", "&eth;",
+                           "&Iacute;", "&iacute;", "&Icirc;", "&icirc;", "&Igrave;", "&igrave;", "&Iuml;", "&iuml;",
+                           "&Oacute;", "&oacute;", "&Ocirc;", "&ocirc;", "&Ograve;", "&ograve;", "&Oslash;", "&oslash;",
+                           "&Otilde;", "&otilde;", "&Ouml;", "&ouml;", "&Uacute;", "&uacute;", "&Ucirc;", "&ucirc;",
+                           "&Ugrave;", "&ugrave;", "&Uuml;", "&uuml;", "&Ccedil;", "&ccedil;", "&Ntilde;", "&ntilde;",
+                           "&Yacute;", "&yacute;", "&quot;", "&lt;", "&gt;", "&amp;", "&reg;", "&copy;"]
+            return text
+        except Exception as error:
+            self.__message(f"Ocorreu um erro ao chamar o __convert_no_ascii_character_html_code: {error}")
+        return text
+
     def _apply_pep(self):
         """
         Método para aplicar as configurações da Pep8 ao documento.
@@ -350,7 +355,7 @@ class Command(BaseCommand):
             # Aplicando a PEP8 as URLs
             os.system(
                 'autopep8 --in-place --aggressive --aggressive {}'
-                .format(self.path_urls))
+                    .format(self.path_urls))
             os.system('isort {}'.format(self.path_urls))
         except Exception as error:
             self.__message(f"Ocorreu o erro : {error}")
@@ -359,7 +364,7 @@ class Command(BaseCommand):
             # Aplicando a PEP8 as Forms
             os.system(
                 'autopep8 --in-place --aggressive --aggressive {}'
-                .format(self.path_form))
+                    .format(self.path_form))
             os.system('isort {}'.format(self.path_form))
         except Exception as error:
             self.__message(f"Ocorreu o erro : {error}")
@@ -368,7 +373,7 @@ class Command(BaseCommand):
             # Aplicando a PEP8 as Views
             os.system(
                 'autopep8 --in-place --aggressive --aggressive {}'
-                .format(self.path_views))
+                    .format(self.path_views))
             os.system('isort {}'.format(self.path_views))
         except Exception as error:
             self.__message(f"Ocorreu o erro : {error}")
@@ -377,7 +382,7 @@ class Command(BaseCommand):
             # Aplicando a PEP8 as Views
             os.system(
                 'autopep8 --in-place --aggressive --aggressive {}'
-                .format(self.path_serializer))
+                    .format(self.path_serializer))
             os.system('isort {}'.format(self.path_serializer))
         except Exception as error:
             self.__message(f"Ocorreu o erro : {error}")
@@ -398,8 +403,6 @@ class Command(BaseCommand):
             path = Path(f"{self.path_template_dir}/index.html")
             # Verificando se o arquivo está travado para novo parser
             if self.__check_file_is_locked(path):
-                print(
-                    f"{'|'*100}\nArquivo {self.path_serializer} travado para parser\n{'|'*100}")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._snippet_index_template
@@ -424,8 +427,6 @@ class Command(BaseCommand):
                 f"{self.path_template_dir}/{self.model_lower}_detail.html")
             # Verificando se o arquivo está travado para novo parser
             if self.__check_file_is_locked(path):
-                print(
-                    f"{'|'*100}\nArquivo {self.path_serializer} travado para parser\n{'|'*100}")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._snippet_detail_template
@@ -450,8 +451,6 @@ class Command(BaseCommand):
                 f"{self.path_template_dir}/{self.model_lower}_list.html")
             # Verificando se o arquivo está travado para novo parser
             if self.__check_file_is_locked(path):
-                print(
-                    f"{'|'*100}\nArquivo {self.path_serializer} travado para parser\n{'|'*100}")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._snippet_list_template
@@ -478,8 +477,6 @@ class Command(BaseCommand):
                 f"{self.path_template_dir}/{self.model_lower}_update.html")
             # Verificando se o arquivo está travado para novo parser
             if self.__check_file_is_locked(path):
-                print(
-                    f"{'|'*100}\nArquivo {self.path_serializer} travado para parser\n{'|'*100}")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._snippet_update_template
@@ -506,8 +503,6 @@ class Command(BaseCommand):
                 f"{self.path_template_dir}/{self.model_lower}_create.html")
             # Verificando se o arquivo está travado para novo parser
             if self.__check_file_is_locked(path):
-                print(
-                    f"{'|'*100}\nArquivo {self.path_serializer} travado para parser\n{'|'*100}")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._snippet_create_template
@@ -525,7 +520,6 @@ class Command(BaseCommand):
     def _manage_delete_template(self):
         """Método para criar o template de Delete do model.
         """
-
         try:
             self.__message(
                 "Trabalhando na configuração do template de Deleção.")
@@ -533,8 +527,6 @@ class Command(BaseCommand):
                 f"{self.path_template_dir}/{self.model_lower}_delete.html")
             # Verificando se o arquivo está travado para novo parser
             if self.__check_file_is_locked(path):
-                print(
-                    f"{'|'*100}\nArquivo {self.path_serializer} travado para parser\n{'|'*100}")
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._snippet_delete_template
@@ -550,7 +542,6 @@ class Command(BaseCommand):
     def _manage_templates(self):
         """Método pai para controlar a criação do templates
         """
-
         try:
             if self._check_dir(self.path_template_dir) is False:
                 self.__message("Criando o diretório dos Templates")
@@ -579,7 +570,6 @@ class Command(BaseCommand):
     def _manage_api_url(self):
         """Método para configuração das URLS da API
         """
-
         try:
             import pdb
             self.__message(
@@ -608,7 +598,8 @@ class Command(BaseCommand):
             # Verificando se já existe o router = routers.DefaultRouter()
             if self._check_content(self.path_urls, "router = routers.DefaultRouter()"):
                 content = content.split("\n", 1)[1]
-                content = content.replace('router = routers.DefaultRouter()', '\n')
+                content = content.replace(
+                    'router = routers.DefaultRouter()', '\n')
                 imports = 'router = routers.DefaultRouter()'
                 with fileinput.FileInput(self.path_urls, inplace=True) as arquivo:
                     for line in arquivo:
@@ -832,8 +823,6 @@ class Command(BaseCommand):
 
             # Verificando se o arquivo está travado para não realizar o parser
             if self.__check_file_is_locked(self.path_serializer) is True:
-                print(
-                    f"{'|'*100}\nArquivo {self.path_serializer} travado para parser\n{'|'*100}")
                 return
 
             # Verificando se já existe configuração no serializers para o Models informado
@@ -909,8 +898,6 @@ class Command(BaseCommand):
 
             # Verificando se o arquivo está travado para não realizar o parser
             if self.__check_file_is_locked(self.path_form) is True:
-                print(
-                    f"{'|'*100}\nArquivo {self.path_form} travado para parser\n{'|'*100}")
                 return
 
             # Verificando se já existe configuração no forms para o Models informado
@@ -1154,8 +1141,6 @@ class Command(BaseCommand):
 
             # Verificando se o arquivo está travado para não realizar o parser
             if self.__check_file_is_locked(self.path_urls) is True:
-                print(
-                    f"{'|'*100}\nArquivo {self.path_serializer} travado para parser\n{'|'*100}")
                 return
 
             if self._check_content(self.path_urls, " {}ListView".format(self.model)):
@@ -1220,8 +1205,6 @@ class Command(BaseCommand):
 
             # Verificando se o arquivo está travado para não realizar o parser
             if self.__check_file_is_locked(self.path_urls) is True:
-                print(
-                    f"{'|'*100}\nArquivo {self.path_urls} travado para parser\n{'|'*100}")
                 return
 
             # Atualizando o conteúdo do arquivo.
@@ -1276,7 +1259,7 @@ class Command(BaseCommand):
             iten["app"], iten["model"], iten["name"] = str(field).split('.')
             iten["tipo"] = (str(
                 str(type(field)).split('.')[-1:])
-                .replace("[\"", "").replace("\'>\"]", ""))
+                            .replace("[\"", "").replace("\'>\"]", ""))
             # print("Campo: {} Tipo: {}".format(iten.get("name"), iten.get("tipo")))
             # Verificando se o tipo de campos está nos tipos conhecidos
             if iten["tipo"] in types:
@@ -1344,11 +1327,11 @@ class Command(BaseCommand):
                         "class='", "class='form-control-plaintext ")
                 # Adicionando a classe obrigatorio aos campos required
                 if required != '':
-                    tag_result += '\n<div class="invalid-feedback">Campo Obrigatorio.</div>'
+                    tag_result += '\n<div class="invalid-feedback">Campo Requerido.</div>'
                 # Adicionando o HelpText no campo
                 if helptext != '':
-                    tag_result += "\n<small class='form-text text-muted'>{}</small>\n".format(
-                        helptext)
+                    tag_result += "\n<small class='form-text text-muted'>{{{{ form.{0}.help_text }}}}</small>\n".format(
+                        iten['name'])
                 tag_result += "{{% if form.{0}.errors  %}}{{{{ form.{0}.errors  }}}}{{% endif %}}".format(
                     iten['name'])
                 tag_result += "</div>"
@@ -1373,8 +1356,7 @@ class Command(BaseCommand):
             # Rercuperando uma instancia do models informado
             model = self._get_model()
             if model == None:
-                self.__message("Favor declarar a app no settings.")
-                return
+                self.__message("Favor declarar a app no settings.", error=True)
             self._manage_templates()
             html_tag = ""
             self.html_modals = ""
@@ -1390,15 +1372,13 @@ class Command(BaseCommand):
                         f"{self.path_template_dir}/{self.model_lower}_{temp}.html")
                     # Verificando se o arquivo está travado para não realizar o parser
                     if self.__check_file_is_locked(list_update_create) is True:
-                        print(
-                            f"{'|'*100}\nArquivo {list_update_create} travado para parser\n{'|'*100}")
                         continue
                     # Adiciona os forms no arquivo
                     with fileinput.FileInput(list_update_create, inplace=True) as arquivo:
                         for line in arquivo:
                             print(line.replace(
                                 "<!--REPLACE_PARSER_HTML-->",
-                                html_tag).replace(
+                                BeautifulSoup(html_tag, 'html5lib').prettify()).replace(
                                 "$url_back$", '{}:{}-list'.format(
                                     self.app_lower, self.model_lower
                                 )), end='')

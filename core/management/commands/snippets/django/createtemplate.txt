@@ -1,11 +1,8 @@
 <!--
-Arquivo gerado automaticamente pelo build, com o formulário HTML de criação do objeto $title$.
-
+Arquivo gerado automaticamente pelo build.
 Caso deseje bloquear o parser nesse arquivo, basta adicionar o caracter #(cerquilha) antes da palavra a seguir
-
 FileLocked
 -->
-
 
 {% extends 'core/index_create.html' %}
 {% load base %}

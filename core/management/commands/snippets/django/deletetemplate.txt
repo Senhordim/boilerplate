@@ -1,11 +1,8 @@
 <!--
-Arquivo gerado automaticamente pelo build, com o formulário HTML de exclusão do objeto $title$.
-
+Arquivo gerado automaticamente pelo build.
 Caso deseje bloquear o parser nesse arquivo, basta adicionar o caracter #(cerquilha) antes da palavra a seguir
-
 FileLocked
 -->
-
 
 {% extends 'core/index_delete.html' %} 
 {% block menu_app %}

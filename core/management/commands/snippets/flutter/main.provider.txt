@@ -8,79 +8,56 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'utils/config.dart';
 import 'utils/localization.dart';
 import 'user_interface/font.dart';
-import 'apps/auth/controller.dart';
+import 'apps/auth/provider.dart';
 import 'user_interface/widget.dart';
-import 'utils/process.controller.dart';
+import 'utils/process.provider.dart';
 
 $ImportViews$
-$ImportController$
+$ImportProvider$
 
-// Variável para controlar o idioma padrão da App
 String currentLanguage = "";
 
 void main() {
-    /// Criando uma instância do Get_it para trabalhar
-    /// com injeção de dependência
     GetIt getIt = GetIt.instance;
-
-    // Registrando o controller do ProcessController
-    getIt.registerSingleton<ProcessController>(ProcessController());
-
-    // Registrando o controller do Auth
-    getIt.registerSingleton<AuthController>(AuthController());
-
-    /// Registrando os controllers dos Models utiliznado o getIt
-    $RegisterControllers$
-
     runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // Recuperando o controller SettingsController
-    SettingsController _controller = GetIt.I<SettingsController>();
+    final _settingsProvider = Provider.of<SettingsProvider>(context, listen: false);
 
-    /// Configurando a cor da barra de status do device
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
       statusBarColor: Colors.transparent
     ));
+
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
       statusBarColor: Colors.transparent
     ));
-    return Observer(builder: (_) {
-      return MaterialApp(
-        title: '${Config.app_title}',
-        theme: _controller.lightTheme == true
+    
+    return MaterialApp(
+        title: Config.app_title,
+        theme: _settingsProvider.lightTheme == true
             ? CustomTheme.lightTheme
             : CustomTheme.darkTheme,
         home: MyHomePage(title: '${Config.app_title}'),
-        /// Área para internacionalização
-        // Configurando quais idiomas serão suportados, por padrão pt_BR e en_US
         supportedLocales: [
-          Locale('en', 'US'),
-          Locale('pt', 'BR'),
+          const Locale('en', 'US'),
+          const Locale('pt', 'BR'),
         ],
-        // These delegates make sure that the localization data for the proper language is loaded
         localizationsDelegates: [
-          // A class which loads the translations from JSON files
           AppLocalizations.delegate,
-          // Built-in localization of basic text for Material widgets
           GlobalMaterialLocalizations.delegate,
-          // Built-in localization for text direction LTR/RTL
           GlobalWidgetsLocalizations.delegate,
         ],
-        // Returns a locale which will be used by the app
         localeResolutionCallback: (locale, supportedLocales) {
-          // Check if the current device locale is supported
           for (var supportedLocale in supportedLocales) {
             if (supportedLocale.languageCode == locale.languageCode &&
                 supportedLocale.countryCode == locale.countryCode) {
@@ -88,14 +65,10 @@ class MyApp extends StatelessWidget {
               return supportedLocale;
             }
           }
-          // If the locale of the device is not supported, use the first one
-          // from the list (English, in this case).
           return supportedLocales.first;
         },
-        /// fim da área de internacionalização
         debugShowCheckedModeBanner: false,
       );
-    });
   }
 }
 
@@ -117,16 +90,11 @@ class MyHomePage extends StatefulWidget {
 /// items do BottomNavigationBar, também é necessário alterar o valor passado para o body, que 
 /// que deve ser _currentPage.
 /// 
+
 class _MyHomePageState extends State<MyHomePage> {
-  // Recuperando o controller SettingsController
-  SettingsController _controller = GetIt.I<SettingsController>();
-  
-  // Declarando o booleano que controla se será mostrado o ButtonNavigationBar
-  bool bottomNavigationEnable = false;
-
-    // Declarando o PageController para pelo ButtonNavigationBar
   PageController _pageController;
-
+  bool bottomNavigationEnable = false;
+  
   // Declarando o inteiro para controlar qual página deve ser exibida
   int _page = 0;
 
@@ -141,9 +109,6 @@ class _MyHomePageState extends State<MyHomePage> {
   /// por meio do ButtonNavigationBar
   Widget _currentPage;
 
-  /// Sobrescrevendo o initState para caso seja configurada a 
-  /// pelo ButtonNavigationBar sejam instânciadas as variáveis de controle
-  /// da 
   @override
   void initState(){
     _itensMenuGridView.make();
@@ -152,7 +117,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Verificando se a será pelo navigationButton
       return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -168,7 +132,6 @@ class _MyHomePageState extends State<MyHomePage> {
       );
   }
 
-  /// Widget para criar as ações da AppBar
   List<Widget> _buildAction(BuildContext context){
     return [
       IconButton(
@@ -182,7 +145,8 @@ class _MyHomePageState extends State<MyHomePage> {
         }),
     ];
   }
-  Widget _buildGridView(context) {
+
+  Widget _buildGridView(BuildContext context) {
     return Stack(children: <Widget>[
       HeadWidget(),
       ButtonBarWidget(
@@ -199,27 +163,34 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   );
                 },
-                child: customMainCardButton(
-                  _itensMenuGridView.list[index].icon,
-                  _itensMenuGridView.list[index].title,
-                  iconColor: _controller.lightTheme == true
-                      ? CustomTheme.mainCardLightIconColor
-                      : CustomTheme.mainCardDarkIconColor,
-                  textColor: _controller.lightTheme == true
-                      ? CustomTheme.mainCardLightTextColor
-                      : CustomTheme.mainCardDarkTextColor,
-                  cardBackgroundColorBegin: _controller.lightTheme == true
-                      ? CustomTheme.mainCardLightBackgroundColor
-                      : CustomTheme.mainCardDarkBackgroundColor,
-                  cardBackgroundColorEnd: _controller.lightTheme == true
-                      ? CustomTheme.mainCardLightBackgroundColor
-                      : CustomTheme.mainCardDarkBackgroundColor,
-                  boxShadowColor: _controller.lightTheme == true
-                      ? CustomTheme.mainCardLightShadowColor
-                      : CustomTheme.mainCardDarkShadowColor,
-                  cardBorderColor: _controller.lightTheme == true
-                      ? CustomTheme.mainCardLightBackgroundColor
-                      : CustomTheme.mainCardDarkBackgroundColor,
+                child: Consumer<SettingsProvider>(
+                  builder:
+                      (BuildContext context, _settingsProvider, Widget child) {
+                    return customMainCardButton(
+                      _itensMenuGridView.list[index].icon,
+                      _itensMenuGridView.list[index].title,
+                      iconColor: _settingsProvider.lightTheme == true
+                          ? CustomTheme.mainCardLightIconColor
+                          : CustomTheme.mainCardDarkIconColor,
+                      textColor: _settingsProvider.lightTheme == true
+                          ? CustomTheme.mainCardLightTextColor
+                          : CustomTheme.mainCardDarkTextColor,
+                      cardBackgroundColorBegin:
+                          _settingsProvider.lightTheme == true
+                              ? CustomTheme.mainCardLightBackgroundColor
+                              : CustomTheme.mainCardDarkBackgroundColor,
+                      cardBackgroundColorEnd:
+                          _settingsProvider.lightTheme == true
+                              ? CustomTheme.mainCardLightBackgroundColor
+                              : CustomTheme.mainCardDarkBackgroundColor,
+                      boxShadowColor: _settingsProvider.lightTheme == true
+                          ? CustomTheme.mainCardLightShadowColor
+                          : CustomTheme.mainCardDarkShadowColor,
+                      cardBorderColor: _settingsProvider.lightTheme == true
+                          ? CustomTheme.mainCardLightBackgroundColor
+                          : CustomTheme.mainCardDarkBackgroundColor,
+                    );
+                  },
                 ),
               ),
             );
@@ -229,15 +200,11 @@ class _MyHomePageState extends State<MyHomePage> {
     ]);
   }
 
-  /// Widget para criar o BottomNavigationBar. Caso o valor do bottomNavigationEnable
-  /// seja false é retornado um null para não "desenhar" nada na tela.
   Widget _buildBottomNavigationBar(BuildContext context) {
     if (bottomNavigationEnable == false) return null;
     return Theme(
       data: Theme.of(context).copyWith(
-        // sets the background color of the `BottomNavigationBar`
         canvasColor: Theme.of(context).primaryColor,
-        // sets the active color of the `BottomNavigationBar` if `Brightness` is light
         primaryColor: Theme.of(context).accentColor,
         textTheme: Theme.of(context).textTheme.copyWith(
               caption: TextStyle(color: Colors.grey[500]),
@@ -277,8 +244,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  /// Método para controlar a das páginas
-  /// conforme o clique nos elementos do ButtonNavigationBar
   _navigationTapped(int page) {
     setState((){
       _page = page;
@@ -287,7 +252,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-/// Classe dos itens do ListView
 class Itens {
   final String title;
   final IconData icon;
@@ -315,5 +279,5 @@ class Itens {
         icon: FontAwesomeIcons.addressBook,
         uri: Container()));
   }
-  Widget geturi() => this.uri;
+  Widget geturi() => uri;
 }
