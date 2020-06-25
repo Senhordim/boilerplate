@@ -58,7 +58,9 @@ class AuthProvider extends ChangeNotifier {
       authList = List<AuthModel>.of(await _authService.fetchAll());
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
-    } finally {}
+    } finally {
+      notifyListeners();
+    }
   }
 
   reload() async {
@@ -67,7 +69,9 @@ class AuthProvider extends ChangeNotifier {
       fetchAll();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
-    } finally {}
+    } finally {
+      notifyListeners();
+    }
   }
 
   detail() async {
@@ -75,7 +79,9 @@ class AuthProvider extends ChangeNotifier {
       authModel = await _authService.detail(authModel);
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
-    } finally {}
+    } finally {
+      notifyListeners();
+    }
   }
 
   post() async {
@@ -83,7 +89,9 @@ class AuthProvider extends ChangeNotifier {
       authModel = await _authService.post(authModel);
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
-    } finally {}
+    } finally {
+      notifyListeners();
+    }
   }
 
   put() async {
@@ -91,7 +99,9 @@ class AuthProvider extends ChangeNotifier {
       authModel = await _authService.put(authModel);
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
-    } finally {}
+    } finally {
+      notifyListeners();
+    }
   }
 
   delete() async {
@@ -99,18 +109,18 @@ class AuthProvider extends ChangeNotifier {
       authModel = await _authService.delete(authModel);
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
-    } finally {}
+    } finally {
+      notifyListeners();
+    }
   }
-
-  ///
-  /// [Área dos métodos da persistência no device]
-  ///
 
   fetchAllLocal() async {
     try {
       authLocalList = List<AuthModel>.of(await _authData.fetchAll());
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
     }
   }
 
@@ -120,6 +130,8 @@ class AuthProvider extends ChangeNotifier {
       fetchAllLocal();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
     }
   }
 
@@ -128,7 +140,9 @@ class AuthProvider extends ChangeNotifier {
       authLocalModel = await _authData.get(id);
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
-    } finally {}
+    } finally {
+      notifyListeners();
+    }
   }
 
   saveLocal(AuthModel model) async {
@@ -139,6 +153,8 @@ class AuthProvider extends ChangeNotifier {
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
     }
   }
 
@@ -150,6 +166,8 @@ class AuthProvider extends ChangeNotifier {
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
     }
   }
 
@@ -158,6 +176,8 @@ class AuthProvider extends ChangeNotifier {
       return await _authData.delete(id);
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
     }
   }
 
@@ -166,6 +186,8 @@ class AuthProvider extends ChangeNotifier {
       return await _authData.deleteAll();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
     }
   }
 

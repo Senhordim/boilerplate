@@ -23,16 +23,12 @@ import '../../utils/custom_dio.dart';
 import '../../utils/process.provider.dart';
 
 class AuthService {
-  // Instanciando a classe AuthModel
   AuthModel _auth = AuthModel();
-
   final ProcessProvider _processProvider = GetIt.I<ProcessProvider>();
 
-  /// Método para retornar todos os Auth da API
   Future<List<AuthModel>> fetchAll() async {
     final List<AuthModel> _itens = <AuthModel>[];
     String _url = "";
-
     try {
       final CustomDio _dio = CustomDio(_url);
       final data = await _dio.getHttp();
@@ -47,7 +43,6 @@ class AuthService {
     return _itens;
   }
 
-  /// Método para detalhar um Auth da API
   Future<AuthModel> detail(AuthModel auth) async {
     String _url = "";
     try {
@@ -62,13 +57,11 @@ class AuthService {
     return _auth;
   }
 
-  /// Método para atualizar um Auth da API
   Future<AuthModel> put(AuthModel auth) async {
     String _url = "";
-
     try {
       final CustomDio _dio = CustomDio(_url);
-      final data = await _dio.putHttp(auth.toJson(), auth.id.toString());
+      final data = await _dio.putHttp(auth.toJson());
       if (data != null) {
         _auth = AuthModel.fromJson(data.toString());
       }
@@ -78,10 +71,8 @@ class AuthService {
     return _auth;
   }
 
-  /// Método para adicionar os Auth da API
   Future<AuthModel> post(AuthModel auth) async {
     String _url = "";
-
     try {
       final CustomDio _dio = CustomDio(_url);
       final data = await _dio.postHttp(auth.toJson());
@@ -94,12 +85,11 @@ class AuthService {
     return _auth;
   }
 
-  /// Método para exclui os Auth da API
   Future<AuthModel> delete(AuthModel auth) async {
     String _url = "";
     try {
       final CustomDio _dio = CustomDio(_url);
-      final data = await _dio.deleteHttp(auth.toJson(), auth.id.toString());
+      final data = await _dio.deleteHttp(auth.toJson());
       if (data != null) {
         _auth = AuthModel.fromJson(data.toString());
       }
@@ -109,7 +99,6 @@ class AuthService {
     return _auth;
   }
 
-  /// Métodos para tratar o retorno do processamento
   void _success(String message) async {
     try {
       _processProvider.withSuccess(message: message);

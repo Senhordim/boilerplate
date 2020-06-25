@@ -171,6 +171,21 @@ class AppModel:
             self.__message(
                 f"Erro no get_path_controller_file {e}", error=True)
 
+    def get_path_provider_file(self):
+        """Método para recuperar o caminho para o arquivo provider.dart
+        da app
+
+        Returns:
+            String -- Caminho do arquivo controller.dart
+        """
+        try:
+            return Path("{}/lib/apps/{}/{}/provider.dart".format(
+                self.path_flutter, self.app_name_lower,
+                self.model_name_lower))
+        except expression as identifier:
+            self.__message(
+                f"Erro no get_path_provider_file {e}", error=True)
+
     def get_path_service_file(self):
         """Método para recuperar o caminho do arquivo service.dart
 
@@ -705,7 +720,10 @@ class Command(BaseCommand):
                 return
 
             # Realizando replace dos dados
-            content = self.__get_snippet(f"{self.snippet_dir}index_page.txt")
+            if self.state_manager_provider:
+                content = self.__get_snippet(f"{self.snippet_dir}index_page.provider.txt")
+            else:
+                content = self.__get_snippet(f"{self.snippet_dir}index_page.txt")
             content = content.replace("$ModelClass$", app.model_name)
             content = content.replace(
                 "$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
@@ -734,7 +752,10 @@ class Command(BaseCommand):
                 return
 
             # Realizando replace dos dados
-            content = self.__get_snippet(f"{self.snippet_dir}list_page.txt")
+            if self.state_manager_provider:
+                content = self.__get_snippet(f"{self.snippet_dir}list_page.provider.txt")
+            else:
+                content = self.__get_snippet(f"{self.snippet_dir}list_page.txt")
 
             content = content.replace("$App$", app.app_name)
             content = content.replace("$Model$", app.model_name_lower)
@@ -1159,6 +1180,32 @@ class Command(BaseCommand):
         except Exception as error:
             self.__message(
                 f"Erro ao executar o controller parser {error}", error=True)
+
+    def __provider_parser(self, app):
+        """Método responsável por criar o arquivo provider do Model
+
+        Args:
+            app {AppModel} -- Instância da class AppModel
+        """
+        try:
+            if app.model is None:
+                print("Informe o App")
+                return
+            __file = app.get_path_provider_file()
+
+            if self.__check_file_is_locked(__file):
+                print("Arquivo travado")
+                return
+            
+            content = self.__get_snippet(f"{self.snippet_dir}provider.txt")
+            content = content.replace("$ModelClass$", app.model_name)
+            content = content.replace("$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
+
+            with open(__file, 'w', encoding='utf-8') as fileProvider:
+                fileProvider.write(content)
+
+        except Exception as error:
+            self.__message(f"Erro ao executar o __provider_parser: {error}", error=True)
 
     def __service_parser(self, app):
         """Método responsável por criar o arquivo de service do Model
@@ -1602,7 +1649,6 @@ class Command(BaseCommand):
                 self.__message("É necessário passar a App")
                 return
 
-            # Verificando se foi passado a App e um Model
             if model_name is None:
                 self.__message(f"É necessário passar o Model")
                 return
@@ -1613,26 +1659,22 @@ class Command(BaseCommand):
             __model_name = __source_class.model_name
             __model = __source_class.model
 
-            # Recuperando os caminhos dos diretório e arquivos do Model
             __model_dir = __source_class.get_path_app_model_dir()
             __views_dir = __source_class.get_path_views_dir()
             __data_file = __source_class.get_path_data_file()
             __model_file = __source_class.get_path_model_file()
             __service_file = __source_class.get_path_service_file()
             __controller_file = __source_class.get_path_controller_file()
+            __provider_file = __source_class.get_path_provider_file()
 
             __views = __source_class.get_path_files_views()
 
-            # Verificando se o diretório base do Model já existe
             if not self.__check_dir(__model_dir):
-                # Diretório inexistente
                 self.__message(
                     f"Criando diretório source do {__app_name}.{__model_name}")
                 os.makedirs(__model_dir)
 
-            # Verificando se o diretório views do Model já existe
             if not self.__check_dir(__views_dir):
-                # Diretório inexistente
                 os.makedirs(__views_dir)
 
                 # Criando os arquivos dart das páginas
@@ -1657,57 +1699,41 @@ class Command(BaseCommand):
                         pagina.write(
                             f"// Update Page {__app_name} {__model_name}")
 
-            # Verificando se o arquivo model.dart já existe
             if not self.__check_file(__model_file):
                 with open(__model_file, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(f"// Modelo do {__model_name}")
 
-            # Verificando se o arquivo data.dart já existe
             if not self.__check_file(__data_file):
                 with open(__data_file, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(f"// Persistência do {__model_name}")
 
-            # Verificando se o arquivo service.dart já existe
             if not self.__check_file(__service_file):
                 with open(__service_file, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(f"// Service do {__model_name}")
 
-            # Verificando se o arquivo controller.dart já existe
-            if not self.__check_file(__controller_file):
-                with open(__controller_file, 'w', encoding='utf-8') as arquivo:
-                    arquivo.write(f"// Controller do {__model_name}")
+            if self.state_manager_provider:
+                if not self.__check_file(__provider_file):
+                    with open(__provider_file, 'w', encoding='utf-8') as arquivo:
+                        arquivo.write(f"// Provider do {__model_name}")
+            else:
+                if not self.__check_file(__controller_file):
+                    with open(__controller_file, 'w', encoding='utf-8') as arquivo:
+                        arquivo.write(f"// Controller do {__model_name}")
 
-            # Área do parser
-
-            # Realizando o parser da página de criação
             self.__create_update_page_parser(__source_class)
-
-            # Realizando o parser da página de detalhe
             self.__detailpage_parser(__source_class)
-
-            # Realizando o parser da página index
             self.__indexpage_parser(__source_class)
-
-            # Realizando o parser da página de listagem
             self.__listpage_parser(__source_class)
-
-            # Realizando o parser do widget
             self.__widget_parser(__source_class)
-
-            # Realizando o parser da página de criação
             self.__create_update_page_parser(__source_class, False)
-
-            # Realizando o parser do arquivo model.dart
             self.__model_parser(__source_class)
-
-            # Realizando o parser do arquivo data.dart
             self.__data_parser(__source_class)
-
-            # Realizando o parser do arquivo service.dart
             self.__service_parser(__source_class)
 
-            # Realizando o parser do arquivo store.dart
-            self.__controller_parser(__source_class)
+            if self.state_manager_provider:
+                self.__provider_parser(__source_class)
+            else:
+                self.__controller_parser(__source_class)
 
         except Exception as error:
             self.__message(f"Error ao executar source. \n {error}", error=True)
@@ -1721,43 +1747,31 @@ class Command(BaseCommand):
 
     def __localization_app(self):
         try:
-            # Acessando o snippet do localizations
             snippet = self.__get_snippet(
                 f"{self.snippet_dir}localization.txt")
 
-            # Recuperando o caminho do arquivo localization.dart
             path_localization = os.path.join(
                 self.utils_dir, 'localization.dart')
 
-            # Verificando se o arquivo está travado para parser
             if self.__check_file_is_locked(path_localization):
                 return
 
-            # Gravando no arquivo
             with open(path_localization, 'w', encoding='utf-8') as localizations:
                 localizations.write(snippet)
 
-            # Adicionando os arquivos de pt.json e en.json no diretório lang
-            #
-            # Recuperando o caminho do diretório e dos arquivos
             __lang_dir = Path(f"{self.flutter_dir}/lang")
             __pt_br = Path(f"{self.flutter_dir}/lang/pt.json")
             __en_us = Path(f"{self.flutter_dir}/lang/en.json")
 
-            # Verificando se existe o diretório
             if not self.__check_dir(__lang_dir):
-                # Criando o diretório
                 os.makedirs(__lang_dir)
 
-            # Verificando se o arquivo do idioma pt_br exiate
             if not self.__check_file(__pt_br):
                 snippet = self.__get_snippet(
                     f"{self.snippet_dir}pt_language.txt")
-                # Criando os arquivos JSON
                 with open(__pt_br, 'w', encoding='utf-8') as pt_json:
                     pt_json.write(snippet)
 
-            # Verificando se o arquivo do idioma en_us existe.
             if not self.__check_file(__en_us):
                 snippet = self.__get_snippet(
                     f"{self.snippet_dir}en_language.txt")

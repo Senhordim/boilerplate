@@ -1,12 +1,5 @@
-/// Controller do model $ModelClass$
-/// 
-///    O CÓDIGO DO ARQUIVO controller.g.dart NUNCA DEVE SER ALTERADO MANUALMENTE.
-///    Quando for alterado algo no arquivo controller.dart deve ser executado o comando:
-///      flutter pub run build_runner build
-///
-/// Após a execução do comando acima o arquivo controller.g.dart terá sido atualizado 
-/// com as novas features.
-///
+/// Provider do model $ModelClass$
+
 /// Os Métodos padrões gerados são:
 ///   Métodos da API
 ///     fecthAll() -> Recupera a lista de $ModelClass$.
@@ -15,7 +8,7 @@
 ///     post() -> Salva um novo $ModelClass$.
 ///     put() -> Atualiza os dados de um $ModelClass$.
 ///     delete() -> Deleta um $ModelClass$.
-///
+
 ///   Métodos do Data
 ///     fetchLocal() -> Recupera a lista de $ModelClass$
 ///     reloadLocal() -> Recarrega a lista de $ModelClass$
@@ -29,245 +22,187 @@
 /// As regras de negócio devem ser implementadas nesse arquivo evitando ao máximo
 /// de serem implementadas nos arquivos das views/pages.
 ///
-/// Todos os métodos de acesso à API devem ser implementados no Service.
+/// Os métodos de acesso à API devem ser implementados no Service.
 
 /// [Travar o arquivo]
 /// Caso deseje "travar" o arquivo para não ser parseado novamente
 /// pelo manage do Django adicione um # antes da palavra abaixo
 /// FileLocked
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
+
+import '../../../utils/process.provider.dart';
 import 'data.dart';
 import 'model.dart';
 import 'service.dart';
-import '../../../utils/config.dart';
-import '../../../utils/process.controller.dart';
 
-import 'package:mobx/mobx.dart';
-import 'package:get_it/get_it.dart';
-
-part 'controller.g.dart';
-
-class $ModelClass$Controller = _$ModelClass$ControllerBase with _$$ModelClass$Controller;
-
-
-/// Declarando a classe abstrata do $ModelClass$ com o Mixin de Store
-abstract class _$ModelClass$ControllerBase with Store {
-
-  // Instanciando o controller de processamento
-  ProcessController _processController = GetIt.I.get<ProcessController>();
-
-  // Instanciando o $ModelClass$Data responsável pelo acesso ao SQLite.
+class $ModelClass$Provider extends ChangeNotifier {
+  ProcessProvider _processProvider = GetIt.I.get<ProcessProvider>();
   $ModelClass$Data _$ModelClassCamelCase$Data = $ModelClass$Data();
-
-  // Instanciando o $ModelClass$Service responsável pelo acesso à API.
   $ModelClass$Service _$ModelClassCamelCase$Service = $ModelClass$Service();
-
-  // Declarando os elementos observáveis padrões do $ModelClass$Controller.
-  @observable
-  ObservableList<$ModelClass$Model> $ModelClassCamelCase$List;
-  
-  @observable
+  List<$ModelClass$Model> $ModelClassCamelCase$List;
   $ModelClass$Model $ModelClassCamelCase$Model;
-
-  /// Declarando os elementos observáveis do Db do $ModelClass$Controller.
-  @observable
-  ObservableList<$ModelClass$Model> $ModelClassCamelCase$LocalList;
-
-  @observable
+  List<$ModelClass$Model> $ModelClassCamelCase$LocalList;
   $ModelClass$Model $ModelClassCamelCase$LocalModel;
 
-  /// Declarando os actions padrões do $ModelClass$Controller.
-  
-  /// Action responsável pelo retorno da lista de elementos da API.
-  @action
   fetchAll() async{
     try{
-     _processController.processing = true;
-      // Recuperando a lista de $ModelClass$ da API.
-      $ModelClassCamelCase$List = ObservableList<$ModelClass$Model>.of(await _$ModelClassCamelCase$Service.fetchAll());
+      $ModelClassCamelCase$List = await _$ModelClassCamelCase$Service.fetchAll();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
-    }finally{
-      _processController.processing = false;
+    }finally {
+      notifyListeners();
     }
   }
-
-  /// Action responsável por recarregar os dados da API.
-  @action
+  
   reload() async{
     try{
-      _processController.processing = true;
-      // Limpando os dados contidos na lista de $ModelClass$
       $ModelClassCamelCase$List.clear();
-      // Invocando o método que carrega os dados da API.
-      this.fetchAll();
+      fetchAll();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
-    }finally{
-      _processController.processing = false;
+    }finally {
+      notifyListeners();
     }
   }
 
-  /// Action responsável por detalhar um $ModelClass$
-  @action
   detail() async{
     try{
-      _processController.processing = true;
-      // Recuperando o detalhe de um determinado $ModelClass$ da API. 
       $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.detail($ModelClassCamelCase$Model);
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
-    }finally{
-      _processController.processing = false;
+    }finally {
+      notifyListeners();
     }
   }
 
-  /// Action responsável por salvar os dados de uma instância do $ModelClass$ na API.
-  @action
   post() async{
     try{
-      _processController.processing = true;
-      // Recuperando o detalhe de um determinado $ModelClass$ da API. 
       $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.post($ModelClassCamelCase$Model);
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
-    }finally{
-      _processController.processing = false;
+    }finally {
+      notifyListeners();
     }
   }
 
-  /// Action responsável por atualizar os dados de uma instância do $ModelClass$ na API.
-  @action
   put() async{
     try{
-      _processController.processing = true;
-      // Recuperando o detalhe de um determinado $ModelClass$ da API. 
       $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.put($ModelClassCamelCase$Model);
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
-    }finally{
-      _processController.processing = false;
+    }finally {
+      notifyListeners();
     }
   }
 
-  /// Action responsável por excluir os dados de uma instância do $ModelClass$ na API.
-  @action
   delete() async{
     try{
-      _processController.processing = true;
-      // Recuperando o detalhe de um determinado $ModelClass$ da API. 
-      bool _result = await _$ModelClassCamelCase$Service.delete($ModelClassCamelCase$Model);
+      final bool _result = await _$ModelClassCamelCase$Service.delete($ModelClassCamelCase$Model);
       if(_result){
         _success("ok");
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
-    }finally{
-      _processController.processing = false;
+    }finally {
+      notifyListeners();
     }
   }
 
-  ///
-  /// [Área dos métodos da persistência no device]
-  ///
-
-  /// Action para recuperar todos os registros do Db
-  @action
   fetchAllLocal() async{
     try{
-      _processController.processing = true;
-      $ModelClassCamelCase$LocalList = ObservableList<$ModelClass$Model>.of(await _$ModelClassCamelCase$Data.fetchAll());
+      $ModelClassCamelCase$LocalList = await _$ModelClassCamelCase$Data.fetchAll();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
     }
   }
   
-  /// Action para atualizar a lista de $ModelClass$ do Db
-  @action
   reloadLocal() async{
     try{
       $ModelClassCamelCase$LocalList.clear();
-      this.fetchAllLocal();
+      fetchAllLocal();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
     }
   }
 
-  /// Action para detalhar um $ModelClass$ do Db
-  @action
   detailLocal(int id) async{
     try{
       $ModelClassCamelCase$LocalModel = await _$ModelClassCamelCase$Data.get(id);
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
-    }finally{
-      _processController.processing = false;
+    }finally {
+      notifyListeners();
     }
   }
 
-  /// Action para detalhar um $ModelClass$ do Db
-  @action
   saveLocal($ModelClass$Model model) async{
     try{
-      bool _result = await _$ModelClassCamelCase$Data.save(model);
+      final bool _result = await _$ModelClassCamelCase$Data.save(model);
       if(_result){
         $ModelClassCamelCase$LocalModel = model;
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
     }
   }
-
-  /// Action para atualizar um $ModelClass$ do Db
-  @action
   updateLocal($ModelClass$Model model) async{
     try{
-      bool _result = await _$ModelClassCamelCase$Data.update(model);
+      final bool _result = await _$ModelClassCamelCase$Data.update(model);
       if(_result){
         $ModelClassCamelCase$LocalModel = model;
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
     }
   }
 
-  /// Action para deletar um $ModelClass$ do Db
-  @action
   deleteLocal(int id) async{
     try{
       return await _$ModelClassCamelCase$Data.delete(id);
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
     }
   }
 
-  /// Action para deletar todos os $ModelClass$s do Db
-  @action
   deleteAllLocal() async{
     try{
       return await _$ModelClassCamelCase$Data.deleteAll();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
     }
   }
 
-  /// Métodos para tratar o retorno do processamento
   void _success(String message) async {
     try {
-      _processController.withSuccess(message: message);
+      _processProvider.withSuccess(message: message);
     } catch (e) {
-      DebugPrint.imprimir("Ocorreu um erro no método error: $e");
+      debugPrint("Ocorreu um erro no método error: $e");
     }
   }
 
   void _error(String error, String exception) async {
     try {
-      _processController.withError(
+      _processProvider.withError(
         error: error,
         exception: exception,
       );
     } catch (e) {
-      DebugPrint.imprimir("Ocorreu um erro no método error: $e");
+      debugPrint("Ocorreu um erro no método error: $e");
     }
   }
 

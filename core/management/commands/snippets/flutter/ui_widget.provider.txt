@@ -691,7 +691,7 @@ class _HeadWidgetState extends State<HeadWidget> {
                 Consumer<AuthProvider>(
                   builder: (context, _authProvider, __) {
                     return Text(
-                      _authProvider.alunoModel.nome.toString(),
+                      _authProvider.authModel.profileName,
                       style: Theme.of(context).textTheme.headline5.copyWith(
                           fontWeight: FontWeight.w600,
                           wordSpacing: 0.08,
