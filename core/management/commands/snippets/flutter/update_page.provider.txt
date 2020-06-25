@@ -6,7 +6,6 @@
 /// FileLocked
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../user_interface/font.dart';
@@ -27,9 +26,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _form$ModelClass$ = GlobalKey<FormState>();
 
-  ProcessProvider _processProvider = GetIt.I.get<ProcessProvider>();
   AnimationController _animationController;
-  $ModelClass$Provider _$ModelClassCamelCase$Provider = GetIt.I.get<$ModelClass$Provider>();
   $ModelClass$Model _$Model$ = $ModelClass$Model();
 
   $Attributes$
@@ -37,21 +34,22 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
   @override
   void initState() {
     _animationController = AnimationController(vsync: this);
-    _$Model$ = _$ModelClassCamelCase$Provider.$Model$Model;
-
-    $EditedAttributes$
-
     super.initState();
   }
   
   @override
   void dispose() {
-    _processProvider.clear();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context, listen: false);
+    final _processProvider = Provider.of<ProcessProvider>(context);
+    _$Model$ = _$ModelClassCamelCase$Provider.$Model$Model;
+
+    $EditedAttributes$
+
     return Scaffold(
       key: _scaffoldKey,
       extendBodyBehindAppBar: true,
@@ -152,6 +150,8 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
   }
 
   void _put() async {
+    final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context, listen: false);
+
     try{
        $GetValuesControllers$
       _$Model$Provider.$Model$Model = _$Model$;

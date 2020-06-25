@@ -25,10 +25,8 @@ class $ModelClass$AddPage extends StatefulWidget {
 
 class _$ModelClass$AddPageState extends State<$ModelClass$AddPage> 
   with SingleTickerProviderStateMixin{
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-  ProcessProvider _processProvider = GetIt.I.get<ProcessProvider>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();  
   AnimationController _animationController;
-  $ModelClass$Provider _$ModelClassCamelCase$Provider = GetIt.I.get<$ModelClass$Provider>();
   $ModelClass$Model _$Model$ = $ModelClass$Model();
   final _form$ModelClass$ = GlobalKey<FormState>();
   $Attributes$
@@ -41,7 +39,6 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
  
   @override
   void dispose() {
-    _processProvider.clear();
     super.dispose();
   }
 
@@ -67,6 +64,8 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
   }
 
   Widget _buildPage(){
+    final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context, listen: false);
+    ProcessProvider _processProvider = GetIt.I.get<ProcessProvider>();
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: new BoxConstraints(
@@ -147,6 +146,8 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
   }
 
   void _post() async {
+    final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context, listen: false);
+
     try{
       $GetValuesControllers$
       _$Model$Provider.$Model$Model = _$Model$;
