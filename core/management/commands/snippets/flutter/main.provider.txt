@@ -16,8 +16,6 @@ import 'home.page.dart';
 import 'utils/config.dart';
 import 'utils/localization.dart';
 import 'utils/process.provider.dart';
-import 'apps/auth/provider.dart';
-
 
 $ImportProvider$
 

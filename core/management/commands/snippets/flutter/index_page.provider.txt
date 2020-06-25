@@ -9,7 +9,7 @@
 /// FileLocked
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../user_interface/widget.dart';
 import '../../../../utils/process.provider.dart';
@@ -25,9 +25,7 @@ class $ModelClass$IndexPage extends StatefulWidget {
 class _$ModelClass$IndexPageState extends State<$ModelClass$IndexPage>
   with SingleTickerProviderStateMixin {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  ProcessProvider _processProvider = GetIt.I.get<ProcessProvider>();
   AnimationController _animationController;
-  $ModelClass$Provider _$ModelClassCamelCase$Provider = GetIt.I.get<$ModelClass$Provider>();
   $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model();
 
   @override
@@ -38,6 +36,8 @@ class _$ModelClass$IndexPageState extends State<$ModelClass$IndexPage>
 
   @override
   Widget build(BuildContext context) {
+    final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context, listen: false);
+    final _processProvider = Provider.of<ProcessProvider>(context);
     return Scaffold(
         key: _scaffoldKey,
         extendBodyBehindAppBar: true,

@@ -8,7 +8,7 @@
 /// FileLocked
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 import 'detail.dart';
 import 'create.dart';
@@ -29,21 +29,19 @@ class $ModelClass$ListPage extends StatefulWidget {
 class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
   with SingleTickerProviderStateMixin {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  ProcessProvider _processProvider = GetIt.I.get<ProcessProvider>();
   AnimationController _animationController;
   List<$ModelClass$Model> _$Model$List = List<$ModelClass$Model>();
-  $ModelClass$Provider _$ModelClassCamelCase$Provider = GetIt.I.get<$ModelClass$Provider>();
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(vsync: this);
-
-    _$ModelClassCamelCase$Provider.fetchAll();
   }
 
   @override
   Widget build(BuildContext context) {
+    final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context);
+    final _processProvider = Provider.of<ProcessProvider>(context);
     String _title = "$ModelClass$";
     return Scaffold(
       key: _scaffoldKey,
@@ -87,6 +85,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
   }
 
   Widget _listBuilder(){
+    final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context);
     return Expanded(
       child: ListView.builder(
       itemCount: _$ModelClassCamelCase$Provider.$ModelClassCamelCase$List.length,
@@ -114,6 +113,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
   }
 
   Future _refresh() async {
+    final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context);
     try {
       await _$ModelClassCamelCase$Provider.reload();
     } catch (error) {

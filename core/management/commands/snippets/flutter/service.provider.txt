@@ -23,11 +23,8 @@ import '../../../utils/process.provider.dart';
 
 class $ModelClass$Service {
   BuildContext context;
-  ProcessProvider _processProvider;
 
-  $ModelClass$Service(this.context){
-    _processProvider = Provider.of<ProcessProvider>(this.context);
-  }
+  $ModelClass$Service(this.context);
 
   $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model();
 
@@ -122,7 +119,7 @@ class $ModelClass$Service {
 
   void _success(String message) async {
     try {
-      _processProvider.withSuccess(message: message);
+      // _processProvider.withSuccess(message: message);
     } catch (e) {
       debugPrint("Ocorreu um erro no método error: $e");
     }
@@ -130,10 +127,10 @@ class $ModelClass$Service {
 
   void _error(String error, String exception) async {
     try {
-      _processProvider.withError(
-        error: error,
-        exception: exception,
-      );
+      // _processProvider.withError(
+      //   error: error,
+      //   exception: exception,
+      // );
     } catch (e) {
       debugPrint("Ocorreu um erro no método error: $e");
     }

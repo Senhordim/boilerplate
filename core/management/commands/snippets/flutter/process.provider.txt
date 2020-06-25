@@ -21,9 +21,15 @@ class ProcessProvider extends ChangeNotifier {
   String error = '';
   String exception = '';
 
-  Future<bool> beginProcessing() async => processing = true;
+  void beginProcessing() async {
+    processing = true;
+    notifyListeners();
+  }
 
-  Future<bool> endProcessing() async => processing = false;
+  void endProcessing() async {
+    processing = false;
+    notifyListeners();
+  }
 
   void withSuccess(
       {int statusCode, String message, String httpHeader, String httpData}) {
@@ -31,7 +37,6 @@ class ProcessProvider extends ChangeNotifier {
     success = true;
     error = null;
     exception = null;
-
     notifyListeners();
   }
 
@@ -44,7 +49,6 @@ class ProcessProvider extends ChangeNotifier {
       String exception}) {
     processing = false;
     success = false;
-
     notifyListeners();
   }
 

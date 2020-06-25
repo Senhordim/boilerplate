@@ -39,21 +39,19 @@ import 'model.dart';
 import 'service.dart';
 
 class $ModelClass$Provider extends ChangeNotifier {
-
   BuildContext context;
+
   $ModelClass$Data _$ModelClassCamelCase$Data = $ModelClass$Data();
   $ModelClass$Service _$ModelClassCamelCase$Service;
-  List<$ModelClass$Model> $ModelClassCamelCase$List;
-  $ModelClass$Model $ModelClassCamelCase$Model;
-  List<$ModelClass$Model> $ModelClassCamelCase$LocalList;
-  $ModelClass$Model $ModelClassCamelCase$LocalModel;
+  List<$ModelClass$Model> $ModelClassCamelCase$List = List<$ModelClass$Model>();
+  $ModelClass$Model $ModelClassCamelCase$Model = $ModelClass$Model();
+  List<$ModelClass$Model> $ModelClassCamelCase$LocalList = List<$ModelClass$Model>();
+  $ModelClass$Model $ModelClassCamelCase$LocalModel = $ModelClass$Model();
 
-  ProcessProvider _processProvider;
-
-  $ModelClass$Provider(this.context){
-    _processProvider = Provider.of<ProcessProvider>(context);
+  $ModelClass$Provider(BuildContext context){
+    context = context;
+    $ModelClass$Service(context);
   }
-
 
   fetchAll() async{
     try{
@@ -198,7 +196,7 @@ class $ModelClass$Provider extends ChangeNotifier {
 
   void _success(String message) async {
     try {
-      _processProvider.withSuccess(message: message);
+      // _processProvider.withSuccess(message: message);
     } catch (e) {
       debugPrint("Ocorreu um erro no método error: $e");
     }
@@ -206,10 +204,10 @@ class $ModelClass$Provider extends ChangeNotifier {
 
   void _error(String error, String exception) async {
     try {
-      _processProvider.withError(
-        error: error,
-        exception: exception,
-      );
+      // _processProvider.withError(
+      //   error: error,
+      //   exception: exception,
+      // );
     } catch (e) {
       debugPrint("Ocorreu um erro no método error: $e");
     }

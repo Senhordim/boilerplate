@@ -6,7 +6,6 @@
 /// FileLocked
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../user_interface/font.dart';
@@ -65,7 +64,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
 
   Widget _buildPage(){
     final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context, listen: false);
-    ProcessProvider _processProvider = GetIt.I.get<ProcessProvider>();
+    final _processProvider = Provider.of<ProcessProvider>(context);
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: new BoxConstraints(

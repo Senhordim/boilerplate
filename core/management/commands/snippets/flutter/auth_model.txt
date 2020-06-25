@@ -51,5 +51,11 @@ class AuthModel {
         "token": token == null ? null : token,
     };
 
-    String get profileName => this.profileName;
+    String get profileName {
+        try {
+        if (this.account == null) return "";
+        return this.account;
+        } catch (e) {}
+        return "";
+    }
 }
