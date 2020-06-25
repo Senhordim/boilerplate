@@ -36,11 +36,11 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
   void initState() {
     super.initState();
     _animationController = AnimationController(vsync: this);
+    _loadData();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context);
     String _title = "$ModelClass$";
     return Scaffold(
       key: _scaffoldKey,
@@ -112,7 +112,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
   }
 
   Future _refresh() async {
-    final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context);
+    final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context, listen: false);
     try {
       await _$ModelClassCamelCase$Provider.reload();
     } catch (error) {
@@ -153,7 +153,9 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
     );
   }
 
-  Future<void> _loadData(){
-    
+  Future<void> _loadData() async {
+    final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context, listen: false);
+    await _$ModelClassCamelCase$Provider.fetchAll();
+    debugPrint("Carregando ...");
   }
 }

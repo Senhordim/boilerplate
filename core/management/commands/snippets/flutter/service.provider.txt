@@ -38,7 +38,8 @@ class $ModelClass$Service {
         }
       }
     } catch (error) {
-      debugPrint("Erro: &{error.toString()}");
+      debugPrint("Erro no método fetchAll em $ModelClass$Service");
+      debugPrint(error.toString());
     }
     return _itens;
   }
@@ -52,7 +53,8 @@ class $ModelClass$Service {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
     } catch (error) {
-        debugPrint("Erro: &{error.toString()}");
+      debugPrint("Erro no método detail em $ModelClass$Service");
+        debugPrint(error.toString());
     }
     return _$ModelClassCamelCase$;
   }
@@ -65,7 +67,8 @@ class $ModelClass$Service {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
     } catch (error) {
-      debugPrint("Erro: &{error.toString()}");
+      debugPrint("Erro no método post em $ModelClass$Service");
+      debugPrint(error.toString());
     }
     return _$ModelClassCamelCase$;
   }
@@ -79,7 +82,8 @@ class $ModelClass$Service {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
     } catch (error) {
-      debugPrint("Erro: &{error.toString()}");
+      debugPrint("Erro no método put em $ModelClass$Service");
+      debugPrint(error.toString());
     }
     return _$ModelClassCamelCase$;
   }
@@ -93,7 +97,8 @@ class $ModelClass$Service {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
     } catch (error) {
-      debugPrint("Erro: &{error.toString()}");
+      debugPrint("Erro no método patch em $ModelClass$Service");
+      debugPrint(error.toString());
     }
     return _$ModelClassCamelCase$;
   }
@@ -109,7 +114,8 @@ class $ModelClass$Service {
       }
       return false;
     } catch (error) {
-      debugPrint("Erro: &{error.toString()}");
+      debugPrint("Erro no método delete em $ModelClass$Service");
+      debugPrint(error.toString());
       return false;
     }
   }

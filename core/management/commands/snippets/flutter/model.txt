@@ -30,21 +30,16 @@ class $ModelClass$Model {
     $ConstructorModelClass$
   });
 
-  factory $ModelClass$Model.fromJson(String str) => $ModelClass$Model.fromMap(json.decode(str));
-
-  String toJson() => json.encode(toMap());
-
-  factory $ModelClass$Model.fromMap(Map<String, dynamic> json) => $ModelClass$Model(
-      nextUrl: json["nextUrl"] == null ? null : json["nextUrl"],
-      previousUrl: json["previousUrl"] == null ? null : json["previousUrl"],
-
+  $ModelClass$Model.fromJson(Map<String, dynamic> json) {
+      nextUrl = json["nextUrl"] == null ? null : json["nextUrl"];
+      previousUrl = json["previousUrl"] == null ? null : json["previousUrl"];
       $ParserFromJson$
-  );
+  }
 
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
       "nextUrl": nextUrl == null ? null : nextUrl,
       "previousUrl": previousUrl == null ? null : previousUrl,
-        $ParserToMap$
+      $ParserToMap$
 
   };
  

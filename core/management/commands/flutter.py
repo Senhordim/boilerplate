@@ -694,11 +694,11 @@ class Command(BaseCommand):
                __app = __current_app.app_name
                for model in __current_app.models:
                    __import_provider += f"import 'apps/{__app.lower()}/{model[1].lower()}/provider.dart';\n"
-                   __register_provider += f"ChangeNotifierProvider<{model[1].title()}Provider>(create: (_) => {model[1].title()}Provider()),\n"
+                   __register_provider += f"ChangeNotifierProvider<{model[1].title()}Provider>(create: (_) => {model[1].title()}Provider(),),\n"
 
             __import_provider += f"import 'apps/auth/provider.dart';\n"
-            __register_provider += f"ChangeNotifierProvider<SettingsProvider>(create: (_) => SettingsProvider()),\n"
-            __register_provider += f"ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),\n"
+            __register_provider += f"ChangeNotifierProvider<SettingsProvider>(create: (_) => SettingsProvider(),),\n"
+            __register_provider += f"ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider(),),\n"
             # __register_provider += f"ChangeNotifierProvider<ProcessProvider>(create: (_) => ProcessProvider()),\n"
         except Exception as error:
             self.__message(f"Ocorreu o erro {error} ao chamar o __register_provider", error=True)
@@ -1336,25 +1336,28 @@ class Command(BaseCommand):
 
                 # Verificando se o campo é do tipo Datetime para fazer a conversão
                 if str(attribute) == "DateTime":
-                    content_from_json += "{1}: Util.convertDate(json['{2}']) == null ? null : json['{2}'],\n        ".format(
+                    content_from_json += "{1} = Util.convertDate(json['{2}']) == null ? null:  Util.convertDate(json['{2}']);\n        ".format(
                         __model.lower(), __name_dart, __name)
+                elif str(attribute) == "double":
+                       content_from_json += "{1} = json['{2}'] == null ? null : double.parse(json['{2}']) ;\n        ".format(
+                            __model.lower(), __name_dart, __name)
                 elif str(attribute) == "bool":
                     if __name_dart.lower() == "enabled":
-                        content_from_json += "{1}: json['{2}'] == null ? true : json['{2}'] ,\n        ".format(
+                        content_from_json += "{1} = json['{2}'] == null ? true : json['{2}'] ;\n        ".format(
                             __model.lower(), __name_dart, __name)
                     elif __name_dart.lower() == "deleted":
-                        content_from_json += "{1}: json['{2}'] == null ? false : json['{2}'],\n        ".format(
+                        content_from_json += "{1} = json['{2}'] == null ? false : json['{2}'];\n        ".format(
                             __model.lower(), __name_dart, __name)
                     else:
-                        content_from_json += "{1}: json['{2}'] == null ? true : json['{2}'],\n        ".format(
+                        content_from_json += "{1} = json['{2}'] == null ? true : json['{2}'];\n        ".format(
                             __model.lower(), __name_dart, __name)
                 else:
                     # Verificando se o campo é do tipo FK para retornar null caso o valor não venha da API
                     if __name_dart.startswith("fk"):
-                        content_from_json += "{1}: json['{2}'] == null ? 0 : json['{2}'],\n        ".format(
+                        content_from_json += "{1} = json['{2}'] == null ? 0 : json['{2}'];\n        ".format(
                             __model.lower(), __name_dart, __name)
                     else:
-                        content_from_json += "{1}: json['{2}'] == null ? \"\" : json['{2}'],\n        ".format(
+                        content_from_json += "{1} = json['{2}'] == null ? \"\" : json['{2}'];\n        ".format(
                             __model.lower(), __name_dart, __name)
 
                 # Tratando os dados do content_to_map usados na função Map
