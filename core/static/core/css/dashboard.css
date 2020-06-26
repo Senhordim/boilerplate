@@ -40,17 +40,42 @@ Dashboard UI
   --breakpoint-xl: 1280px;
   --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   --font-family-monospace: Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  /* Custom values */
   --global-bg-color: #fff;
-  --global-font-color: #495057;
   --global-link-color: #467fcf;
   --global-link-menu-avatar-color: #9aa0ac;
+  --global-bg-card: #fff;
+  --global-font-color: rgb(73, 80, 87);
+  --global-bg-input: #fff;
+  --head-border-bottom: 1px solid rgba(0, 40, 100, 0.12);
+  --head-font-color: #495057;
+  --page-bg-color: #F5F7FB;
+  --page-link-color: #295A9F;
+  --page-font-color: rgb(73, 80, 87);
+  --select-font-color: rgb(73, 80, 87);
+  --form-control-valid: #5eba00;
+  --form-control-invalid: #cd201f;
+  --menu-app-title-color: #2d2e2f;
+  --footer-border-top: 1px solid rgba(0, 40, 100, 0.12);
 }
 
 html[data-theme='dark'] {
-  --global-bg-color: #343a40;
-  --global-font-color: #afb3b8;
+  --global-bg-color: #3B3A39;
   --global-link-color: #afb3b8;
   --global-link-menu-avatar-color: #afb3b8;
+  --global-bg-card: #1a1918;
+  --global-bg-input: #2e2e2e;
+  --global-font-color: #aaa4a4;
+  --head-border-bottom: 1px solid rgba(86, 88, 90, 0.85);
+  --head-font-color: #afb3b8;
+  --page-bg-color: #292929;
+  --page-link-color: #98C1EC;
+  --page-font-color: #8b9097;
+  --select-font-color: #8b9097;
+  --form-control-valid: #87a56a;
+  --form-control-invalid: #6b2323;
+  --menu-app-title-color: rgba(255, 255, 255, 0.85);
+  --footer-border-top: 1px solid rgba(86, 88, 90, 0.85);
 }
 
 *,
@@ -68,11 +93,47 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
+thead>tr>th {
+  font-weight: 600 !important;
+}
+
 /* Area to working css themes light and dark */
 
 div.header {
-  color: var(--global-font-color);
+  color: var(--head-font-color);
   background-color: var(--global-bg-color);
+  border-bottom: var(--head-border-bottom);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--global-font-color) !important;
+}
+
+input.form-control,
+textarea,
+select {
+  background-color: var(--global-bg-input) !important;
+}
+
+input.form-control.obrigatorio,
+textarea.obrigatorio,
+select.obrigatorio {
+  border-color: var(--form-control-invalid) !important;
+}
+
+input.form-control:valid,
+textarea:valid,
+select:valid {
+  border-color: var(--form-control-valid) !important;
+}
+
+select {
+  color: var(--select-font-color) !important;
 }
 
 a.nav-link {
@@ -81,6 +142,45 @@ a.nav-link {
 
 a.nav-link.pr-0.leading-none span {
   color: var(--global-link-menu-avatar-color) !important;
+}
+
+div.page {
+  background-color: var(--page-bg-color);
+}
+
+div.page.content-page a {
+  color: var(--page-link-color) !important;
+}
+
+div.page.content-page {
+  color: var(--page-font-color) !important;
+}
+
+div.card {
+  background-color: var(--global-bg-card);
+}
+
+div.menu-vertical-app .card-title {
+  color: var(--menu-app-title-color) !important;
+}
+
+div.menu-vertical-app a {
+  color: var(--page-link-color) !important;
+}
+
+div.listview a {
+  color: var(--page-link-color);
+}
+
+div.listview,
+div.listview,
+label {
+  color: var(--page-font-color);
+}
+
+footer.footer {
+  background-color: var(--global-bg-color);
+  border-top: var(--footer-border-top);
 }
 
 /* end area to working css themes light and dark */
