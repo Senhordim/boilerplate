@@ -20,5 +20,5 @@ urlpatterns = [
          ResetPassword.as_view(), name='reset-password'),
     path('profile/update/password/',
          UpdatePassword.as_view(), name='password-update'),
-    path('settings/', ProfileView.as_view(), name='settings'),
+    path('settings/', SettingsView.as_view(), name='settings'),
 ]

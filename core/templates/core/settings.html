@@ -5,100 +5,56 @@
         <div class="my-3 my-md-5">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-4">
-                        <div class="card card-profile">
-                            <div class="card-header" style="background-image: url(demo/photos/eberhard-grossgasteiger-311213-500.jpg);"></div>
-                            <div class="card-body text-center">
-                                <img class="card-profile-img" src="demo/faces/male/16.jpg">
-                                <h3 class="mb-3">{{ user.first_name|title }}</h3>
-                                <p class="mb-4">
-                                    Big belly rude boy, million dollar hustler. Unemployed.
-                                </p>
-                                <button class="btn btn-outline-primary btn-sm">
-                                    <span class="fa fa-twitter"></span> Follow
-                                </button>
+                    <div class="col-md-3">
+                        <h3 class="page-title mb-5">Configurações</h3>
+                        <div>
+                            <div class="list-group list-group-transparent mb-0">
+                                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center active">
+                                    <span class="icon mr-3"><i class="fe fe-settings"></i></span>Tema
+                                </a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-8">
-                        <form class="card" id="update-form" name="update-form" method="POST" action="{% url 'core:profile-update' %}">
-                            {% csrf_token %}
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Escolha do tema que deseja utilizar</h3>
+                            </div>
                             <div class="card-body">
-                                <h3 class="card-title">Configurações</h3>
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="form-label">Login</label>
-                                            <input type="text" id="login" name="login" class="form-control" disabled="" placeholder="Login" value="{{ user.username }}">
-                                        </div>
+                                    <div class="col-md-6 h-50 bg-gray-dark">
+                                        <h1 class="dark-theme-text-common">
+                                            <a href id="dark-theme">Escuro</a>
+                                        </h1>
                                     </div>
-                                    <div class="col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Nome</label>
-                                            <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Nome" value="{{ user.first_name }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Sobrenome</label>
-                                            <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Sobrenome" value="{{ user.last_name }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="form-label">Email</label>
-                                            <input type="email" id="email" name="email" class="form-control" placeholder="Informe seu e-mail" value="{{ user.email }}">
-                                        </div>
+                                    <div class="col-md-6">
+                                        <h1>
+                                            <a href id="light-theme">Claro</a>
+                                        </h1>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer text-right">
-                                <button type="submit" class="btn btn-primary">Atualizar Perfil</button>
-                            </div>
-                        </form>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-lg-8 offset-lg-4">
-                        <form class="card needs-validation" novalidate action="{% url 'core:password-update' %}" method="post">
-                            {% csrf_token %}
-                            <div class="card-body">
-                                <h3 class="card-title">Editar Senha</h3>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Nova Senha</label>
-                                            <input class="form-control" required type="password" name="new-password" id="new-password">
-                                            <div class="invalid-feedback">
-                                                Campo obrigatório
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Confirmar Nova Senha</label>
-                                            <input class="form-control" required type="password" name="confirm-password" id="confirm-password">
-                                            <div class="invalid-feedback">
-                                                Campo obrigatório
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p id="password-error" class="p-0 m-0 pl-4 text-danger d-none">As senhas devem ser iguais</p>
-                                </div>
-                            </div>
-                            <div class="card-footer text-right">
-                                <button id="btn-change-password" type="submit" class="btn btn-primary">Atualizar Senha</button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 {% endblock content %}
 
 {% block extra_js %}
+<script>
+    function toggleTheme() {
+        const htmlTag = document.getElementsByTagName('html')[0]
+        if (htmlTag.hasAttribute('data-theme')) {
+            htmlTag.removeAttribute('data-theme')
+            return window.localStorage.removeItem("site-theme")
+        }
+
+        htmlTag.setAttribute('data-theme', 'dark')
+        window.localStorage.setItem("site-theme", "dark")
+    }
+    document.getElementById("dark-theme").addEventListener("click", toggleTheme);
+</script>
 {% endblock extra_js %}
