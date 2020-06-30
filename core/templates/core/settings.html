@@ -22,15 +22,15 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-6 h-50 bg-gray-dark">
-                                        <h1 class="dark-theme-text-common">
-                                            <a href id="dark-theme">Escuro</a>
-                                        </h1>
-                                    </div>
                                     <div class="col-md-6">
-                                        <h1>
-                                            <a href id="light-theme">Claro</a>
-                                        </h1>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                          <input type="radio" id="TemaEscuro" name="Tema" class="custom-control-input form-control-lg">
+                                          <label class="custom-control-label" for="TemaEscuro">Tema Escuro</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                          <input type="radio" id="TemaClaro" name="Tema" class="custom-control-input form-control-lg">
+                                          <label class="custom-control-label" for="TemaClaro">Tema Claro</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -45,7 +45,7 @@
 
 {% block extra_js %}
 <script>
-    function toggleTheme() {
+    function darkTheme() {
         const htmlTag = document.getElementsByTagName('html')[0]
         if (htmlTag.hasAttribute('data-theme')) {
             htmlTag.removeAttribute('data-theme')
@@ -55,6 +55,14 @@
         htmlTag.setAttribute('data-theme', 'dark')
         window.localStorage.setItem("site-theme", "dark")
     }
-    document.getElementById("dark-theme").addEventListener("click", toggleTheme);
+    function lightTheme() {
+        const htmlTag = document.getElementsByTagName('html')[0]
+        if (htmlTag.hasAttribute('data-theme')) {
+            htmlTag.removeAttribute('data-theme')
+            return window.localStorage.removeItem("site-theme")
+        }
+    }
+    document.getElementById("TemaEscuro").addEventListener("click", darkTheme);
+    document.getElementById("TemaClaro").addEventListener("click", lightTheme);
 </script>
 {% endblock extra_js %}
