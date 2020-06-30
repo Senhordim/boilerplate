@@ -100,3 +100,17 @@ window.tabler = {
         'gray-dark-lightest': '#ebebec'
     }
 };
+
+// JavaScript to sidebar
+$(document).ready(function () {
+    $('#sidebarCollapse').on('click', function () {
+        const sideBar = $('#sidebar_left');
+        sideBar.toggleClass('active');
+        if (sideBar.hasClass('active')) {
+            window.localStorage.setItem("sidebar_active", 'active');
+        } else {
+            window.localStorage.setItem("sidebar_active", '');
+        }
+    });
+});
+// finished JavaScript to sidebar

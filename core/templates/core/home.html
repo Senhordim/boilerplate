@@ -1,21 +1,23 @@
-{% extends 'core/base.html' %} {% block content %}
-<div class="row my-4">
-    <div class="col-3 col-xl-2">
-        <!-- Menu lateral com os models das app -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title"><strong>{% block title_modulo %}{% endblock title_modulo %}</strong></h3>
-            </div>
-            <!-- <div class="card-body"> -->
-            <table class="table card-table">
-                <tbody>
-                    {% block menu_app %}
-                    {% endblock menu_app %}
-                </tbody>
-            </table>
-            <!-- </div> -->
-        </div>
-    </div>
-    <div class="col-9 col-xl-10"></div>
+{% extends 'core/base_menu_vertical.html' %} {% block content %}
+<!--<div class="row">-->
+<!--    <div class="col-3 col-xl-2">-->
+<!--        &lt;!&ndash; Menu lateral com os models das app &ndash;&gt;-->
+<!--        <div class="card">-->
+<!--            <div class="card-header">-->
+<!--                <h3 class="card-title"><strong>{% block title_modulo %}{% endblock title_modulo %}</strong></h3>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; <div class="card-body"> &ndash;&gt;-->
+<!--            <table class="table card-table">-->
+<!--                <tbody>-->
+<!--                    {% block menu_app %}-->
+<!--                    {% endblock menu_app %}-->
+<!--                </tbody>-->
+<!--            </table>-->
+<!--            &lt;!&ndash; </div> &ndash;&gt;-->
+<!--        </div>-->
+<!--    </div>-->
+<div id="div_content" class="col-12">
+    {% lorem 5 p %}
 </div>
+<!--</div>-->
 {% endblock content %}
