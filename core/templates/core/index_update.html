@@ -1,34 +1,34 @@
 {% extends 'core/base.html' %}
 {% block content %}
-    <div class="row mb-4">
-        <div class="col-3 col-xl-2">
-            <!-- Menu lateral com os models das app -->
-            <div class="card menu-vertical-app">
-                <div class="card-header">
-                    <h3 class="card-title"><strong>{% block title_modulo %}{% endblock title_modulo %}</strong></h3>
-                </div>
-                <table class="table table-borderless">
-                    <tbody>
-                        {% block menu_app %}
-                        {% endblock menu_app %}
-                    </tbody>
-                </table>
+<div id="content_index_page_app" class="row mb-4 content-page h-100">
+    <div id="submenu_index_page" class="col-3 col-xl-2 h-100">
+        <!-- Menu lateral com os models das app -->
+        <div class="card menu-vertical-app h-100">
+            <div class="card-header">
+                <h3 class="card-title"><strong>{% block title_modulo %}{% endblock title_modulo %}</strong></h3>
             </div>
+            <table class="table table-borderless">
+                <tbody>
+                    {% block menu_app %}
+                    {% endblock menu_app %}
+                </tbody>
+            </table>
         </div>
-        <div class="col-9 col-xl-10">
-            <!-- Div do Formulário de criação -->
-            <div class="card">
-                <div class="card-header m-0 p-0">
-                    <!-- <h3 class="card-title">{{ object }}</h3> -->
-                    <div class="row m-0 p-5 w-100">
-                        <div class="col-12 ml-0">
-                            {% block form_app %}
-                            {% block contentinline %}{% endblock contentinline %}
-                            {% endblock form_app %}
-                        </div>
+    </div>
+    <div class="col-9 col-xl-10">
+        <!-- Div do Formulário de criação -->
+        <div class="card">
+            <div class="card-header m-0 p-0">
+                <!-- <h3 class="card-title">{{ object }}</h3> -->
+                <div class="row m-0 p-5 w-100">
+                    <div class="col-12 ml-0">
+                        {% block form_app %}
+                        {% block contentinline %}{% endblock contentinline %}
+                        {% endblock form_app %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-{% endblock content %}    
+</div>
+{% endblock content %}
