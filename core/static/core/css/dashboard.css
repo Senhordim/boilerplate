@@ -97,12 +97,16 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
+body{
+  overflow: hidden !important;
+}
+
 thead>tr>th {
   font-weight: 600 !important;
 }
 
 #form_create_card,
-#form_update_card {
+#form_update_card, #listview_card {
   overflow-y: scroll !important;
   max-height: 85% !important;
 }
