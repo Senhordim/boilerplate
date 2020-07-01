@@ -5,7 +5,7 @@ FileLocked
 -->
 
 {% extends 'core/index_list.html' %} 
-{% block title %}Index de $title${% endblock title %} 
+{% block title %}Listagem $title${% endblock title %} 
 {% block title_modulo %}$title${% endblock title_modulo %} 
 {% block menu_app %}
     {% for app in apps %}

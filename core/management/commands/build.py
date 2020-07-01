@@ -344,7 +344,8 @@ class Command(BaseCommand):
                            "&Yacute;", "&yacute;", "&quot;", "&lt;", "&gt;", "&amp;", "&reg;", "&copy;"]
             return text
         except Exception as error:
-            self.__message(f"Ocorreu um erro ao chamar o __convert_no_ascii_character_html_code: {error}")
+            self.__message(
+                f"Ocorreu um erro ao chamar o __convert_no_ascii_character_html_code: {error}")
         return text
 
     def _apply_pep(self):
@@ -355,7 +356,7 @@ class Command(BaseCommand):
             # Aplicando a PEP8 as URLs
             os.system(
                 'autopep8 --in-place --aggressive --aggressive {}'
-                    .format(self.path_urls))
+                .format(self.path_urls))
             os.system('isort {}'.format(self.path_urls))
         except Exception as error:
             self.__message(f"Ocorreu o erro : {error}")
@@ -364,7 +365,7 @@ class Command(BaseCommand):
             # Aplicando a PEP8 as Forms
             os.system(
                 'autopep8 --in-place --aggressive --aggressive {}'
-                    .format(self.path_form))
+                .format(self.path_form))
             os.system('isort {}'.format(self.path_form))
         except Exception as error:
             self.__message(f"Ocorreu o erro : {error}")
@@ -373,7 +374,7 @@ class Command(BaseCommand):
             # Aplicando a PEP8 as Views
             os.system(
                 'autopep8 --in-place --aggressive --aggressive {}'
-                    .format(self.path_views))
+                .format(self.path_views))
             os.system('isort {}'.format(self.path_views))
         except Exception as error:
             self.__message(f"Ocorreu o erro : {error}")
@@ -382,7 +383,7 @@ class Command(BaseCommand):
             # Aplicando a PEP8 as Views
             os.system(
                 'autopep8 --in-place --aggressive --aggressive {}'
-                    .format(self.path_serializer))
+                .format(self.path_serializer))
             os.system('isort {}'.format(self.path_serializer))
         except Exception as error:
             self.__message(f"Ocorreu o erro : {error}")
@@ -530,9 +531,12 @@ class Command(BaseCommand):
                 return
             # Pegando o conteúdo do snippet para criar o template
             content = self._snippet_delete_template
+            _title = self._get_verbose_name(
+                app_name=self.app.lower(), model_name=self.model_lower)
             # Interpolando o conteúdo
             content = content.replace("$app_name$", self.app_lower)
             content = content.replace("$model_name$", self.model_lower)
+            content = content.replace("$title$", _title)
             with open(path, 'w', encoding='utf-8') as template:
                 template.write(content)
 
@@ -1259,7 +1263,7 @@ class Command(BaseCommand):
             iten["app"], iten["model"], iten["name"] = str(field).split('.')
             iten["tipo"] = (str(
                 str(type(field)).split('.')[-1:])
-                            .replace("[\"", "").replace("\'>\"]", ""))
+                .replace("[\"", "").replace("\'>\"]", ""))
             # print("Campo: {} Tipo: {}".format(iten.get("name"), iten.get("tipo")))
             # Verificando se o tipo de campos está nos tipos conhecidos
             if iten["tipo"] in types:
@@ -1378,7 +1382,13 @@ class Command(BaseCommand):
                         for line in arquivo:
                             print(line.replace(
                                 "<!--REPLACE_PARSER_HTML-->",
-                                BeautifulSoup(html_tag, 'html5lib').prettify()).replace(
+                                BeautifulSoup(html_tag, 'html5lib').prettify().replace(
+                                    "<html>", "").replace(
+                                        "<head>", "").replace(
+                                            "</head>", "").replace(
+                                                "<body>", "").replace(
+                                                    "</body>", "").replace(
+                                                        "</html>", "").strip()).replace(
                                 "$url_back$", '{}:{}-list'.format(
                                     self.app_lower, self.model_lower
                                 )), end='')

@@ -39,7 +39,7 @@ Put (Atualizar um novo registro via API)
 Delete (Deletar um novo registro via API)
 -->
 
-{% block title %}$title${% endblock title %} 
+{% block title %}Atualização $title${% endblock title %} 
 {% block title_modulo %}$title${% endblock title_modulo %} 
 {% block menu_app %}
     {% for app in apps %}
@@ -47,9 +47,7 @@ Delete (Deletar um novo registro via API)
             {% for model in app.models_app %}
             <tr>
                 <td>
-                    <i class="fe fe-chevrons-right text-muted"></i>
-                </td>
-                <td>
+                    <i class="fe fe-chevrons-right text-muted"></i> &nbsp;
                     <a href="{% url model.path_url %}"> {{ model.name_model|title }} </a>
                 </td>
             </tr>
