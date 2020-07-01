@@ -1,8 +1,7 @@
 {% extends 'core/base.html' %}
 {% block content %}
-<div id="content_index_page_app" class="row mb-4 content-page h-100">
+<div id="content_update_page_app" class="row mb-4 content-page h-100">
     <div id="submenu_index_page" class="col-3 col-xl-2 h-100">
-        <!-- Menu lateral com os models das app -->
         <div class="card menu-vertical-app h-100">
             <div class="card-header">
                 <h3 class="card-title"><strong>{% block title_modulo %}{% endblock title_modulo %}</strong></h3>
@@ -15,11 +14,9 @@
             </table>
         </div>
     </div>
-    <div class="col-9 col-xl-10">
-        <!-- Div do Formulário de criação -->
+    <div id="form_update_card" class="col-9 col-xl-10">
         <div class="card">
             <div class="card-header m-0 p-0">
-                <!-- <h3 class="card-title">{{ object }}</h3> -->
                 <div class="row m-0 p-5 w-100">
                     <div class="col-12 ml-0">
                         {% block form_app %}

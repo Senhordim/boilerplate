@@ -101,6 +101,12 @@ thead>tr>th {
   font-weight: 600 !important;
 }
 
+#form_create_card,
+#form_update_card {
+  overflow-y: scroll !important;
+  max-height: 85% !important;
+}
+
 /* Area to working css themes light and dark */
 
 div.header {
@@ -172,7 +178,7 @@ div.card {
   background-color: var(--global-bg-card);
 }
 
-div.menu-vertical-app{
+div.menu-vertical-app {
   border-right: 0.5px solid;
   background-color: var(--menu-vertical-bgcolor);
 }
@@ -255,7 +261,7 @@ p {
   margin-bottom: 1rem;
 }
 
-footer{
+footer {
   z-index: 1;
 }
 
