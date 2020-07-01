@@ -1,0 +1,196 @@
+/// Provider do model $ModelClass$
+
+/// Os Métodos padrões gerados são:
+///   Métodos da API
+///     fecthAll() -> Recupera a lista de $ModelClass$.
+///     reload() -> Recarrega a lista de $ModelClass$.
+///     detail() -> Recupera os detalhes de um $ModelClass$.
+///     post() -> Salva um novo $ModelClass$.
+///     put() -> Atualiza os dados de um $ModelClass$.
+///     delete() -> Deleta um $ModelClass$.
+
+///   Métodos do Data
+///     fetchLocal() -> Recupera a lista de $ModelClass$
+///     reloadLocal() -> Recarrega a lista de $ModelClass$
+///     detailLocal() -> Recupera os detalhes de um $ModelClass$
+///     saveLocal() -> Salva um novo $ModelClass$
+///     updateLocal() -> Atualiza um novo $ModelClass$
+///     deleteLocal() -> Deleta um novo $ModelClass$
+///     deleteAllLocal() -> Deleta um novo $ModelClass$
+
+///
+/// As regras de negócio devem ser implementadas nesse arquivo evitando ao máximo
+/// de serem implementadas nos arquivos das views/pages.
+///
+/// Os métodos de acesso à API devem ser implementados no Service.
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../../utils/process.provider.dart';
+import 'data.dart';
+import 'model.dart';
+import 'service.dart';
+
+class $ModelClass$Provider extends ChangeNotifier {
+
+  $ModelClass$Data _$ModelClassCamelCase$Data = $ModelClass$Data();
+  $ModelClass$Service _$ModelClassCamelCase$Service = $ModelClass$Service();
+  List<$ModelClass$Model> $ModelClassCamelCase$List = List<$ModelClass$Model>();
+  $ModelClass$Model $ModelClassCamelCase$Model = $ModelClass$Model();
+  List<$ModelClass$Model> $ModelClassCamelCase$LocalList = List<$ModelClass$Model>();
+  $ModelClass$Model $ModelClassCamelCase$LocalModel = $ModelClass$Model();
+
+  fetchAll() async{
+    try{
+      $ModelClassCamelCase$List = await _$ModelClassCamelCase$Service.fetchAll();
+      notifyListeners();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+  
+  reload() async{
+    try{
+      $ModelClassCamelCase$List.clear();
+      fetchAll();
+      notifyListeners();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  detail() async{
+    try{
+      $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.detail($ModelClassCamelCase$Model);
+      notifyListeners();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  post() async{
+    try{
+      $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.post($ModelClassCamelCase$Model);
+      notifyListeners();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  put() async{
+    try{
+      $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.put($ModelClassCamelCase$Model);
+      notifyListeners();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  delete() async{
+    try{
+      final bool _result = await _$ModelClassCamelCase$Service.delete($ModelClassCamelCase$Model);
+      if(_result){
+        _success("ok");
+        notifyListeners();
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  fetchAllLocal() async{
+    try{
+      $ModelClassCamelCase$LocalList = await _$ModelClassCamelCase$Data.fetchAll();
+      notifyListeners();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+  
+  reloadLocal() async{
+    try{
+      $ModelClassCamelCase$LocalList.clear();
+      fetchAllLocal();
+      notifyListeners();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  detailLocal(int id) async{
+    try{
+      $ModelClassCamelCase$LocalModel = await _$ModelClassCamelCase$Data.get(id);
+      notifyListeners();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  saveLocal($ModelClass$Model model) async{
+    try{
+      final bool _result = await _$ModelClassCamelCase$Data.save(model);
+      if(_result){
+        $ModelClassCamelCase$LocalModel = model;
+        notifyListeners();
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+  updateLocal($ModelClass$Model model) async{
+    try{
+      final bool _result = await _$ModelClassCamelCase$Data.update(model);
+      if(_result){
+        $ModelClassCamelCase$LocalModel = model;
+        notifyListeners();
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  deleteLocal(int id) async{
+    try{
+      _$ModelClassCamelCase$Data.delete(id);
+      notifyListeners();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  deleteAllLocal() async{
+    try{
+      await _$ModelClassCamelCase$Data.deleteAll();
+      notifyListeners();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  void _success(String message) async {
+    try {
+      // _processProvider.withSuccess(message: message);
+    } catch (e) {
+      debugPrint("Ocorreu um erro no método error: $e");
+    }
+  }
+
+  void _error(String error, String exception) async {
+    try {
+      // _processProvider.withError(
+      //   error: error,
+      //   exception: exception,
+      // );
+    } catch (e) {
+      debugPrint("Ocorreu um erro no método error: $e");
+    }
+  }
+
+}

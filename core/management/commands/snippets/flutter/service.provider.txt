@@ -1,0 +1,141 @@
+/// Service do model $ModelClass$
+/// 
+/// Os Métodos padrões gerados são:
+///     fecthAll() -> Recupera a lista de $ModelClass$ da API.
+///     detail()   -> Recupera os detalhes de $ModelClass$ da API.
+///     post()     -> Salva os dados de uma instância do $ModelClass$ na API.
+///     put()      -> Atualiza os dados de uma instância do $ModelClass$ na API.
+///     delete()   -> Deleta os dados de uma instância do $ModelClass$ na API.
+///
+/// Os métodos de acesso à API devem ser implementados no nessa classe.
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+
+import 'model.dart';
+import '../../../utils/custom_dio.dart';
+import '../../../utils/process.provider.dart';
+
+class $ModelClass$Service {
+
+  $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model();
+
+  String _uri = "$App$/$Model$/";
+
+  Future<List<$ModelClass$Model>> fetchAll() async {
+    List<$ModelClass$Model> _itens = List<$ModelClass$Model>();
+    try {
+      final CustomDio _dio = CustomDio(_uri);
+      final data = await _dio.getHttp();
+      if (data != null) {
+        for (var item in data){
+          _itens.add($ModelClass$Model.fromJson(item));
+        }
+      }
+    } catch (error) {
+      debugPrint("Erro no método fetchAll em $ModelClass$Service");
+      debugPrint(error.toString());
+    }
+    return _itens;
+  }
+  
+  Future<$ModelClass$Model> detail($ModelClass$Model $ModelClassCamelCase$) async {
+    _uri += "${$ModelClassCamelCase$.id}/";
+    try {
+      final CustomDio _dio = CustomDio(_uri);
+      final data = await _dio.getHttp();
+      if (data != null) {
+        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
+      }
+    } catch (error) {
+      debugPrint("Erro no método detail em $ModelClass$Service");
+        debugPrint(error.toString());
+    }
+    return _$ModelClassCamelCase$;
+  }
+  
+  Future<$ModelClass$Model> post($ModelClass$Model $ModelClassCamelCase$) async {
+    try {
+      final CustomDio _dio = CustomDio(_uri);
+      final data = await _dio.postHttp($ModelClassCamelCase$.toJson());
+      if (data != null) {
+        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
+      }
+    } catch (error) {
+      debugPrint("Erro no método post em $ModelClass$Service");
+      debugPrint(error.toString());
+    }
+    return _$ModelClassCamelCase$;
+  }
+
+  Future<$ModelClass$Model> put($ModelClass$Model $ModelClassCamelCase$) async {
+    _uri += "${$ModelClassCamelCase$.id}/";
+    try {
+      final CustomDio _dio = CustomDio(_uri);
+      final data = await _dio.putHttp($ModelClassCamelCase$.toJson());
+      if (data != null) {
+        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
+      }
+    } catch (error) {
+      debugPrint("Erro no método put em $ModelClass$Service");
+      debugPrint(error.toString());
+    }
+    return _$ModelClassCamelCase$;
+  }
+
+  Future<$ModelClass$Model> patch($ModelClass$Model $ModelClassCamelCase$) async {
+    _uri += "${$ModelClassCamelCase$.id}/";
+    try {
+      final CustomDio _dio = CustomDio(_uri);
+      final data = await _dio.patchHttp($ModelClassCamelCase$.toJson());
+      if (data != null) {
+        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
+      }
+    } catch (error) {
+      debugPrint("Erro no método patch em $ModelClass$Service");
+      debugPrint(error.toString());
+    }
+    return _$ModelClassCamelCase$;
+  }
+
+  Future<bool> delete($ModelClass$Model $ModelClassCamelCase$) async {
+    _uri += "${$ModelClassCamelCase$.id}/";
+    try {
+      final CustomDio _dio = CustomDio(_uri);
+      final data = await _dio.deleteHttp($ModelClassCamelCase$.toJson());
+      if (data != null) {
+        _success("ok");
+        return true;
+      }
+      return false;
+    } catch (error) {
+      debugPrint("Erro no método delete em $ModelClass$Service");
+      debugPrint(error.toString());
+      return false;
+    }
+  }
+
+  void _success(String message) async {
+    try {
+      // _processProvider.withSuccess(message: message);
+    } catch (e) {
+      debugPrint("Ocorreu um erro no método error: $e");
+    }
+  }
+
+  void _error(String error, String exception) async {
+    try {
+      // _processProvider.withError(
+      //   error: error,
+      //   exception: exception,
+      // );
+    } catch (e) {
+      debugPrint("Ocorreu um erro no método error: $e");
+    }
+  }
+}

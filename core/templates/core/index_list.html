@@ -3,11 +3,11 @@
 <div class="row mb-4">
     <div class="col-3 col-xl-2">
         <!-- Menu lateral com os models das app -->
-        <div class="card">
+        <div class="card menu-vertical-app">
             <div class="card-header">
                 <h3 class="card-title"><strong>{% block title_modulo %}{% endblock title_modulo %}</strong></h3>
             </div>
-            <table class="table card-table">
+            <table class="table table-borderless">
                 <tbody>
                     {% block menu_app %}
                     {% endblock menu_app %}
@@ -17,7 +17,7 @@
     </div>
     <div class="col-9 col-xl-10">
         <!-- Div da listagem e edição -->
-        <div class="card">
+        <div class="card listview">
             <div class="card-header m-0 p-0">
                 <div class="row m-0 p-0 w-100">
                     <div class="col-12 my-3">
@@ -28,7 +28,7 @@
                                         <div class="alert {% if message.extra_tags %}alert-{{ message.extra_tags }}{% elif message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
                                             {{ message|safe }}
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                          <span aria-hidden="true">&times;</span>
+                                          <span aria-hidden="true"></span>
                                         </button>
                                       </div>
                                     {% endfor %}

@@ -16,7 +16,7 @@
 
 import 'model.dart';
 import '../../../utils/config.dart';
-import '../../../utils/http_dio_request.dart';
+import '../../../utils/custom_dio.dart';
 import '../../../utils/process.controller.dart';
 
 import 'package:get_it/get_it.dart';
@@ -31,14 +31,14 @@ class $ModelClass$Service {
   /// Método para retornar todos os $ModelClass$ da API
   Future<List<$ModelClass$Model>> fetchAll() async {
     List<$ModelClass$Model> _itens = List<$ModelClass$Model>();
-    String _url = "${Config.uri}$Model$-list/?format=json";
-    String _uri = "${Config.uri}$App$/$Model$/?format=json";
+    String _url = "$Model$-list/?format=json";
+    String _uri = "$App$/$Model$/?format=json";
     
     // Verificando a configuração de qual endereço utilizar
     String url = Config.usingURL == true? _url: _uri;
 
     try {
-      HttpRequestDio _dio = HttpRequestDio(url);
+      CustomDio _dio = CustomDio(url);
       var data = await _dio.getHttp();
       if (data != null) {
         for (var item in data){
@@ -60,7 +60,7 @@ class $ModelClass$Service {
     String url = Config.usingURL == true? _url: _uri;
 
     try {
-      HttpRequestDio _dio = HttpRequestDio(url);
+      CustomDio _dio = CustomDio(url);
       var data = await _dio.getHttp();
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
@@ -80,8 +80,8 @@ class $ModelClass$Service {
     String url = Config.usingURL == true? _url: _uri;
 
     try {
-      HttpRequestDio _dio = HttpRequestDio(url);
-      var data = await _dio.putHttp($ModelClassCamelCase$.toJson(), $ModelClassCamelCase$.id);
+      CustomDio _dio = CustomDio(url);
+      var data = await _dio.putHttp($ModelClassCamelCase$.toJson(), $ModelClassCamelCase$.id.toString());
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
@@ -100,7 +100,7 @@ class $ModelClass$Service {
     String url = Config.usingURL == true? _url: _uri;
 
     try {
-      HttpRequestDio _dio = HttpRequestDio(url);
+      CustomDio _dio = CustomDio(url);
       var data = await _dio.postHttp($ModelClassCamelCase$.toJson());
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
@@ -112,7 +112,7 @@ class $ModelClass$Service {
   }
 
   /// Método para exclui os $ModelClass$ da API
-  Future<$ModelClass$Model> delete($ModelClass$Model $ModelClassCamelCase$) async {
+  Future<bool> delete($ModelClass$Model $ModelClassCamelCase$) async {
     String _url = "${Config.uri}$Model$-delete/${$ModelClassCamelCase$.id}/?format=json";
     String _uri = "${Config.uri}$App$/$Model$/${$ModelClassCamelCase$.id}/?format=json";
 
@@ -120,15 +120,18 @@ class $ModelClass$Service {
     String url = Config.usingURL == true? _url: _uri;
 
     try {
-      HttpRequestDio _dio = HttpRequestDio(url);
-      var data = await _dio.deleteHttp($ModelClassCamelCase$.toJson(), $ModelClassCamelCase$.id);
+      CustomDio _dio = CustomDio(url);
+      var data = await _dio.deleteHttp($ModelClassCamelCase$.toJson(), $ModelClassCamelCase$.id.toString());
       if (data != null) {
-        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
+        _success("ok");
+        return true;
       }
+      return false;
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+      return false;
     }
-    return _$ModelClassCamelCase$;
+      return false;
   }
 
   /// Métodos para tratar o retorno do processamento

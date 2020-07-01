@@ -1,0 +1,107 @@
+import 'package:dio/dio.dart';
+import 'package:dio/native_imp.dart';
+import 'package:flutter/material.dart';
+import 'package:help/utils/process.provider.dart';
+import 'package:provider/provider.dart';
+
+import 'config.dart';
+
+class CustomDio extends DioForNative {
+  String _url;
+
+  CustomDio(String url, [BaseOptions options]) : super(options) {
+    interceptors.add(CustomDioInterceptor());
+    _url = "${Config.uri}$url";
+  }
+
+  Map<String, String> makeHeadersAuthentication(
+      {String token, String contentType = "application/json; charset=utf-8"}) {
+    Map<String, String> headersMap;
+    headersMap = {
+      'Content-Type': contentType,
+    };
+    options.headers = headersMap;
+    return headersMap;
+  }
+
+  Future<dynamic> getHttp() async {
+    final Response _response = await get(_url);
+    if (_response.statusCode == 200) {
+      return _response.data;
+    }
+    return null;
+  }
+
+  Future<dynamic> postHttp(dynamic data) async {
+    final Response _response = await post(_url, data: data);
+    if (_response.statusCode == 201) {
+      return _response.data;
+    }
+    return null;
+  }
+
+  Future<dynamic> putHttp(dynamic data) async {
+    final Response _response = await put(_url, data: data);
+    if (_response.statusCode == 200) {
+      return _response.data;
+    }
+    return null;
+  }
+
+  Future<dynamic> patchHttp(dynamic data) async {
+    final Response _response = await put(_url, data: data);
+    if (_response.statusCode == 200) {
+      return _response.data;
+    }
+    return null;
+  }
+
+  Future<dynamic> deleteHttp(dynamic data) async {
+    final Response _response = await delete(_url, data: data);
+    if (_response.statusCode == 200) {
+      return _response.data;
+    }
+    return null;
+  }
+}
+
+class CustomDioInterceptor extends InterceptorsWrapper {
+  BuildContext context;
+  // ProcessProvider _processProvider;
+  // 
+  // CustomDioInterceptor(this.context) {
+  //   _processProvider = Provider.of<ProcessProvider>(context);
+  // }
+
+  @override
+  Future onRequest(RequestOptions options) {
+    options.headers = {'Content-Type': 'application/json'};
+    options.connectTimeout = 50000;
+    options.receiveTimeout = 50000;
+    return super.onRequest(options);
+  }
+
+  @override
+  Future onResponse(Response response) {
+    // _processProvider.withSuccess(
+    //     message: response.statusMessage,
+    //     statusCode: response.statusCode,
+    //     httpData: response.data.toString(),
+    //     httpHeader: response.headers.toString());
+    return super.onResponse(response);
+  }
+
+  @override
+  Future onError(DioError err) {
+    debugPrint(err.message);
+    debugPrint(err.response.statusCode.toString());
+    debugPrint(err.response.data.toString());
+    debugPrint(err.response.headers.toString());
+    // _processProvider.withError(
+    //     message: err.message,
+    //     statusCode: err.response.statusCode,
+    //     httpData: err.response.data.toString(),
+    //     httpHeader: err.response.headers.toString());
+    return super.onError(err);
+  }
+}

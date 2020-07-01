@@ -1,0 +1,61 @@
+// To parse this JSON data, do
+//
+//     final authModel = authModelFromMap(jsonString);
+
+import 'dart:convert';
+
+class AuthModel {
+    String id;
+    String uuid;
+    String email;
+    String login;
+    String socialProfileLogin;
+    String account;
+    String cpf;
+    String token;
+
+    AuthModel({
+        this.id,
+        this.uuid,
+        this.email,
+        this.login,
+        this.socialProfileLogin,
+        this.account,
+        this.cpf,
+        this.token,
+    });
+
+    factory AuthModel.fromJson(String str) => AuthModel.fromMap(json.decode(str));
+
+    String toJson() => json.encode(toMap());
+
+    factory AuthModel.fromMap(Map<String, dynamic> json) => AuthModel(
+        id: json["id"] == null ? null : json["id"],
+        uuid: json["uuid"] == null ? null : json["uuid"],
+        email: json["email"] == null ? null : json["email"],
+        login: json["login"] == null ? null : json["login"],
+        socialProfileLogin: json["socialProfileLogin"] == null ? null : json["socialProfileLogin"],
+        account: json["account"] == null ? null : json["account"],
+        cpf: json["cpf"] == null ? null : json["cpf"],
+        token: json["token"] == null ? null : json["token"],
+    );
+
+    Map<String, dynamic> toMap() => {
+        "id": id == null ? null : id,
+        "uuid": uuid == null ? null : uuid,
+        "email": email == null ? null : email,
+        "login": login == null ? null : login,
+        "socialProfileLogin": socialProfileLogin == null ? null : socialProfileLogin,
+        "account": account == null ? null : account,
+        "cpf": cpf == null ? null : cpf,
+        "token": token == null ? null : token,
+    };
+
+    String get profileName {
+        try {
+        if (this.account == null) return "";
+        return this.account;
+        } catch (e) {}
+        return "";
+    }
+}

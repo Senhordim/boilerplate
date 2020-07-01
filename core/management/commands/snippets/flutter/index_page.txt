@@ -14,7 +14,9 @@ import 'package:flutter/material.dart';
 import '../model.dart';
 import '../controller.dart';
 import '../../../../utils/localization.dart';
+import '../../../../user_interface/widget.dart';
 import '../../../../utils/process.controller.dart';
+
 
 class $ModelClass$IndexPage extends StatefulWidget {
   @override
@@ -47,7 +49,23 @@ class _$ModelClass$IndexPageState extends State<$ModelClass$IndexPage>
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+        key: _scaffoldKey,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(          
+          backgroundColor: Colors.transparent
+        ),
+        body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    return Stack(
+      children: <Widget>[
+        HeadWidget(),
+        ButtonBarWidget()
+      ],
+    );
   }
 
   /// Método para mostrar/ocultar a barra de mensagem para o usuário

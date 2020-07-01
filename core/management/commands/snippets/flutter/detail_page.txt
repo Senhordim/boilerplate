@@ -12,18 +12,13 @@ import 'update.dart';
 import '../model.dart';
 import '../controller.dart';
 import '../../../../utils/util.dart';
-import '../../../../utils/config.dart';
 import '../../../../utils/localization.dart';
 import '../../../../user_interface/font.dart';
+import '../../../../user_interface/widget.dart';
 import '../../../../utils/process.controller.dart';
 
 
 class $ModelClass$DetailPage extends StatefulWidget {
-  final $ModelClass$Model $Model$;
-
-  //Construtor recebendo o $Model$ enviado por parâmetro
-  $ModelClass$DetailPage(this.$Model$);
-
   @override
   _$ModelClass$DetailPageState createState() => _$ModelClass$DetailPageState();
 }
@@ -51,32 +46,41 @@ class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage>
     // Iniciando o AnimationController
     _animationController = AnimationController(vsync: this);
 
-    _$Model$ = widget.$Model$;
+    _$Model$ = _$ModelClassCamelCase$Controller.$Model$Model;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: customAppBarTitle(
-          context, '${Config.app_title}',
-        ),
+        backgroundColor: Colors.transparent
       ),
-      body: _buildBody(context),
+      body: _buildBody(),
       floatingActionButton: FloatingActionButton(
         child: Icon(
           Icons.update,
         ),
         onPressed: () {
+          _$ModelClassCamelCase$Controller.$Model$Model = _$Model$;
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => $ModelClass$UpdatePage(_$Model$)));
+              MaterialPageRoute(builder: (context) => $ModelClass$UpdatePage()));
         },
       ),
     );
   }
 
-  Widget _buildBody(context) {
+  Widget _buildBody() {
+    return Stack(
+      children: <Widget>[
+        HeadWidget(),
+        _buildPage()
+      ],
+    );
+  }
+
+  Widget _buildPage() {
     return SingleChildScrollView(
       child: Container(
         height: MediaQuery.of(context).size.height,

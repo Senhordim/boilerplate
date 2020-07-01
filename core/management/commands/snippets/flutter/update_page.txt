@@ -21,10 +21,6 @@ import '../../../../user_interface/widget.dart';
 import '../../../../utils/process.controller.dart';
 
 class $ModelClass$UpdatePage extends StatefulWidget {
-  final $ModelClass$Model $Model$;
-
-  $ModelClass$UpdatePage(this.$Model$);
-
   @override
   _$ModelClass$AddPageState createState() => _$ModelClass$AddPageState();
 }
@@ -52,7 +48,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
   // Criando os controladores do Form
   final _form$ModelClass$ = GlobalKey<FormState>();
 
-  $Atributes$
+  $Attributes$
 
   @override
   void initState() {
@@ -73,7 +69,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
     _animationController = AnimationController(vsync: this);
 
     // Recuperando o objeto passado na chamada da view.
-    _$Model$ = widget.$Model$;
+    _$Model$ = _$ModelClassCamelCase$Controller.$Model$Model;
 
     $EditedAttributes$
 
@@ -92,17 +88,24 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: customAppBarTitle(
-          context, 
-          '${Config.app_title}',
-        ),
+        backgroundColor: Colors.transparent
       ),
-      body: _createBody(context),
+      body: _buildBody(),
+    );
+  }
+  
+    Widget _buildBody() {
+    return Stack(
+      children: <Widget>[
+        HeadWidget(),
+        _buildPage(),
+      ],
     );
   }
 
-  Widget _createBody(context) {
+  Widget _buildPage() {
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: new BoxConstraints(
@@ -186,14 +189,14 @@ $AttributesData$
   
 void _clearForm(){
     // Método para limpar os dados do fomulário após enviar os dados
-    $ClearData$
-  }
+$ClearData$
+}
 
   void _put() async {
     // Método para enviar a requisição de inserção de dados para a API
     try{
       // Recuperando os valores do controller
-      $GetValuesControllers$
+$GetValuesControllers$
 
       // Invocando o método do Controller para atualizar
       _$Model$Controller.$Model$Model = _$Model$;

@@ -1,38 +1,46 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 
 class Config {
-  // Constante contendo o endereço padrão de acesso à API
   static const uri = "$DjangoAPIPath$";
 
-  // Constante contendo o Token de acesso à API
-    //TODO: Setar o valor do Token
+  //TODO: Setar o valor do Token
   static const DRFToken = "Token 128ad486de8ffb2c8def82e46a71adcacdb45df1";
 
-  // Constante com a URL do média no projeto Django
   static const String uri_media = "$DjangoAPIPath$media/";
 
-  // Constante contendo o nome do aplicativo
-  // esse nome aparecerá por padrão nos títulos das páginas
   static const String app_title = "$AppName$";
-
-  // Constante para determinar se deve ser utilizada
-  // no service a constante _url ou _uri
-  static const bool usingURL = false;
+  
 }
 
-class DebugPrint{
-  static void imprimir(String texto){
-    print(texto);
+class DebugPrint {
+  static const bool debuggingMode = true;
+
+  static void imprimir(String texto) {
+    if (debuggingMode) {
+      developer.log(texto.toLowerCase(), name: 'Debug:');
+    }
+  }
+
+  static void error(String error) {
+    if (debuggingMode) {
+      String _error = "**********\n";
+      _error += "##########\n";
+      _error += "\n${error.toUpperCase()}\n";
+      _error += "##########\n";
+      _error += "**********";
+      developer.log("erro", name: 'Error:', error: "****\n$_error\n****");
+    }
   }
 }
 
-/// Classe para configurar os temas light e dark da app
 class CustomTheme{
   //Colors for theme
   static Color defaultColor = Colors.black;
-  static Color lightPrimary = Color(0xfffcfcff);
+  static Color lightPrimary = const Color(0xfffcfcff);
   static Color lightAccent = Colors.blue;
-  static Color lightBG = Color(0xfffcfcff);
+  static Color lightBG =  const Color(0xfffcfcff);
   static Color darkPrimary = Colors.black;
   static Color darkAccent = Colors.blueGrey;
   static Color darkBG = Colors.black;
@@ -50,7 +58,6 @@ class CustomTheme{
   static Color mainCardDarkBackgroundColor = Colors.grey[850];
   static Color mainCardDarkShadowColor = Colors.grey[900];
 
-  // Área de configuração dos temas
   static ThemeData lightTheme = ThemeData(
     backgroundColor: lightBG,
     primaryColor: lightPrimary,

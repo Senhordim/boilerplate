@@ -17,6 +17,7 @@ import '../model.dart';
 import '../controller.dart';
 import '../../../../utils/util.dart';
 import '../../../../utils/config.dart';
+import '../../../../utils/localization.dart';
 import '../../../../user_interface/font.dart';
 import '../../../../user_interface/widget.dart';
 import '../../../../utils/process.controller.dart';
@@ -57,36 +58,43 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
   Widget build(BuildContext context) {
     String _title = "$ModelClass$Model";
     return Scaffold(
+      key: _scaffoldKey,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: customAppBarTitle(
-          context, 
-          '${Config.app_title}',
-        ),
+        backgroundColor: Colors.transparent,
       ),
-      body: Container(
-        alignment: FractionalOffset.topLeft,
-        child: RefreshIndicator(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  customTitlePage(context, _title),
-                  _listBuilder(),
-                ],
-              ),
-            ),
-            onRefresh: _refresh),
-      ),
+      body: _buildBody(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {
-          _processController.clear();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => $ModelClass$AddPage(),
-            ),
-          );
-        },
+        onPressed: () {},
+      ),
+    );
+  }
+
+    Widget _buildBody() {
+    return Stack(
+      children: <Widget>[
+        HeadWidget(),
+        _buildPage()
+      ],
+    );
+  }
+
+  /// Widget para criar o body da views
+  Widget _buildPage() {
+    return Container(
+      alignment: FractionalOffset.topLeft,
+      child: RefreshIndicator(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _listBuilder(),
+            ],
+          ),
+        ),
+        onRefresh: _refresh,
       ),
     );
   }
@@ -123,11 +131,12 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
               return GestureDetector(
                 onTap: () {
                   _processController.clear();
+                  _$ModelClassCamelCase$Controller.$Model$Model = _$Model$;
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          $ModelClass$DetailPage(_$Model$),
+                          $ModelClass$DetailPage(),
                     ),
                   );
                 },

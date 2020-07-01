@@ -16,8 +16,8 @@
 ///     put() -> Atualiza os dados de um $ModelClass$.
 ///     delete() -> Deleta um $ModelClass$.
 ///
-///   Métodos do SQLite
-///     fetchAllLocal() -> Recupera a lista de $ModelClass$
+///   Métodos do Data
+///     fetchLocal() -> Recupera a lista de $ModelClass$
 ///     reloadLocal() -> Recarrega a lista de $ModelClass$
 ///     detailLocal() -> Recupera os detalhes de um $ModelClass$
 ///     saveLocal() -> Salva um novo $ModelClass$
@@ -69,7 +69,7 @@ abstract class _$ModelClass$ControllerBase with Store {
   @observable
   $ModelClass$Model $ModelClassCamelCase$Model;
 
-  /// Declarando os elementos observáveis do SQLite do $ModelClass$Controller.
+  /// Declarando os elementos observáveis do Db do $ModelClass$Controller.
   @observable
   ObservableList<$ModelClass$Model> $ModelClassCamelCase$LocalList;
 
@@ -156,7 +156,10 @@ abstract class _$ModelClass$ControllerBase with Store {
     try{
       _processController.processing = true;
       // Recuperando o detalhe de um determinado $ModelClass$ da API. 
-      $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.delete($ModelClassCamelCase$Model);
+      bool _result = await _$ModelClassCamelCase$Service.delete($ModelClassCamelCase$Model);
+      if(_result){
+        _success("ok");
+      }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
     }finally{
@@ -165,10 +168,10 @@ abstract class _$ModelClass$ControllerBase with Store {
   }
 
   ///
-  /// Área dos métodos da persistência no SQLite
+  /// [Área dos métodos da persistência no device]
   ///
 
-  /// Action para recuperar todos os registros do SQLite
+  /// Action para recuperar todos os registros do Db
   @action
   fetchAllLocal() async{
     try{
@@ -179,7 +182,7 @@ abstract class _$ModelClass$ControllerBase with Store {
     }
   }
   
-  /// Action para atualizar a lista de $ModelClass$ do SQLite
+  /// Action para atualizar a lista de $ModelClass$ do Db
   @action
   reloadLocal() async{
     try{
@@ -190,11 +193,11 @@ abstract class _$ModelClass$ControllerBase with Store {
     }
   }
 
-  /// Action para detalhar um $ModelClass$ do SQLite
+  /// Action para detalhar um $ModelClass$ do Db
   @action
   detailLocal(int id) async{
     try{
-      $ModelClassCamelCase$LocalModel = await _$ModelClassCamelCase$Data.detail(id);
+      $ModelClassCamelCase$LocalModel = await _$ModelClassCamelCase$Data.get(id);
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
     }finally{
@@ -202,27 +205,33 @@ abstract class _$ModelClass$ControllerBase with Store {
     }
   }
 
-  /// Action para detalhar um $ModelClass$ do SQLite
+  /// Action para detalhar um $ModelClass$ do Db
   @action
   saveLocal($ModelClass$Model model) async{
     try{
-      $ModelClassCamelCase$LocalModel = await _$ModelClassCamelCase$Data.save(model);
+      bool _result = await _$ModelClassCamelCase$Data.save(model);
+      if(_result){
+        $ModelClassCamelCase$LocalModel = model;
+      }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
     }
   }
 
-  /// Action para atualizar um $ModelClass$ do SQLite
+  /// Action para atualizar um $ModelClass$ do Db
   @action
   updateLocal($ModelClass$Model model) async{
     try{
-      $ModelClassCamelCase$LocalModel = await _$ModelClassCamelCase$Data.update(model);
+      bool _result = await _$ModelClassCamelCase$Data.update(model);
+      if(_result){
+        $ModelClassCamelCase$LocalModel = model;
+      }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
     }
   }
 
-  /// Action para deletar um $ModelClass$ do SQLite
+  /// Action para deletar um $ModelClass$ do Db
   @action
   deleteLocal(int id) async{
     try{
@@ -232,7 +241,7 @@ abstract class _$ModelClass$ControllerBase with Store {
     }
   }
 
-  /// Action para deletar todos os $ModelClass$s do SQLite
+  /// Action para deletar todos os $ModelClass$s do Db
   @action
   deleteAllLocal() async{
     try{

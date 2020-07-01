@@ -4,11 +4,18 @@ import 'dart:ui';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
+import '../utils/util.dart';
 import '../utils/config.dart';
 import '../utils/localization.dart';
+import '../apps/auth/controller.dart';
 import '../apps/configuracao/controller.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
+// Constante contendo o valor da proporção da tela padrão
+// utilizado para calcular altura do Head da página e da 
+// margem superior da barra de botões
+const double _proportionScreenDefault = 0.55;
 
 /// Widget para gerar os "botões" da tela inicial de acesso rápido
 Widget customMainCardButton(icon, label,
@@ -17,14 +24,19 @@ Widget customMainCardButton(icon, label,
     cardBackgroundColorBegin,
     cardBackgroundColorEnd,
     boxShadowColor,
-    cardBorderColor}) {
+    cardBorderColor,
+    image,
+    double textSize, textWeight = FontWeight.w600}) {
   return Container(
-    margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+    margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
     decoration: BoxDecoration(
       border: Border.all(color: cardBorderColor),
       boxShadow: [
         BoxShadow(
-            color: boxShadowColor, offset: Offset(2.0, 2.0), blurRadius: 3.0)
+          color: boxShadowColor,
+          offset: Offset(2.0, 2.0),
+          blurRadius: 3.0,
+        )
       ],
       gradient: LinearGradient(
         begin: Alignment.topCenter,
@@ -37,28 +49,28 @@ Widget customMainCardButton(icon, label,
       ),
       borderRadius: BorderRadius.circular(8.0),
     ),
-    child: Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 6),
-            child: Center(
-              child: Icon(icon, color: iconColor, size: 42),
-            ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 6),
+          child: Center(
+            child:
+                icon != null ? Icon(icon, color: iconColor, size: 42) : image,
           ),
-          Center(
-            child: Text(
-              '$label',
-              style: TextStyle(
-                  color: textColor, fontWeight: FontWeight.w600, fontSize: 14),
-              textAlign: TextAlign.center,
-            ),
-          )
-        ],
-      ),
+        ),
+        Center(
+          child: Text(
+            '$label',
+            style: TextStyle(
+                color: textColor,
+                fontWeight: textWeight,
+                fontSize: textSize ?? 14),
+            textAlign: TextAlign.center,
+          ),
+        )
+      ],
     ),
   );
 }
@@ -461,7 +473,11 @@ Widget customButtonOutline(
     Color textColor,
     Color borderColor,
     Icon iconButton,
-    bool rounded = false}) {
+    bool rounded = false,
+    bool processing = false,
+    double circularProgressIndicatorSize = 28,
+    double circularProgressIndicatorStrokeWidth = 4.0,
+    Color circularProgressIndicatorBgColor = Colors.blue}) {
   try {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -481,11 +497,19 @@ Widget customButtonOutline(
             SizedBox(
               width: 4.0,
             ),
-            Text(
-              label,
-              style:
-                  TextStyle(color: textColor ?? Theme.of(context).primaryColor),
-            ),
+            processing
+                ? Container(
+                    height: circularProgressIndicatorSize,
+                    width: circularProgressIndicatorSize,
+                    child: CircularProgressIndicator(
+                      strokeWidth: circularProgressIndicatorStrokeWidth,
+                      valueColor: new AlwaysStoppedAnimation<Color> (circularProgressIndicatorBgColor),
+                    ))
+                : Text(
+                    label,
+                    style: TextStyle(
+                        color: textColor ?? Theme.of(context).primaryColor),
+                  ),
           ],
         ),
         onPressed: onPress,
@@ -594,4 +618,116 @@ customErrorSnackbar(String message, {int secondsDuration = 4}) {
     backgroundColor: Color(0xfffFF6961),
     duration: Duration(seconds: secondsDuration),
   );
+}
+
+///
+/// [Área para os widgets do cabeçalho da página/views e da barra de botões]
+///
+
+/// Head da tela inicial
+class HeadWidget extends StatefulWidget {
+  final String assetImageHeadBackground;
+  final String webImageHeadBackground;
+
+  HeadWidget({
+    this.assetImageHeadBackground = "",
+    this.webImageHeadBackground = "",
+  });
+
+  @override
+  _HeadWidgetState createState() => _HeadWidgetState();
+}
+
+class _HeadWidgetState extends State<HeadWidget> {
+  /// Variável contendo o tipo da imagem a ser renderizada como background
+  /// iniciado com zero para o caso de não ter sido informada nenhuma imagem
+  /// no construtor do Widget. Valor 1 -> AssetsImage, 2 -> WebImage
+  int imageType = 0;
+
+  /// String contendo o caminho a ser renderizado como background do cabeçalho
+  String _urlPath;
+
+  // Instânciando o Controller da Autenticação
+  AuthController _authController = GetIt.I<AuthController>();
+
+  @override
+  void initState() {
+    // Verificando se foi passado algum valor para o assetImageHeadBackgroud ou webImageHeadBackground
+    if (widget.assetImageHeadBackground.isNotEmpty) {
+      _urlPath = widget.assetImageHeadBackground;
+      imageType = 1;
+    } else if (widget.webImageHeadBackground.isNotEmpty) {
+      _urlPath = widget.webImageHeadBackground;
+      imageType = 2;
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+        return Container(
+      height: Util.getProportionScreenWidth(context, proportionScreen),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).primaryColor,
+            Theme.of(context).accentColor,
+          ],
+        ),
+      ),
+      child: Stack(
+        children: <Widget>[
+          imageType == 1
+              ? Image.asset(
+                  _urlPath,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                )
+              : Container(),
+          Container(
+            color: Colors.black.withOpacity(0.22),
+            width: double.infinity,
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 36, bottom: 12, left: 12, right: 45),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Text(
+                  _autenticacaoController.alunoModel.nome,
+                  style: Theme.of(context).textTheme.headline5.copyWith(
+                      fontWeight: FontWeight.w600,
+                      wordSpacing: 0.08,
+                      color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  }
+}
+
+/// Barra de botões da tela inicial
+class ButtonBarWidget extends StatefulWidget {
+  final Widget gridButton;
+  const ButtonBarWidget({
+    Key key,
+    this.gridButton,
+  }) : super(key: key);
+
+  @override
+  _ButtonBarWidgetState createState() => _ButtonBarWidgetState();
+}
+
+class _ButtonBarWidgetState extends State<ButtonBarWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.only(
+            top: Util.getProportionScreenWidth(context, _proportionScreenDefault) - 125),
+        child: widget.gridButton);
+  }
 }
