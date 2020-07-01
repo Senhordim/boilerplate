@@ -1,13 +1,13 @@
 {% extends 'core/base.html' %} {% block content %}
 
-<div class="row mb-4">
-    <div class="col-3 col-xl-2">
+<div class="row mb-4 h-100">
+    <div id="submenu_listview_page" class="col-3 col-xl-2 h-100">
         <!-- Menu lateral com os models das app -->
-        <div class="card menu-vertical-app">
+        <div class="card menu-vertical-app h-100">
             <div class="card-header">
                 <h3 class="card-title"><strong>{% block title_modulo %}{% endblock title_modulo %}</strong></h3>
             </div>
-            <table class="table table-borderless">
+            <table class="table table-borderless table-hover table-sm">
                 <tbody>
                     {% block menu_app %}
                     {% endblock menu_app %}
