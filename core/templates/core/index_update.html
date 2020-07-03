@@ -29,3 +29,13 @@
     </div>
 </div>
 {% endblock content %}
+{% block extra_css %}
+<script>
+    $(document).ready(function () {
+        $('.datetimefield').mask('00/00/0000 00:00');
+    });
+</script>
+{% endblock extra_css %}
+{% block extra_js %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js">
+{% endblock extra_js %}
