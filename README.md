@@ -38,8 +38,11 @@ Para que o projeto funcione corretamente devem ser seguidas as etapas a seguir.
     3.1 Usuários Linux/Mac `. env/bin/activate`  
     3.2 Usuários Windows `env/Scripts/activate`  
 5. Executar o comando `pip install -r requirements_dev.txt`
-
  
+### Protegendo arquivos de serem sobrescritos ao rodar os comandos
+> Para impedir que ao executar o comando build o arquivo seja novamente
+> gerado pelo CLI basta adicionar no começo do arquivo o palavra #FileLocked    
+
 ### Configurações para funcionamento do manager doc  
 > Manage responsável por gerar a documentação baseado nos DocStrings.  
 
@@ -70,8 +73,11 @@ __________
 
 ### Build (Templates HTML)
 > Manage responsável por gerar os templates html, para que o parser funcione corretamente
-> é necessário configurar no Class Meta do model o parâmetro list_display = [] 
-> contendo os campos que deseja que sejam mostrados na listview 
+> é necessário configurar no Class Meta do model o parâmetro fields_display = [] 
+> contendo os campos que deseja que sejam mostrados na listview.
+
+> Para que o build gere os formulários modais dos campos ForeignKey deve ser informado também no 
+> Class Meta do model o parâmetro fk_fields_modal com os campos que deseja que sejam criados os modais.
 
 ```python manage.py build --parser_html NOME_DA_APP NOME_DO_MODEL```
 
