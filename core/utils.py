@@ -15,9 +15,8 @@ def obter_modelo(nome_modelo):
 
 def registro_existente(objeto, campo):
     campo_str = '{0}__iexact'.format(campo)
-    filtro = Q(**{campo_str:getattr(objeto, campo)})
+    filtro = Q(**{campo_str: getattr(objeto, campo)})
     if objeto.id:
         return objeto._meta.model.objects.exclude(id=objeto.id).filter(filtro).exists()
     else:
         return objeto._meta.model.objects.filter(filtro).exists()
-

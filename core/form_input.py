@@ -11,6 +11,4 @@ class DateTimeInput(forms.DateTimeInput):
 
 
 def moneyInput():
-   return TextInput(attrs={'input-mask':'money'})
-
-
+    return TextInput(attrs={'input-mask': 'money'})

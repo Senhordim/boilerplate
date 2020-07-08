@@ -68,6 +68,12 @@ __________
 
 ```python manage.py build NOME_DA_APP NOME_DO_MODEL```
 
+### Build (Templates HTML)
+> Manage responsável por gerar os templates html, para que o parser funcione corretamente
+> é necessário configurar no Class Meta do model o parâmetro list_display = [] 
+> contendo os campos que deseja que sejam mostrados na listview 
+
+```python manage.py build --parser_html NOME_DA_APP NOME_DO_MODEL```
 
 ### Flutter
 > Manage responsável por gerar os templates HTML, as views, configurar  as url's do projeto e gerar a APIRest. 
