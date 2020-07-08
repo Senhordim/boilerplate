@@ -5,6 +5,7 @@ import logging
 import secrets
 import string
 from datetime import date, datetime
+from locale import normalize
 
 import pytz
 from django.conf import settings
@@ -18,14 +19,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import (FieldDoesNotExist, FieldError,
                                     ValidationError)
 from django.core.mail import EmailMessage
-from django.db.models import (ForeignKey, Q, DateTimeField)
-from django.db.models.fields import BooleanField as BooleanFieldModel
+from django.db.models import (ForeignKey, Q, DateField)
+from django.db.models.fields import BooleanField as BooleanFieldModel, DateTimeField
 from django.db.models.fields.related_descriptors import ForwardManyToOneDescriptor, ManyToManyDescriptor
 from django.db.models.query_utils import DeferredAttribute
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.utils.regex_helper import normalize
 from django.utils.text import camel_case_to_spaces
 from django.views import View
 from django.views.generic import DetailView, ListView, TemplateView
