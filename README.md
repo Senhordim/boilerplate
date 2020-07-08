@@ -84,7 +84,11 @@ __________
 ### Flutter
 > Manage responsável por gerar os templates HTML, as views, configurar  as url's do projeto e gerar a APIRest. 
 
-Para gerar o projeto com todas as apps configuradas no FLUTTER_APPS  
+Para gerar o projeto com todas as apps configuradas no FLUTTER_APPS
+> Caso deseje gerar o projeto utilizando o gerenciador de estado mobx use --init_mobx no final do comando
+
+> Caso deseje gerar o projeto utilizando o gerenciador de estado provider user --init_provider no final do comando
+  
 ```python manage.py flutter```
 
 Para gerar os arquivos do Flutter de uma determinada App e seus models  
