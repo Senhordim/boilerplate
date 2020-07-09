@@ -26,7 +26,7 @@ class AuthService {
   ProcessController _processController = GetIt.I.get<ProcessController>();
 
   // Instanciando a classe AuthModel
-  AuthModel _auth = AuthModel();
+  AuthModel auth = AuthModel();
 
   /// Método para retornar todos os Auth da API
   Future<List<AuthModel>> fetchAll() async {
@@ -54,12 +54,12 @@ class AuthService {
       CustomDio _dio = CustomDio(_url);
       var data = await _dio.getHttp();
       if (data != null) {
-        _auth = AuthModel.fromJson(data);
+        auth = AuthModel.fromJson(data);
       }
     } catch (error, exception) {
         _error(error.toString(), exception.toString());
     }
-    return _auth;
+    return auth;
   }
 
   /// Método para atualizar um Auth da API
@@ -70,12 +70,12 @@ class AuthService {
       CustomDio _dio = CustomDio(_url);
       var data = await _dio.putHttp(auth.toJson(), auth.id.toString());
       if (data != null) {
-        _auth = AuthModel.fromJson(data);
+        auth = AuthModel.fromJson(data);
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
     }
-    return _auth;
+    return auth;
   }
   
   /// Método para adicionar os Auth da API
@@ -86,12 +86,12 @@ class AuthService {
       CustomDio _dio = CustomDio(_url);
       var data = await _dio.postHttp(auth.toJson());
       if (data != null) {
-        _auth = AuthModel.fromJson(data);
+        auth = AuthModel.fromJson(data);
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
     }
-    return _auth;
+    return auth;
   }
 
   /// Método para exclui os Auth da API
@@ -101,12 +101,12 @@ class AuthService {
       CustomDio _dio = CustomDio(_url);
       var data = await _dio.deleteHttp(auth.toJson(), auth.id.toString());
       if (data != null) {
-        _auth = AuthModel.fromJson(data);
+        auth = AuthModel.fromJson(data);
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
     }
-    return _auth;
+    return auth;
   }
 
   /// Métodos para tratar o retorno do processamento

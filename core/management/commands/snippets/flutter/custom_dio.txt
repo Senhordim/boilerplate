@@ -32,7 +32,8 @@ class CustomDio extends DioForNative {
     return headersMap;
   }
 
-  Future<dynamic> getHttp() async {
+  Future<dynamic> getHttp({String uri}) async {
+    _url = uri ?? _url;
     try {
       Response _response = await this.get(this._url);
       if (_response.statusCode == 200) {
@@ -42,17 +43,19 @@ class CustomDio extends DioForNative {
     } on DioError catch (error) {}
   }
 
-  Future<dynamic> postHttp(data) async {
+  Future<dynamic> postHttp(data, {String uri}) async {
+    _url = uri ?? _url;
     try {
       Response _response = await this.post(_url, data: data);
-      if (_response.statusCode == 201) {
+      if (_response.statusCode == 200  || _response.statusCode == 200) {
         return _response.data;
       }
       return null;
     } on DioError catch (error) {}
   }
 
-  Future<dynamic> putHttp(data, String id) async {
+  Future<dynamic> putHttp(data, String id, {String uri}) async {
+    _url = uri ?? _url;
     try {
       Response _response = await this.put(_url, data: data);
       if (_response.statusCode == 200) {
@@ -62,7 +65,8 @@ class CustomDio extends DioForNative {
     } on DioError catch (error) {}
   }
 
-  Future<dynamic> patchHttp(data) async {
+  Future<dynamic> patchHttp(data, {String uri}) async {
+    _url = uri ?? _url;
     try {
       Response _response = await this.put(_url, data: data);
       if (_response.statusCode == 200) {
@@ -72,7 +76,8 @@ class CustomDio extends DioForNative {
     } on DioError catch (error) {}
   }
 
-  Future<dynamic> deleteHttp(data, String id) async {
+  Future<dynamic> deleteHttp(data, String id, {String uri}) async {
+    _url = uri ?? _url;
     try {
       Response _response = await this.delete(_url, data: data);
       if (_response.statusCode == 200) {
