@@ -36,11 +36,11 @@ class DebugPrint {
 }
 
 class CustomTheme{
-  //Colors for theme
+ //Colors for theme
   static Color defaultColor = Colors.black;
   static Color lightPrimary = const Color(0xfffcfcff);
   static Color lightAccent = Colors.blue;
-  static Color lightBG =  const Color(0xfffcfcff);
+  static Color lightBG = const Color(0xfffcfcff);
   static Color darkPrimary = Colors.black;
   static Color darkAccent = Colors.blueGrey;
   static Color darkBG = Colors.black;
@@ -51,12 +51,18 @@ class CustomTheme{
   static Color mainCardLightTextColor = Colors.black38;
   static Color mainCardLightBackgroundColor = Colors.white;
   static Color mainCardLightShadowColor = Colors.black38;
+  static Color mainTextFieldLightColor = Colors.black45;
+  static Color mainButtonBgLightColor = Colors.black38;
+  static Color mainButtonFontLightColor = Colors.white;
 
   static Color mainCardDarkBorderColor = Colors.grey[700];
   static Color mainCardDarkIconColor = Colors.grey[300];
   static Color mainCardDarkTextColor = Colors.grey[300];
   static Color mainCardDarkBackgroundColor = Colors.grey[850];
   static Color mainCardDarkShadowColor = Colors.grey[900];
+  static Color mainTextFieldDarkColor = Colors.grey[600];
+  static Color mainButtonBgDarkColor = Colors.grey[600];
+  static Color mainButtonFontDarkColor = Colors.black;
 
   static ThemeData lightTheme = ThemeData(
     backgroundColor: lightBG,

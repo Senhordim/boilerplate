@@ -371,6 +371,12 @@ Widget customFlatButton(
     @required BuildContext context,
     Color textColor,
     Icon iconButton}) {
+  final _settingsProvider =
+      Provider.of<SettingsProvider>(context, listen: false);
+  final Color _color = _settingsProvider.lightTheme == true
+      ? CustomTheme.mainTextFieldLightColor
+      : CustomTheme.mainTextFieldDarkColor;
+  if (textColor == null) textColor = _color;
   try {
     return FlatButton(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -420,6 +426,16 @@ Widget customRaisedButton(
     Icon iconButton,
     bool rounded = false,
     double elevation = 2.0}) {
+  final _settingsProvider =
+      Provider.of<SettingsProvider>(context, listen: false);
+  final Color _color = _settingsProvider.lightTheme == true
+      ? CustomTheme.mainButtonBgLightColor
+      : CustomTheme.mainButtonBgDarkColor;
+  final Color _colorText = _settingsProvider.lightTheme == true
+      ? CustomTheme.mainButtonFontLightColor
+      : CustomTheme.mainButtonFontDarkColor;
+  if (textColor == null) textColor = _colorText;
+  if (color == null) color = _color;
   try {
     return RaisedButton(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -443,7 +459,7 @@ Widget customRaisedButton(
       ),
     );
   } catch (error, exception) {
-    debugPrint("Error: $error, Exception: $exception");
+    debugPrint("Error: $error, Exception: ${exception.toString()}");
     return Container();
   }
 }
@@ -547,15 +563,44 @@ Widget customTextFormField(
     @required BuildContext context,
     Function validator,
     bool outline = false}) {
+  final _settingsProvider =
+      Provider.of<SettingsProvider>(context, listen: false);
+  final Color _color = _settingsProvider.lightTheme == true
+      ? CustomTheme.mainTextFieldLightColor
+      : CustomTheme.mainTextFieldDarkColor;
   try {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
           controller: controller,
           decoration: InputDecoration(
-              labelText: labelText,
-              hintText: hintText,
-              border: outline == true ? const OutlineInputBorder() : null),
+            labelText: labelText,
+            hintText: hintText,
+            fillColor: _color,
+            hoverColor: _color,
+            border: outline == true
+                ? OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _color,
+                    ),
+                  )
+                : UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _color,
+                    ),
+                  ),
+            enabledBorder: outline == true
+                ? OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _color,
+                    ),
+                  )
+                : UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _color,
+                    ),
+                  ),
+          ),
           validator: validator != null ? validator : null),
     );
   } catch (error, exception) {
