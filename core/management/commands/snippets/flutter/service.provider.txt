@@ -14,7 +14,6 @@
 /// pelo manage do Django adicione um # antes da palavra abaixo
 /// FileLocked
 
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dio/dio.dart';
 
@@ -39,8 +38,7 @@ class $ModelClass$Service {
         }
       }
     } catch (error) {
-      debugPrint("Erro no método fetchAll em $ModelClass$Service");
-      debugPrint(error.toString());
+      _error(error);
     }
     return _itens;
   }
@@ -54,8 +52,7 @@ class $ModelClass$Service {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
     } catch (error) {
-      debugPrint("Erro no método detail em $ModelClass$Service");
-        debugPrint(error.toString());
+      _error(error);
     }
     return _$ModelClassCamelCase$;
   }
@@ -69,8 +66,7 @@ class $ModelClass$Service {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
     } catch (error) {
-      debugPrint("Erro no método post em $ModelClass$Service");
-      debugPrint(error.toString());
+      _error(error);
     }
     return _$ModelClassCamelCase$;
   }
@@ -79,13 +75,13 @@ class $ModelClass$Service {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);
-      final data = await _dio.putHttp($ModelClassCamelCase$.toJson());
+      final _data = FormData.fromMap($ModelClassCamelCase$.toJson());
+      final data = await _dio.putHttp(_data);
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
     } catch (error) {
-      debugPrint("Erro no método put em $ModelClass$Service");
-      debugPrint(error.toString());
+      _error(error);
     }
     return _$ModelClassCamelCase$;
   }
@@ -94,13 +90,13 @@ class $ModelClass$Service {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);
-      final data = await _dio.patchHttp($ModelClassCamelCase$.toJson());
+      final _data = FormData.fromMap($ModelClassCamelCase$.toJson());
+      final data = await _dio.patchHttp(_data);
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
     } catch (error) {
-      debugPrint("Erro no método patch em $ModelClass$Service");
-      debugPrint(error.toString());
+      _error(error);
     }
     return _$ModelClassCamelCase$;
   }
@@ -109,35 +105,24 @@ class $ModelClass$Service {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);
-      final data = await _dio.deleteHttp($ModelClassCamelCase$.toJson());
+      final _data = FormData.fromMap($ModelClassCamelCase$.toJson());
+      final data = await _dio.deleteHttp(_data);
       if (data != null) {
         _success("ok");
         return true;
       }
       return false;
     } catch (error) {
-      debugPrint("Erro no método delete em $ModelClass$Service");
-      debugPrint(error.toString());
+      _error(error);
       return false;
     }
   }
 
   void _success(String message) async {
-    try {
-      // _processProvider.withSuccess(message: message);
-    } catch (e) {
-      debugPrint("Ocorreu um erro no método error: $e");
-    }
+       Process().finishSuccess(message);
   }
 
-  void _error(String error, String exception) async {
-    try {
-      // _processProvider.withError(
-      //   error: error,
-      //   exception: exception,
-      // );
-    } catch (e) {
-      debugPrint("Ocorreu um erro no método error: $e");
-    }
+  void _error(String error) async {
+    Process().finishError(error.toString(), "");
   }
 }
