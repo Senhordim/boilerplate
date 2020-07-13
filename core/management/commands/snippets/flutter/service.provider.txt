@@ -14,8 +14,9 @@
 /// pelo manage do Django adicione um # antes da palavra abaixo
 /// FileLocked
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:dio/dio.dart';
 
 import 'model.dart';
 import '../../../utils/custom_dio.dart';
@@ -62,7 +63,8 @@ class $ModelClass$Service {
   Future<$ModelClass$Model> post($ModelClass$Model $ModelClassCamelCase$) async {
     try {
       final CustomDio _dio = CustomDio(_uri);
-      final data = await _dio.postHttp($ModelClassCamelCase$.toJson());
+      final _data = FormData.fromMap($ModelClassCamelCase$.toJson());
+      final data = await _dio.postHttp(_data);
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }

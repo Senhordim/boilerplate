@@ -46,55 +46,77 @@ class $ModelClass$Provider extends ChangeNotifier {
   $ModelClass$Model $ModelClassCamelCase$Model = $ModelClass$Model();
   List<$ModelClass$Model> $ModelClassCamelCase$LocalList = List<$ModelClass$Model>();
   $ModelClass$Model $ModelClassCamelCase$LocalModel = $ModelClass$Model();
+  bool processing = false;
+
+  void _isProcessing(){
+    processing = !processing;
+    notifyListeners();
+  }
 
   fetchAll() async{
     try{
+      _isProcessing();
       $ModelClassCamelCase$List = await _$ModelClassCamelCase$Service.fetchAll();
       notifyListeners();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    } finally {
+      _isProcessing();
     }
   }
   
   reload() async{
     try{
+      _isProcessing();
       $ModelClassCamelCase$List.clear();
       fetchAll();
       notifyListeners();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    } finally {
+      _isProcessing();
     }
   }
 
   detail() async{
     try{
+      _isProcessing();
       $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.detail($ModelClassCamelCase$Model);
       notifyListeners();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    } finally {
+      _isProcessing();
     }
   }
 
   post() async{
     try{
+      _isProcessing();
       $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.post($ModelClassCamelCase$Model);
       notifyListeners();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    } finally {
+      _isProcessing();
     }
   }
 
   put() async{
     try{
+      _isProcessing();
       $ModelClassCamelCase$Model = await _$ModelClassCamelCase$Service.put($ModelClassCamelCase$Model);
       notifyListeners();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    } finally {
+      _isProcessing();
     }
   }
 
   delete() async{
     try{
+      _isProcessing();
       final bool _result = await _$ModelClassCamelCase$Service.delete($ModelClassCamelCase$Model);
       if(_result){
         _success("ok");
@@ -102,39 +124,51 @@ class $ModelClass$Provider extends ChangeNotifier {
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    } finally {
+      _isProcessing();
     }
   }
 
   fetchAllLocal() async{
     try{
+      _isProcessing();
       $ModelClassCamelCase$LocalList = await _$ModelClassCamelCase$Data.fetchAll();
       notifyListeners();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    } finally {
+      _isProcessing();
     }
   }
   
   reloadLocal() async{
     try{
+      _isProcessing();
       $ModelClassCamelCase$LocalList.clear();
       fetchAllLocal();
       notifyListeners();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    } finally {
+      _isProcessing();
     }
   }
 
   detailLocal(int id) async{
     try{
+      _isProcessing();
       $ModelClassCamelCase$LocalModel = await _$ModelClassCamelCase$Data.get(id);
       notifyListeners();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    } finally {
+      _isProcessing();
     }
   }
 
   saveLocal($ModelClass$Model model) async{
     try{
+      _isProcessing();
       final bool _result = await _$ModelClassCamelCase$Data.save(model);
       if(_result){
         $ModelClassCamelCase$LocalModel = model;
@@ -142,10 +176,13 @@ class $ModelClass$Provider extends ChangeNotifier {
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    } finally {
+      _isProcessing();
     }
   }
   updateLocal($ModelClass$Model model) async{
     try{
+      _isProcessing();
       final bool _result = await _$ModelClassCamelCase$Data.update(model);
       if(_result){
         $ModelClassCamelCase$LocalModel = model;
@@ -153,24 +190,32 @@ class $ModelClass$Provider extends ChangeNotifier {
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    } finally {
+      _isProcessing();
     }
   }
 
   deleteLocal(int id) async{
     try{
+      _isProcessing();
       _$ModelClassCamelCase$Data.delete(id);
       notifyListeners();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    } finally {
+      _isProcessing();
     }
   }
 
   deleteAllLocal() async{
     try{
+      _isProcessing();
       await _$ModelClassCamelCase$Data.deleteAll();
       notifyListeners();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
+    } finally {
+      _isProcessing();
     }
   }
 

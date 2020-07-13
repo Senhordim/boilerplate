@@ -562,7 +562,10 @@ Widget customTextFormField(
     @required TextEditingController controller,
     @required BuildContext context,
     Function validator,
-    bool outline = false, TextInputType keyboardType = TextInputType.text, bool obscureText = false}) {
+    bool outline = false, 
+    TextInputType keyboardType = TextInputType.text,
+    bool obscureText = false,
+    int maxLenght}) {
   final _settingsProvider =
       Provider.of<SettingsProvider>(context, listen: false);
   final Color _color = _settingsProvider.lightTheme == true
@@ -575,6 +578,7 @@ Widget customTextFormField(
           controller: controller,
           keyboardType:keyboardType,
           obscureText: obscureText,
+          maxLength: maxLenght,
           decoration: InputDecoration(
             labelText: labelText,
             hintText: hintText,
