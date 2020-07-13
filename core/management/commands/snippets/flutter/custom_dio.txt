@@ -101,24 +101,22 @@ class CustomDioInterceptor extends InterceptorsWrapper {
 
   @override
   Future onResponse(Response response) {
-    // Retorno com Status Code 200 ou 201
-    _processController.withSuccess(
-        message: response.statusMessage,
-        statusCode: response.statusCode,
-        httpData: response.data.toString(),
-        httpHeader: response.headers.toString());
+    Process().finishSuccess(
+      response.statusMessage,
+      status: response.statusCode,
+    );
     return super.onResponse(response);
   }
 
   @override
   Future onError(DioError err) {
-    // Retorno com Status diferente de 200 ou 201
-    _processController.withError(
-        message: err.message,
-        statusCode: err.response.statusCode,
-        httpData: err.response.data.toString(),
-        httpHeader: err.response.headers.toString());
-    print(err.toString());
+    Process().finishError(
+      err.message,
+      err.response.statusMessage,
+      status: err.response.statusCode,
+      data: err.request.data.toString(),
+      header: err.request.headers.toString(),
+    );
     return super.onError(err);
   }
 }
