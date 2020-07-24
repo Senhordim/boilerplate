@@ -4,6 +4,62 @@
 import 'dart:math';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+class Process {
+  static Process _instance;
+
+  Process._internal() {
+    _instance = this;
+  }
+
+  factory Process() => _instance ?? Process._internal();
+
+  static bool processing = true;
+  static bool finishedSuccessfully;
+  static bool isDioError;
+  static int statusCode = 0;
+  static String resultMessage;
+  static String friendlyMessage = 'Ocorreu um erro, favor tentar novamente.';
+  static String httpHeader;
+  static String httpData;
+  static String resultException;
+  static String request;
+
+  Process.finishSuccess(String message,
+      {int status, String data, String header}) {
+    finishedSuccessfully = true;
+    resultMessage = message;
+    statusCode = status ?? 0;
+  }
+
+  Process.finishError(String message, String exception,
+      {int status,
+      String data,
+      String header,
+      String request,
+      bool dioError = false}) {
+    finishedSuccessfully = false;
+    resultMessage = message;
+    httpHeader = header;
+    httpData = data;
+    statusCode = status ?? 0;
+    resultException = exception ?? "";
+    request = request ?? "";
+    isDioError = dioError;
+  }
+
+  static bool get isSuccess {
+    if (finishedSuccessfully == null || finishedSuccessfully == false)
+      return false;
+    return true;
+  }
+
+  @override
+  String toString() {
+    String _result =
+        "===\nProcesso:\nStatusCode -> $statusCode\nException -> $resultException\nError -> $resultMessage\nHttp Data -> $httpData\n Http Header -> $httpHeader\n===";
+    return _result;
+  }
+}
 
 class Util {
   final _imageDefault =

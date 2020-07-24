@@ -101,7 +101,7 @@ class CustomDioInterceptor extends InterceptorsWrapper {
 
   @override
   Future onResponse(Response response) {
-    Process().finishSuccess(
+    Process.finishSuccess(
       response.statusMessage,
       status: response.statusCode,
     );
@@ -110,13 +110,12 @@ class CustomDioInterceptor extends InterceptorsWrapper {
 
   @override
   Future onError(DioError err) {
-    Process().finishError(
-      err.message,
-      err.response.statusMessage,
-      status: err.response.statusCode,
-      data: err.request.data.toString(),
-      header: err.request.headers.toString(),
-    );
+    Process.finishError(err.message, err.response.data.toString(),
+        status: err.response.statusCode,
+        data: err.request.data.toString(),
+        header: err.request.headers.toString(),
+        request: err.request.data.toString(),
+        dioError: true);
     return super.onError(err);
   }
 }

@@ -37,8 +37,8 @@ class $ModelClass$Service {
           _itens.add($ModelClass$Model.fromJson(item));
         }
       }
-    } catch (error) {
-      _error(error);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
     }
     return _itens;
   }
@@ -51,8 +51,8 @@ class $ModelClass$Service {
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
-    } catch (error) {
-      _error(error);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
     }
     return _$ModelClassCamelCase$;
   }
@@ -65,8 +65,8 @@ class $ModelClass$Service {
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
-    } catch (error) {
-      _error(error);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
     }
     return _$ModelClassCamelCase$;
   }
@@ -80,8 +80,8 @@ class $ModelClass$Service {
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
-    } catch (error) {
-      _error(error);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
     }
     return _$ModelClassCamelCase$;
   }
@@ -95,8 +95,8 @@ class $ModelClass$Service {
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
-    } catch (error) {
-      _error(error);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
     }
     return _$ModelClassCamelCase$;
   }
@@ -112,17 +112,27 @@ class $ModelClass$Service {
         return true;
       }
       return false;
-    } catch (error) {
-      _error(error);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
       return false;
     }
   }
 
-  void _success(String message) async {
-       Process().finishSuccess(message);
+  void _success(String message, {int statusCode}) async {
+    try {
+      Process.finishSuccess(message, status: statusCode);
+    } catch (e) {
+      debugPrint("Ocorreu um erro no método error: $e");
+    }
   }
 
-  void _error(String error) async {
-    Process().finishError(error.toString(), "");
+  void _error(String error, String exception, {int statusCode}) async {
+    try {
+      if (Process.isDioError == false) {
+        Process.finishError(error, exception, status: statusCode);
+      }
+    } catch (e) {
+      debugPrint("Ocorreu um erro no método error: $e");
+    }
   }
 }
