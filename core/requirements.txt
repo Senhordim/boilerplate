@@ -4,4 +4,5 @@ djangorestframework==3.8.2
 requests==2.18.4
 django_select2
 beautifulsoup4==4.9.1
+dateparser==0.7.6
 html5lib
