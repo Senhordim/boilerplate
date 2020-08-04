@@ -31,9 +31,10 @@ class $ModelClass$Model {
   });
 
   $ModelClass$Model.fromJson(Map<String, dynamic> json) {
-      nextUrl = json["nextUrl"] == null ? null : json["nextUrl"];
-      previousUrl = json["previousUrl"] == null ? null : json["previousUrl"];
-      $ParserFromJson$
+    id = json.containsKey('id') ? json['id'] : 0;
+    nextUrl = json.containsKey('nextUrl') ? json['nextUrl'] : "";
+    previousUrl = json.containsKey('previousUrl') ? json['previousUrl'] : "";
+    $ParserFromJson$
   }
 
   Map<String, dynamic> toJson() => {

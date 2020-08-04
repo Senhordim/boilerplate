@@ -16,7 +16,6 @@ class CustomDio extends DioForNative {
     _url = "${Config.uri}$url";
   }
 
-  // Método para construir a Autenticação no cabeçalho
   Map<String, String> makeHeadersAuthentication(
       {String token, String contentType = "application/json; charset=utf-8"}) {
     Map<String, String> headersMap;

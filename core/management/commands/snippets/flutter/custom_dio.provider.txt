@@ -16,7 +16,6 @@ class CustomDio extends DioForNative {
     _url = "${Config.uri}$url";
   }
 
-  // Método para construir a Autenticação no cabeçalho
   Map<String, String> makeHeadersAuthentication(
       {String token, String contentType = "application/json; charset=utf-8"}) {
     Map<String, String> headersMap;
@@ -35,23 +34,31 @@ class CustomDio extends DioForNative {
   Future<dynamic> getHttp({String uri}) async {
     _url = uri ?? _url;
     try {
-      Response _response = await this.get(this._url);
+      Response _response = await this.get(_url);
       if (_response.statusCode == 200) {
         return _response.data;
       }
       return null;
-    } on DioError catch (error) {}
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Get no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
   }
 
   Future<dynamic> postHttp(data, {String uri}) async {
     _url = uri ?? _url;
     try {
       Response _response = await this.post(_url, data: data);
-      if (_response.statusCode == 200  || _response.statusCode == 200) {
+      if (_response.statusCode == 201) {
         return _response.data;
       }
       return null;
-    } on DioError catch (error) {}
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Post no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
   }
 
   Future<dynamic> putHttp(data, String id, {String uri}) async {
@@ -62,7 +69,11 @@ class CustomDio extends DioForNative {
         return _response.data;
       }
       return null;
-    } on DioError catch (error) {}
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Put no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
   }
 
   Future<dynamic> patchHttp(data, {String uri}) async {
@@ -73,7 +84,11 @@ class CustomDio extends DioForNative {
         return _response.data;
       }
       return null;
-    } on DioError catch (error) {}
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Patch no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
   }
 
   Future<dynamic> deleteHttp(data, String id, {String uri}) async {
@@ -84,7 +99,11 @@ class CustomDio extends DioForNative {
         return _response.data;
       }
       return null;
-    } on DioError catch (error) {}
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Delete no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
   }
 }
 

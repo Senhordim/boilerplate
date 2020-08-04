@@ -14,33 +14,69 @@
 /// pelo manage do Django adicione um # antes da palavra abaixo
 /// FileLocked
 
-import 'package:provider/provider.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 
 import 'model.dart';
-import '../../../utils/custom_dio.dart';
-import '../../../utils/process.provider.dart';
+import '../../utils/config.dart';
+import '../../utils/custom_dio.dart';
+import '../../utils/util.dart';
 
 class $ModelClass$Service {
-
-  $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model();
-
   String _uri = "$App$/$Model$/";
+  $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model();
+  List<$ModelClass$Model> _$ModelClassCamelCase$List = List<$ModelClass$Model>();
+
+  $ModelClass$Service({$ModelClass$Model _$ModelClassCamelCase$, List<$ModelClass$Model> _$ModelClassCamelCase$List}) {
+    if (_$ModelClassCamelCase$ != null) __$ModelClassCamelCase$ = _$ModelClassCamelCase$;
+  }
 
   Future<List<$ModelClass$Model>> fetchAll() async {
-    List<$ModelClass$Model> _itens = List<$ModelClass$Model>();
     try {
-      final CustomDio _dio = CustomDio(_uri);
-      final data = await _dio.getHttp();
-      if (data != null) {
-        for (var item in data){
-          _itens.add($ModelClass$Model.fromJson(item));
+      String _url;
+      _$ModelClassCamelCase$List?.clear();
+      final CustomDio _dio = CustomDio(_url);
+      _dio.makeHeadersAuthentication();
+      final dataResponse = await _dio.getHttp();
+      if (dataResponse != null) {
+        final String _next = dataResponse.containsKey('nextUrl') ? dataResponse["next"] : "";
+        final String _previous = dataResponse.containsKey('previousUrl') ?dataResponse["previous"]: "";
+        final _dataItens = dataResponse.containsKey('results')? dataResponse["results"]: dataResponse;
+        for (var data in _dataItens) {
+          $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
+          _$ModelClassCamelCase$.nextUrl = _next;
+          _$ModelClassCamelCase$.previousUrl = _previous;
+          _$ModelClassCamelCase$List.add(_$ModelClassCamelCase$);
         }
+        _success("ok");
       }
     } catch (error, exception) {
-      _error(error.toString(), exception.toString());
+      _error(error, exception.toString());
     }
-    return _itens;
+    return _$ModelClassCamelCase$List;
+  }
+
+  Future<List<$ModelClass$Model>> getMorel(String uri) async {
+    try {
+      final CustomDio _dio = CustomDio(uri);
+      _dio.makeHeadersAuthentication();
+      final dataResponse = await _dio.getHttp();
+      if (dataResponse != null) {
+        final String _next = dataResponse.containsKey('nextUrl') ? dataResponse["next"] : "";
+        final String _previous = dataResponse.containsKey('previousUrl') ?dataResponse["previous"]: "";
+        final _dataItens = dataResponse.containsKey('results')? dataResponse["results"]: dataResponse;
+        for (var data in _dataItens) {
+          $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
+          _$ModelClassCamelCase$.nextUrl = _next;
+          _$ModelClassCamelCase$.previousUrl = _previous;
+          _$ModelClassCamelCase$List.add(_$ModelClassCamelCase$);
+        }
+        _success("ok");
+      }
+    } catch (error, exception) {
+      _error(error, exception.toString());
+    }
+    return _$ModelClassCamelCase$List;
   }
   
   Future<$ModelClass$Model> detail($ModelClass$Model $ModelClassCamelCase$) async {
@@ -108,8 +144,8 @@ class $ModelClass$Service {
       final _data = FormData.fromMap($ModelClassCamelCase$.toJson());
       final data = await _dio.deleteHttp(_data);
       if (data != null) {
-        _success("ok");
         return true;
+        _success("ok");
       }
       return false;
     } catch (error, exception) {
