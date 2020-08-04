@@ -13,7 +13,7 @@ import '../apps/auth/controller.dart';
 import '../apps/configuracao/controller.dart';
 
 // Constante contendo o valor da proporção da tela padrão
-// utilizado para calcular altura do Head da página e da 
+// utilizado para calcular altura do Head da página e da
 // margem superior da barra de botões
 const double _proportionScreenDefault = 0.55;
 
@@ -26,7 +26,8 @@ Widget customMainCardButton(icon, label,
     boxShadowColor,
     cardBorderColor,
     image,
-    double textSize, textWeight = FontWeight.w600}) {
+    double textSize,
+    textWeight = FontWeight.w600}) {
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
     decoration: BoxDecoration(
@@ -503,7 +504,8 @@ Widget customButtonOutline(
                     width: circularProgressIndicatorSize,
                     child: CircularProgressIndicator(
                       strokeWidth: circularProgressIndicatorStrokeWidth,
-                      valueColor: new AlwaysStoppedAnimation<Color> (circularProgressIndicatorBgColor),
+                      valueColor: new AlwaysStoppedAnimation<Color>(
+                          circularProgressIndicatorBgColor),
                     ))
                 : Text(
                     label,
@@ -564,23 +566,21 @@ Widget customTextFormField(
   }
 }
 
-
 /// Componente visual para mostrar um card enquando o usuário aguarda
 /// o processamento da operação.
 ///
 ///    Parameters:
 ///
 ///      context -> BuildContext contendo o contexto do App
-Widget customProcessingCardModal(BuildContext context){
+Widget customProcessingCardModal(BuildContext context) {
   return Container(
     child: Align(
       alignment: Alignment.center,
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-              vertical: 12, horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8.0),
           child: Column(
-              children: [
+            children: [
               CircularProgressIndicator(),
               Text(
                 AppLocalizations.of(context)
@@ -595,15 +595,15 @@ Widget customProcessingCardModal(BuildContext context){
 }
 
 /// Componente para mostrar a mensagem de erro para o usuário na UI
-Widget customErrorMessage(BuildContext context, 
-    {String title, String message}){
+Widget customErrorMessage(BuildContext context,
+    {String title, String message}) {
   return Center(child: Text(message));
 }
 
 /// Componente para mostrar mensagens aos usuário de
 /// ações que retornaram com sucesso
 customSuccessSnackbar(String message, {int secondsDuration = 4}) {
-  return SnackBar( 
+  return SnackBar(
     content: Text(message),
     backgroundColor: Color(0xFFF799FCB),
     duration: Duration(seconds: secondsDuration),
@@ -613,7 +613,7 @@ customSuccessSnackbar(String message, {int secondsDuration = 4}) {
 /// Componente para mostrar mensagens aos usuário de
 /// ações que retornaram com sucesso
 customErrorSnackbar(String message, {int secondsDuration = 4}) {
-  return SnackBar( 
+  return SnackBar(
     content: Text(message),
     backgroundColor: Color(0xfffFF6961),
     duration: Duration(seconds: secondsDuration),
@@ -625,30 +625,19 @@ customErrorSnackbar(String message, {int secondsDuration = 4}) {
 ///
 
 /// Head da tela inicial
-class HeadWidget extends StatefulWidget {
-  final String assetImageHeadBackground;
-  final String webImageHeadBackground;
-
-  HeadWidget({
-    this.assetImageHeadBackground = "",
-    this.webImageHeadBackground = "",
-  });
-
-  @override
-  _HeadWidgetState createState() => _HeadWidgetState();
-}
-
 class _HeadWidgetState extends State<HeadWidget> {
   /// Variável contendo o tipo da imagem a ser renderizada como background
   /// iniciado com zero para o caso de não ter sido informada nenhuma imagem
   /// no construtor do Widget. Valor 1 -> AssetsImage, 2 -> WebImage
   int imageType = 0;
+  double marginTitleTop, marginTitleLef, marginTitleBottom, marginTitleRight;
 
   /// String contendo o caminho a ser renderizado como background do cabeçalho
   String _urlPath;
 
-  // Instânciando o Controller da Autenticação
-  AuthController _authController = GetIt.I<AuthController>();
+  /// Instanciando o controller da Autenticacao
+  AutenticacaoController _autenticacaoController =
+      GetIt.I<AutenticacaoController>();
 
   @override
   void initState() {
@@ -660,12 +649,16 @@ class _HeadWidgetState extends State<HeadWidget> {
       _urlPath = widget.webImageHeadBackground;
       imageType = 2;
     }
+    marginTitleTop = widget.marginTitleTop;
+    marginTitleBottom = widget.marginTitleBottom;
+    marginTitleLef = widget.marginTitleLeft;
+    marginTitleRight = widget.marginTitleRight;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-        return Container(
+    return Container(
       height: Util.getProportionScreenWidth(context, proportionScreen),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -689,7 +682,12 @@ class _HeadWidgetState extends State<HeadWidget> {
             width: double.infinity,
           ),
           Container(
-            padding: const EdgeInsets.only(top: 36, bottom: 12, left: 12, right: 45),
+            padding: EdgeInsets.only(
+              top: marginTitleTop,
+              bottom: marginTitleBottom,
+              left: marginTitleLef,
+              right: marginTitleRight,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
@@ -706,7 +704,6 @@ class _HeadWidgetState extends State<HeadWidget> {
         ],
       ),
     );
-  }
   }
 }
 
@@ -727,7 +724,9 @@ class _ButtonBarWidgetState extends State<ButtonBarWidget> {
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.only(
-            top: Util.getProportionScreenWidth(context, _proportionScreenDefault) - 125),
+            top: Util.getProportionScreenWidth(
+                    context, _proportionScreenDefault) -
+                125),
         child: widget.gridButton);
   }
 }

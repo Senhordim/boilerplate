@@ -672,30 +672,23 @@ SnackBar customErrorSnackbar(String message, {int secondsDuration = 4}) {
 ///
 
 /// Head da tela inicial
-class HeadWidget extends StatefulWidget {
-  final String assetImageHeadBackground;
-  final String webImageHeadBackground;
-
-  const HeadWidget({
-    this.assetImageHeadBackground = "",
-    this.webImageHeadBackground = "",
-  });
-
-  @override
-  _HeadWidgetState createState() => _HeadWidgetState();
-}
-
 class _HeadWidgetState extends State<HeadWidget> {
   /// Variável contendo o tipo da imagem a ser renderizada como background
   /// iniciado com zero para o caso de não ter sido informada nenhuma imagem
   /// no construtor do Widget. Valor 1 -> AssetsImage, 2 -> WebImage
   int imageType = 0;
+  double marginTitleTop, marginTitleLef, marginTitleBottom, marginTitleRight;
 
   /// String contendo o caminho a ser renderizado como background do cabeçalho
   String _urlPath;
 
+  /// Instanciando o controller da Autenticacao
+  AutenticacaoController _autenticacaoController =
+      GetIt.I<AutenticacaoController>();
+
   @override
   void initState() {
+    // Verificando se foi passado algum valor para o assetImageHeadBackgroud ou webImageHeadBackground
     if (widget.assetImageHeadBackground.isNotEmpty) {
       _urlPath = widget.assetImageHeadBackground;
       imageType = 1;
@@ -703,13 +696,17 @@ class _HeadWidgetState extends State<HeadWidget> {
       _urlPath = widget.webImageHeadBackground;
       imageType = 2;
     }
+    marginTitleTop = widget.marginTitleTop;
+    marginTitleBottom = widget.marginTitleBottom;
+    marginTitleLef = widget.marginTitleLeft;
+    marginTitleRight = widget.marginTitleRight;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: Util.getProportionScreenWidth(context, _proportionScreenDefault),
+      height: Util.getProportionScreenWidth(context, proportionScreen),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -732,28 +729,21 @@ class _HeadWidgetState extends State<HeadWidget> {
             width: double.infinity,
           ),
           Container(
-            padding:
-                const EdgeInsets.only(top: 36, bottom: 12, left: 12, right: 45),
+            padding: EdgeInsets.only(
+              top: marginTitleTop,
+              bottom: marginTitleBottom,
+              left: marginTitleLef,
+              right: marginTitleRight,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Consumer<AuthProvider>(
-                  builder: (context, _authProvider, __) {
-                    return _authProvider != null
-                        ? _authProvider.authModel != null
-                            ? Text(
-                                _authProvider.authModel.profileName,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    .copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        wordSpacing: 0.08,
-                                        color: Colors.white),
-                              )
-                            : Container()
-                        : Container();
-                  },
+                Text(
+                  _autenticacaoController.alunoModel.nome,
+                  style: Theme.of(context).textTheme.headline5.copyWith(
+                      fontWeight: FontWeight.w600,
+                      wordSpacing: 0.08,
+                      color: Colors.white),
                 ),
               ],
             ),
