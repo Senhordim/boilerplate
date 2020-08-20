@@ -57,10 +57,10 @@ class AppModel:
             message {str} -- Mensagem a ser exibida
         """
         if error:
-            self.stdout.write(self.style.ERROR(message))
+            sys.stdout.write(self.style.ERROR(message))
             sys.exit()
         else:
-            self.stdout.write(self.style.SUCCESS(message))
+            sys.stdout.write(self.style.SUCCESS(message))
 
     def get_path_app_dir(self):
         """Método para retornar o path da app no projeto Flutter
@@ -1637,20 +1637,32 @@ class Command(BaseCommand):
         elif options['clear']:
             self.__clear_project()
             sys.exit()
+
         elif options['init_provider'] or options['init_mobx'] or options['init_cubit']:
             if options['init_provider']:
-                self.state_manager_provider = True
+                self.state_manager = StateManager.Provider
+            elif options['init_mobx']:
+                self.state_manager = StateManager.MobX
+            elif options['init_cubit']:
+                self.state_manager = StateManager.Cubit
             else:
-                self.state_manager_provider = False
-            self.__init_flutter()
-            self.__build_settings_controller()
-            self.__create_utils()
-            self.__create_user_interface_directories()
-            self.__http_dio_request()
-            self.__create_auth_application()
-            self.__localization_app()
-            self.__build_flutter()
-            return
+                sys.exit()
+
+            print(self.state_manager)
+            # self.__init_flutter()
+            # self.__create_utils()
+
+        #     if options['init_provider']:
+        #         self.state_manager_provider = True
+        #     else:
+        #         self.state_manager_provider = False
+        #     self.__build_settings_controller()
+        #     self.__create_user_interface_directories()
+        #     self.__http_dio_request()
+        #     self.__create_auth_application()
+        #     self.__localization_app()
+        #     self.__build_flutter()
+        #     return
         else:
             self.__message(
                 "É necessário passar pelo menos um dos parâmetros a seguir: --init_provider, --init_mobx, --init_cubit,"
