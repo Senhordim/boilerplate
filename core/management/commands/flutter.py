@@ -8,9 +8,15 @@ import subprocess
 from pathlib import Path
 from django.apps import apps
 from django.core.management.base import BaseCommand
-
+from enum import Enum
 from nuvols.core.models import Base
 from nuvols.core.settings import FLUTTER_APPS, SYSTEM_NAME, API_PATH
+
+
+class StateManager(Enum):
+    Provider = 1
+    MobX = 2
+    Cubit = 3
 
 
 class AppModel:
@@ -683,25 +689,27 @@ class Command(BaseCommand):
                     __itens_menu += f"list.add(Itens(title: '{__model.title()}',icon: FontAwesomeIcons.folderOpen,uri: {__app.title()}{__model.title()}Views.{__model.title()}ListPage(),),);"
             return __itens_menu
         except Exception as error:
-            self.__message(f"Ocorreu o erro {error} ao chamar o __build_menu_home_page_itens", error=True)
+            self.__message(
+                f"Ocorreu o erro {error} ao chamar o __build_menu_home_page_itens", error=True)
 
     def __register_provider(self):
         try:
             __register_provider = ""
             __import_provider = ""
             for app in FLUTTER_APPS:
-               __current_app = AppModel(self.flutter_project, app) 
-               __app = __current_app.app_name
-               for model in __current_app.models:
-                   __import_provider += f"import 'apps/{__app.lower()}/{model[1].lower()}/provider.dart';\n"
-                   __register_provider += f"ChangeNotifierProvider<{model[1].title()}Provider>(create: (_) => {model[1].title()}Provider(),),\n"
+                __current_app = AppModel(self.flutter_project, app)
+                __app = __current_app.app_name
+                for model in __current_app.models:
+                    __import_provider += f"import 'apps/{__app.lower()}/{model[1].lower()}/provider.dart';\n"
+                    __register_provider += f"ChangeNotifierProvider<{model[1].title()}Provider>(create: (_) => {model[1].title()}Provider(),),\n"
 
             __import_provider += f"import 'apps/auth/provider.dart';\n"
             __register_provider += f"ChangeNotifierProvider<SettingsProvider>(create: (_) => SettingsProvider(),),\n"
             __register_provider += f"ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider(),),\n"
             # __register_provider += f"ChangeNotifierProvider<ProcessProvider>(create: (_) => ProcessProvider()),\n"
         except Exception as error:
-            self.__message(f"Ocorreu o erro {error} ao chamar o __register_provider", error=True)
+            self.__message(
+                f"Ocorreu o erro {error} ao chamar o __register_provider", error=True)
         return __import_provider, __register_provider
 
     def __mapping_all_application(self):
@@ -1032,9 +1040,11 @@ class Command(BaseCommand):
                 return
 
             if self.state_manager_provider:
-                content = self.__get_snippet(f"{self.snippet_dir}detail_page.provider.txt")
+                content = self.__get_snippet(
+                    f"{self.snippet_dir}detail_page.provider.txt")
             else:
-                content = self.__get_snippet(f"{self.snippet_dir}detail_page.txt")
+                content = self.__get_snippet(
+                    f"{self.snippet_dir}detail_page.txt")
             content = content.replace("$App$", app.app_name)
             content = content.replace("$app$", app.app_name_lower)
             content = content.replace(
@@ -1339,8 +1349,8 @@ class Command(BaseCommand):
                     content_from_json += "{1} = Util.convertDate(json['{2}']) == null ? null:  Util.convertDate(json['{2}']);\n        ".format(
                         __model.lower(), __name_dart, __name)
                 elif str(attribute) == "double":
-                       content_from_json += "{1} = json['{2}'] == null ? null : double.parse(json['{2}']) ;\n        ".format(
-                            __model.lower(), __name_dart, __name)
+                    content_from_json += "{1} = json['{2}'] == null ? null : double.parse(json['{2}']) ;\n        ".format(
+                        __model.lower(), __name_dart, __name)
                 elif str(attribute) == "bool":
                     if __name_dart.lower() == "enabled":
                         content_from_json += "{1} = json['{2}'] == null ? true : json['{2}'] ;\n        ".format(
@@ -1881,11 +1891,13 @@ class Command(BaseCommand):
 
             path_homepage = Path(f"{self.flutter_dir}/lib/home.page.dart")
             if self.__check_file_is_locked(path_homepage):
-                return 
-            __snippet_page = self.__get_snippet(f"{self.snippet_dir}home.page.provider.txt")
+                return
+            __snippet_page = self.__get_snippet(
+                f"{self.snippet_dir}home.page.provider.txt")
             __menu_home_page_itens = self.__build_menu_home_page_itens()
 
-            __snippet_page = __snippet_page.replace("$ImportViews$", __import_views)
+            __snippet_page = __snippet_page.replace(
+                "$ImportViews$", __import_views)
             __snippet_page = __snippet_page.replace(
                 "$ItenMenu$", __menu_home_page_itens)
 
@@ -1915,7 +1927,7 @@ class Command(BaseCommand):
         elif options['clear']:
             self.__clear_project()
             sys.exit()
-        elif options['init_provider'] or options['init_mobx']:
+        elif options['init_provider'] or options['init_mobx'] or options['init_cubit']:
             if options['init_provider']:
                 self.state_manager_provider = True
             else:

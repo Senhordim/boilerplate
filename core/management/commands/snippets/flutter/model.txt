@@ -11,9 +11,6 @@
 /// pelo manage do Django adicione um # antes da palavra abaixo
 /// FileLocked
 
-import 'dart:convert';
-
-
 import '../../../utils/util.dart';
 
 class $ModelClass$Model {  
