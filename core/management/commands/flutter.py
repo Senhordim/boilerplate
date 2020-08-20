@@ -91,7 +91,7 @@ class AppModel:
             String -- Caminho do diretório views no projeto Flutter
         """
         try:
-            return Path("{}/lib/apps/{}/{}/views/".format(self.path_flutter, self.app_name_lower,
+            return Path("{}/lib/apps/{}/{}/pages/".format(self.path_flutter, self.app_name_lower,
                                                           self.model_name_lower))
         except Exception as error:
             self.__message(f"Erro no get_path_views_dir {error}", error=True)
@@ -103,16 +103,15 @@ class AppModel:
             String's -- Caminho de cada arquivo das páginas na create, detail, index, list e update
         """
         try:
-            # TODO 1: Modificar para pages
-            __create = Path("{}/lib/apps/{}/{}/views/create.dart".format(
+            __create = Path("{}/lib/apps/{}/{}/pages/create.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
-            __detail = Path("{}/lib/apps/{}/{}/views/detail.dart".format(
+            __detail = Path("{}/lib/apps/{}/{}/pages/detail.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
-            __index = Path("{}/lib/apps/{}/{}/views/index.dart".format(
+            __index = Path("{}/lib/apps/{}/{}/pages/index.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
-            __list = Path("{}/lib/apps/{}/{}/views/list.dart".format(
+            __list = Path("{}/lib/apps/{}/{}/pages/list.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
-            __update = Path("{}/lib/apps/{}/{}/views/update.dart".format(
+            __update = Path("{}/lib/apps/{}/{}/pages/update.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
 
             return __create, __detail, __index, __list, __update
@@ -594,14 +593,9 @@ class Command(BaseCommand):
                 self.__replace_main()
                 time.sleep(3)
 
-                # TODO 2: Refatorar para utilizar o Enum para saber qual StateManager está sendo utilizado
-                if self.state_manager_provider:
-                    print("Gerando com Provider")
-                    pass
-                else:
-                    print("Gerando com MobX")
-                    self.__message("Gerando os arquivos controller.g.dart do MobX")
+                if self.state_manager == StateManager.MobX:
                     self.__build_mobx()
+
         except Exception as error:
             self.__message(f"Erro ao executar o __build_flutter: {error}", error=True)
 
@@ -655,13 +649,10 @@ class Command(BaseCommand):
                 __app = __current_app.app_name
                 for model in __current_app.models:
                     __model = model[1]
-                    __imports_views += "import 'apps/{}/{}/views/list.dart' as {}Views;\n".format(
-                        __app, __model.lower(
-                        ), f"{__app.title()}{__model}"
-                    )
+                    __imports_views += "import 'apps/{}/{}/pages/list.dart' as {}Views;\n".format(
+                        __app, __model.lower(), f"{__app.title()}{__model}")
                     __list_views += "Itens(title: '{}', icon: FontAwesomeIcons.folderOpen, uri: {}.{}ListPage()),\n".format(
-                        model[0]._meta.verbose_name, f"{__app.title()}{__model}", __model
-                    )
+                        model[0]._meta.verbose_name, f"{__app.title()}{__model}", __model)
                     __imports_controllers += f"import 'apps/{__app.lower()}/{__model.lower()}/controller.dart' as {__app.title()}{__model.title()}Controller;\n"
                     __controller_model = f"{__app.title()}{__model.title()}Controller.{__model}"
                     __controllers_models += f"getIt.registerSingleton<{__controller_model}Controller>({__controller_model}Controller(), instanceName: '{__app.title()}{__model.title()}Controller');\n    "
@@ -683,11 +674,7 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(__indexpage_file):
                 return
 
-            if self.state_manager_provider:
-                content = self.__get_snippet(
-                    f"{self.snippet_dir}index_page.provider.txt")
-            else:
-                content = self.__get_snippet(f"{self.snippet_dir}index_page.txt")
+            content = self.__get_snippet(file_name="index_page.txt", state_manager=True)
             content = content.replace("$ModelClass$", app.model_name)
             content = content.replace("$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
             content = content.replace("$project$", self.flutter_project.lower())
@@ -1629,7 +1616,7 @@ class Command(BaseCommand):
         elif options['yaml']:
             self.__add_packages()
             return
-        elif options['build_mobx']:
+        elif options['build_mobx'] and self.state_manager == StateManager.MobX:
             self.__build_mobx()
             return
         elif options['clear']:
@@ -1644,13 +1631,12 @@ class Command(BaseCommand):
             self.__create_user_interface_directories()
             self.__http_dio_request()
         #     self.__create_auth_application()
-        #     self.__build_flutter()
+            self.__build_flutter()
         #     return
         else:
             self.__message(
                 "É necessário passar pelo menos um dos parâmetros a seguir: --init_provider, --init_mobx, --init_cubit,"
                 " --main, --yaml, --build_mobx", error=True)
-            sys.exit()
 
     def handle(self, *args, **options):
         """Método invocado internamente pelo Command logo após a
