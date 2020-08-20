@@ -936,10 +936,15 @@ class Command(BaseCommand):
                 model_file.write(__model_snippet)
 
             __snippet = self.__get_snippet(file_name="auth_app.txt", state_manager=True)
-            if self.state_manager_provider:
+
+            if self.state_manager == StateManager.Provider:
                 __file = Path("{}/lib/apps/auth/provider.dart".format(self.flutter_dir))
-            else:
+            if self.state_manager == StateManager.MobX:
                 __file = Path("{}/lib/apps/auth/controller.dart".format(self.flutter_dir))
+            if self.state_manager == StateManager.Cubit:
+                # TODO Cubit: Implementar 
+                pass
+
             with open(__file, 'w', encoding='utf-8') as provider_file:
                     provider_file.write(__snippet)
 
@@ -978,7 +983,6 @@ class Command(BaseCommand):
         """Método para criar a classe auxiliar de acesso HTTP
         """
         try:
-
             __dio_file = Path(f"{self.flutter_dir}/lib/utils/custom_dio.dart")
             content = self.__get_snippet(f"{self.snippet_dir}/custom_dio.txt")
             content = content.replace("$project$", self.flutter_project)
@@ -1434,14 +1438,17 @@ class Command(BaseCommand):
                 with open(__service_file, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(f"// Service do {__model_name}")
 
-            if self.state_manager_provider:
+            if self.state_manager == StateManager.Provider:
                 if not self.__check_file(__provider_file):
                     with open(__provider_file, 'w', encoding='utf-8') as arquivo:
                         arquivo.write(f"// Provider do {__model_name}")
-            else:
+            if self.state_manager == StateManager.MobX:
                 if not self.__check_file(__controller_file):
                     with open(__controller_file, 'w', encoding='utf-8') as arquivo:
                         arquivo.write(f"// Controller do {__model_name}")
+            if self.state_manager == StateManager.Cubit:
+                # TODO Cubit: Implementar
+                pass
 
             self.__create_update_page_parser(__source_class)
             self.__detailpage_parser(__source_class)
@@ -1531,13 +1538,16 @@ class Command(BaseCommand):
             snippet = snippet.replace('$project$', self.flutter_project)
             snippet = snippet.replace('$RegisterControllers$', __register_controller)
             snippet = snippet.replace('$ImportViews$', __import_views)
-            # TODO 2:
-            if self.state_manager_provider:
+            if self.state_manager == StateManager.Provider:
                 __import, __register = self.__register_provider()
                 snippet = snippet.replace('$ImportProvider$', __import)
                 snippet = snippet.replace('$RegisterProviders$', __register)
-            else:
+            if self.state_manager == StateManager.MobX:
                 snippet = snippet.replace('$ImportController$', __import_controllers)
+            if self.state_manager == StateManager.Cubit:
+                # TODO Cubit Implementar
+                snippet = ""
+
             snippet = snippet.replace('$Listviews$', __views)
 
             with open(path_maindart, 'w', encoding='utf-8') as main_dart:
@@ -1546,8 +1556,7 @@ class Command(BaseCommand):
             path_homepage = Path(f"{self.flutter_dir}/lib/home.page.dart")
             if self.__check_file_is_locked(path_homepage):
                 return
-            __snippet_page = self.__get_snippet(
-                f"{self.snippet_dir}home.page.provider.txt")
+            __snippet_page = self.__get_snippet(file_name="home.page.txt", state_manager=True)
             __menu_home_page_itens = self.__build_menu_home_page_itens()
 
             __snippet_page = __snippet_page.replace("$ImportViews$", __import_views)
