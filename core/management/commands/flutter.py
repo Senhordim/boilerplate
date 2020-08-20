@@ -996,7 +996,7 @@ class Command(BaseCommand):
         except Exception as error:
             self.__message(f"Ocorreu um erro ao criar o DBHelper {error}", error=True)
 
-    def __http_dio_request(self):
+    def __build_custom_dio(self):
         """Método para criar a classe auxiliar de acesso HTTP
         """
         try:
@@ -1289,7 +1289,7 @@ class Command(BaseCommand):
     #################################################################
     """
 
-    def __create_utils(self):
+    def __build_utils(self):
         """
         Método para criar os arquivos úteis do projeto
         """
@@ -1351,7 +1351,7 @@ class Command(BaseCommand):
     #################################################################
     """
 
-    def __create_user_interface_directories(self):
+    def __build_user_interface(self):
         """Método para criar a estrutura de diretórios UI
         """
         try:
@@ -1496,7 +1496,7 @@ class Command(BaseCommand):
     #################################################################
     """
 
-    def __localization_app(self):
+    def _build_internationalization(self):
         try:
             snippet = self.__get_snippet(f"{self.snippet_dir}localization.txt")
 
@@ -1625,11 +1625,11 @@ class Command(BaseCommand):
 
         elif options['init_provider'] or options['init_mobx'] or options['init_cubit']:
             self.__init_flutter()
-            self.__create_utils()
             self.__build_settings_controller()
-            self.__localization_app()
-            self.__create_user_interface_directories()
-            self.__http_dio_request()
+            self.__build_utils()
+            self.__build_user_interface()
+            self.__build_custom_dio()
+            self._build_internationalization()
         #     self.__create_auth_application()
             self.__build_flutter()
         #     return
