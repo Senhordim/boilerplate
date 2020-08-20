@@ -1013,14 +1013,9 @@ class Command(BaseCommand):
         """Método para criar a classe auxiliar de acesso HTTP
         """
         try:
-            # TODO 2:
-            if self.state_manager_provider:
-                __dio_snippet = Path(f"{self.snippet_dir}/custom_dio.provider.txt")
-            else:
-                __dio_snippet = Path(f"{self.snippet_dir}/custom_dio.txt")
 
             __dio_file = Path(f"{self.flutter_dir}/lib/utils/custom_dio.dart")
-            content = self.__get_snippet(__dio_snippet)
+            content = self.__get_snippet(f"{self.snippet_dir}/custom_dio.txt")
             content = content.replace("$project$", self.flutter_project)
             with open(__dio_file, 'w', encoding='utf-8') as http_request:
                 http_request.write(content)
@@ -1655,7 +1650,7 @@ class Command(BaseCommand):
             self.__create_utils()
             self.__build_settings_controller()
             self.__create_user_interface_directories()
-        #     self.__http_dio_request()
+            self.__http_dio_request()
         #     self.__create_auth_application()
         #     self.__localization_app()
         #     self.__build_flutter()

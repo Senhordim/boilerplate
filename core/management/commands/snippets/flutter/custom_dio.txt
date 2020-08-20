@@ -1,11 +1,9 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:get_it/get_it.dart';
 import 'package:dio/native_imp.dart';
 
 import 'config.dart';
-import 'process.controller.dart';
 
 class CustomDio extends DioForNative {
   String _url;
@@ -34,23 +32,31 @@ class CustomDio extends DioForNative {
   Future<dynamic> getHttp({String uri}) async {
     _url = uri ?? _url;
     try {
-      Response _response = await this.get(this._url);
+      Response _response = await this.get(_url);
       if (_response.statusCode == 200) {
         return _response.data;
       }
       return null;
-    } on DioError catch (error) {}
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Get no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
   }
 
   Future<dynamic> postHttp(data, {String uri}) async {
     _url = uri ?? _url;
     try {
       Response _response = await this.post(_url, data: data);
-      if (_response.statusCode == 200  || _response.statusCode == 200) {
+      if (_response.statusCode == 201) {
         return _response.data;
       }
       return null;
-    } on DioError catch (error) {}
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Post no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
   }
 
   Future<dynamic> putHttp(data, String id, {String uri}) async {
@@ -61,7 +67,11 @@ class CustomDio extends DioForNative {
         return _response.data;
       }
       return null;
-    } on DioError catch (error) {}
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Put no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
   }
 
   Future<dynamic> patchHttp(data, {String uri}) async {
@@ -72,7 +82,11 @@ class CustomDio extends DioForNative {
         return _response.data;
       }
       return null;
-    } on DioError catch (error) {}
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Patch no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
   }
 
   Future<dynamic> deleteHttp(data, String id, {String uri}) async {
@@ -83,13 +97,15 @@ class CustomDio extends DioForNative {
         return _response.data;
       }
       return null;
-    } on DioError catch (error) {}
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Delete no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
   }
 }
 
 class CustomDioInterceptor extends InterceptorsWrapper {
-  ProcessController _processController = GetIt.I.get<ProcessController>();
-
   @override
   Future onRequest(RequestOptions options) {
     options.headers = {'Content-Type': 'application/json'};
@@ -100,21 +116,13 @@ class CustomDioInterceptor extends InterceptorsWrapper {
 
   @override
   Future onResponse(Response response) {
-    Process.finishSuccess(
-      response.statusMessage,
-      status: response.statusCode,
-    );
+    // TODO Dio: Implementar o tratamento de retorno com sucesso
     return super.onResponse(response);
   }
 
   @override
   Future onError(DioError err) {
-    Process.finishError(err.message, err.response.data.toString(),
-        status: err.response.statusCode,
-        data: err.request.data.toString(),
-        header: err.request.headers.toString(),
-        request: err.request.data.toString(),
-        dioError: true);
+    // TODO Dio: Implementar o tratatamento de retorno com erro
     return super.onError(err);
   }
 }
