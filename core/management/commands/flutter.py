@@ -1649,10 +1649,10 @@ class Command(BaseCommand):
             self.__init_flutter()
             self.__create_utils()
             self.__build_settings_controller()
+            self.__localization_app()
             self.__create_user_interface_directories()
             self.__http_dio_request()
         #     self.__create_auth_application()
-        #     self.__localization_app()
         #     self.__build_flutter()
         #     return
         else:
