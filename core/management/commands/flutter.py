@@ -374,7 +374,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--init_cubit',
             action='store_true',
-            dest='init_mobx',
+            dest='init_cubit',
             help='Gerar o projeto Flutter utilizando o Cubit como gerencia de estado.'
         )
         parser.add_argument(
@@ -1291,13 +1291,7 @@ class Command(BaseCommand):
         """
         try:
             __path = self.__get_yaml_file()
-
-            # TODO 2:
-            if self.state_manager_provider:
-                snippet = self.__get_snippet(f"{self.snippet_dir}yaml.provider.txt")
-            else:
-                snippet = self.__get_snippet(f"{self.snippet_dir}yaml.txt")
-
+            snippet = self.__get_snippet(file_name="yaml.txt", state_manager=True)
             snippet = snippet.replace("$AppPackage$", self.project.lower())
             snippet = snippet.replace("$AppDescription$", f"Projeto Flutter do sistema Django {self.project}")
             with open(__path, 'w', encoding='utf-8') as yaml_file:
@@ -1622,6 +1616,17 @@ class Command(BaseCommand):
     """
 
     def call_methods(self, options):
+        if options['init_provider'] is False and options['init_mobx'] is False and options['init_cubit'] is False:
+            self.__message("É obrigatório informar o state manager que será utilizado no projeto Flutter", error=True)
+        if options['init_provider']:
+                self.state_manager = StateManager.Provider
+        elif options['init_mobx']:
+            self.state_manager = StateManager.MobX
+        elif options['init_cubit']:
+            self.state_manager = StateManager.Cubit
+        else:
+            sys.exit()
+
         if options['main']:
             self.__replace_main()
             return
@@ -1636,16 +1641,6 @@ class Command(BaseCommand):
             sys.exit()
 
         elif options['init_provider'] or options['init_mobx'] or options['init_cubit']:
-            if options['init_provider']:
-                self.state_manager = StateManager.Provider
-            elif options['init_mobx']:
-                self.state_manager = StateManager.MobX
-            elif options['init_cubit']:
-                self.state_manager = StateManager.Cubit
-            else:
-                sys.exit()
-
-            print(self.snippet_dir)
             self.__init_flutter()
             self.__create_utils()
             self.__build_settings_controller()
