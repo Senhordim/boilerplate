@@ -57,10 +57,10 @@ class AppModel:
             message {str} -- Mensagem a ser exibida
         """
         if error:
-            sys.stdout.write(self.style.ERROR(message))
+            sys.stdout.write(message)
             sys.exit()
         else:
-            sys.stdout.write(self.style.SUCCESS(message))
+            sys.stdout.write(message)
 
     def get_path_app_dir(self):
         """Método para retornar o path da app no projeto Flutter
@@ -69,8 +69,7 @@ class AppModel:
             String -- Caminho do diretório da app no projeto Flutter
         """
         try:
-            return Path("{}/lib/apps/{}".format(
-                self.path_flutter, self.app_name_lower))
+            return Path("{}/lib/apps/{}".format(self.path_flutter, self.app_name_lower))
         except Exception as error:
             self.__message(f"Erro no get_path_app_dir: {error}", error=True)
 
@@ -467,18 +466,32 @@ class Command(BaseCommand):
             self.__message(f"Ocorreu um erro no Camel Case: {error}")
             return None
 
-    def __get_snippet(self, path):
+    def __get_snippet(self, path=None, file_name=None, state_manager=False):
         """Método para recuperar o texto a ser utilizado na
         configuração do novo elemento
 
         Arguments:
-            path {str} -- Caminho absoluto para o arquivo
+            path {str} -- Caminho absoluto para o arquivo opcional,
+                          deve ser passado quando o path do snippet é no diretório flutter mesmo
+            file_name {str} -- Nome do arquivo do snippet no formato XPTO.txt, deve ser passado em conjunto
+                               com o state_manager=True para recuperar o snippet do state manage correto
+            state_manager {bool} -- Valor para determinar se o snippet será recuperado levando em consideração
+                                    o state_manager escolhido
 
         Returns:
             str -- Texto a ser utilizado para interpolar os dados do models
         """
 
         try:
+            if file_name and state_manager is True:
+                if self.state_manager == StateManager.Provider:
+                    path = f"{self.snippet_dir}provider/"
+                if self.state_manager == StateManager.MobX:
+                    path = f"{self.snippet_dir}mobx/"
+                if self.state_manager == StateManager.Cubit:
+                    path = f"{self.snippet_dir}cubit/"
+                path += file_name
+
             if os.path.isfile(path):
                 with open(path, encoding='utf-8') as arquivo:
                     return arquivo.read()
@@ -1242,7 +1255,6 @@ class Command(BaseCommand):
             if not self.__check_dir(self.app_configuration):
                 os.makedirs(self.app_configuration)
 
-                # TODO 2:
                 if self.state_manager_provider:
                     _content_page = self.__get_snippet(f"{self.snippet_dir}settings_page.provider.txt")
                     _content_controller = self.__get_snippet(f"{self.snippet_dir}settings.provider.txt")
@@ -1318,11 +1330,7 @@ class Command(BaseCommand):
 
             __util_snippet = self.__get_snippet(f"{self.snippet_dir}util.txt")
 
-            # TODO 2:
-            if self.state_manager_provider:
-                __controller_snippet = self.__get_snippet(f"{self.snippet_dir}process.provider.txt")
-            else:
-                __controller_snippet = self.__get_snippet(f"{self.snippet_dir}process_controller.txt")
+            __controller_snippet = self.__get_snippet(file_name="process.txt", state_manager=True)
 
             if self.__check_file(self.config_file) is False:
                 __config_snippet = __config_snippet.replace("$AppName$", SYSTEM_NAME)
@@ -1344,8 +1352,7 @@ class Command(BaseCommand):
                     with open(self.util_file, "w", encoding='utf-8') as config:
                         config.write(__util_snippet)
 
-            # TODO 2:
-            if self.state_manager_provider:
+            if self.state_manager == StateManager.Provider:
                 if self.__check_file(self.process_provider_file) is False:
                     with open(self.process_provider_file, "w", encoding='utf-8') as process_provider:
                         process_provider.write(__controller_snippet)
@@ -1353,7 +1360,7 @@ class Command(BaseCommand):
                     if self.__check_file_is_locked(self.process_provider_file) is False:
                         with open(self.process_provider_file, "w", encoding='utf-8') as process_provider:
                             process_provider.write(__controller_snippet)
-            else:
+            elif self.state_manager == StateManager.MobX:
                 if self.__check_file(self.process_controller_file) is False:
                     with open(self.process_controller_file, "w", encoding='utf-8') as process_controller:
                         process_controller.write(__controller_snippet)
@@ -1361,6 +1368,8 @@ class Command(BaseCommand):
                     if self.__check_file_is_locked(self.process_controller_file) is False:
                         with open(self.process_controller_file, "w", encoding='utf-8') as process_controller:
                             process_controller.write(__controller_snippet)
+            elif self.state_manager == StateManager.Cubit:
+                pass
 
         except Exception as error:
             self.__message(f"Erro ao criar o arquivo utils {error}", error=True)
@@ -1648,15 +1657,15 @@ class Command(BaseCommand):
             else:
                 sys.exit()
 
-            print(self.state_manager)
-            # self.__init_flutter()
-            # self.__create_utils()
+            print(self.snippet_dir)
+            self.__init_flutter()
+            self.__create_utils()
+            self.__build_settings_controller()
 
         #     if options['init_provider']:
         #         self.state_manager_provider = True
         #     else:
         #         self.state_manager_provider = False
-        #     self.__build_settings_controller()
         #     self.__create_user_interface_directories()
         #     self.__http_dio_request()
         #     self.__create_auth_application()
