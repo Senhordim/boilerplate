@@ -693,15 +693,10 @@ class Command(BaseCommand):
         """
         try:
             __listpage_file = Path(f"{app.get_path_views_dir()}/list.dart")
-
             if self.__check_file_is_locked(__listpage_file):
                 return
 
-            # TODO 2: Refatorar para utilizar o Enum para saber qual StateManager está sendo utilizado
-            if self.state_manager_provider:
-                content = self.__get_snippet(f"{self.snippet_dir}list_page.provider.txt")
-            else:
-                content = self.__get_snippet(f"{self.snippet_dir}list_page.txt")
+            content = self.__get_snippet(file_name="list_page.txt", state_manager=True)
 
             content = content.replace("$App$", app.app_name)
             content = content.replace("$Model$", app.model_name_lower)
@@ -798,22 +793,12 @@ class Command(BaseCommand):
         try:
             if createpage is True:
                 __createpage_file = Path(f"{app.get_path_views_dir()}/create.dart")
-                # TODO 2: Refatorar para utilizar o Enum para saber qual StateManager está sendo utilizado
-                if self.state_manager_provider:
-                    content = self.__get_snippet(f"{self.snippet_dir}create_page.provider.txt")
-                else:
-                    content = self.__get_snippet(f"{self.snippet_dir}create_page.txt")
-
+                content = self.__get_snippet(file_name="create_page.txt", state_manager=True)
                 if self.__check_file_is_locked(__createpage_file):
                     return
             else:
                 __createpage_file = Path(f"{app.get_path_views_dir()}/update.dart")
-                # TODO 2: Refatorar para utilizar o Enum para saber qual StateManager está sendo utilizado
-                if self.state_manager_provider:
-                    content = self.__get_snippet("{self.snippet_dir}update_page.provider.txt")
-                else:
-                    content = self.__get_snippet(f"{self.snippet_dir}update_page.txt")
-
+                content = self.__get_snippet(file_name="update_page.txt", state_manager=True)
                 if self.__check_file_is_locked(__createpage_file):
                     return
 
@@ -888,11 +873,8 @@ class Command(BaseCommand):
 
             if self.__check_file_is_locked(__detailpage_file):
                 return
-            # TODO 2:
-            if self.state_manager_provider:
-                content = self.__get_snippet(f"{self.snippet_dir}detail_page.provider.txt")
-            else:
-                content = self.__get_snippet(f"{self.snippet_dir}detail_page.txt")
+
+            content = self.__get_snippet(file_name="detail_page.txt", state_manager=True)
             content = content.replace("$App$", app.app_name)
             content = content.replace("$app$", app.app_name_lower)
             content = content.replace("$Model$", self.__to_camel_case(app.model_name, True))
@@ -1631,7 +1613,7 @@ class Command(BaseCommand):
             self.__build_custom_dio()
             self._build_internationalization()
         #     self.__create_auth_application()
-            self.__build_flutter()
+            # self.__build_flutter()
         #     return
         else:
             self.__message(
