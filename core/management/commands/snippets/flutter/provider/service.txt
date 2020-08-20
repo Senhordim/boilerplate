@@ -18,9 +18,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'model.dart';
-import '../../utils/config.dart';
-import '../../utils/custom_dio.dart';
-import '../../utils/util.dart';
+import '../../../utils/config.dart';
+import '../../../utils/custom_dio.dart';
+import '../../../utils/util.dart';
 
 class $ModelClass$Service {
   String _uri = "$App$/$Model$/";
@@ -28,7 +28,7 @@ class $ModelClass$Service {
   List<$ModelClass$Model> _$ModelClassCamelCase$List = List<$ModelClass$Model>();
 
   $ModelClass$Service({$ModelClass$Model _$ModelClassCamelCase$, List<$ModelClass$Model> _$ModelClassCamelCase$List}) {
-    if (_$ModelClassCamelCase$ != null) __$ModelClassCamelCase$ = _$ModelClassCamelCase$;
+    if (_$ModelClassCamelCase$ != null) this._$ModelClassCamelCase$ = _$ModelClassCamelCase$;
   }
 
   Future<List<$ModelClass$Model>> fetchAll() async {
@@ -112,7 +112,7 @@ class $ModelClass$Service {
     try {
       final CustomDio _dio = CustomDio(_uri);
       final _data = FormData.fromMap($ModelClassCamelCase$.toJson());
-      final data = await _dio.putHttp(_data);
+      final data = await _dio.putHttp(_data, $ModelClassCamelCase$.id.toString());
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
@@ -142,10 +142,9 @@ class $ModelClass$Service {
     try {
       final CustomDio _dio = CustomDio(_uri);
       final _data = FormData.fromMap($ModelClassCamelCase$.toJson());
-      final data = await _dio.deleteHttp(_data);
+      final data = await _dio.deleteHttp(_data, $ModelClassCamelCase$.id.toString());
       if (data != null) {
         return true;
-        _success("ok");
       }
       return false;
     } catch (error, exception) {
@@ -156,7 +155,8 @@ class $ModelClass$Service {
 
   void _success(String message, {int statusCode}) async {
     try {
-      Process.finishSuccess(message, status: statusCode);
+      // TODO: Estudar como repassar o sucesso para outra camada.
+      debugPrint(message);
     } catch (e) {
       debugPrint("Ocorreu um erro no método error: $e");
     }
@@ -164,9 +164,8 @@ class $ModelClass$Service {
 
   void _error(String error, String exception, {int statusCode}) async {
     try {
-      if (Process.isDioError == false) {
-        Process.finishError(error, exception, status: statusCode);
-      }
+      // TODO: Estudar como repassar o erro para a outra camada
+      debugPrint("Ocorreu o erro: $error");
     } catch (e) {
       debugPrint("Ocorreu um erro no método error: $e");
     }

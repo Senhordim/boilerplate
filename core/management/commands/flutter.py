@@ -1035,7 +1035,7 @@ class Command(BaseCommand):
                 print("Arquivo travado")
                 return
 
-            content = self.__get_snippet(f"{self.snippet_dir}provider.txt")
+            content = self.__get_snippet(file_name="provider.txt", state_manager=True)
             content = content.replace("$ModelClass$", app.model_name)
             content = content.replace("$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
 
@@ -1056,16 +1056,10 @@ class Command(BaseCommand):
                 return
 
             __service_file = app.get_path_service_file()
-
             if self.__check_file_is_locked(__service_file):
                 return
 
-            # TODO 2:
-            if self.state_manager_provider:
-                content = self.__get_snippet(f"{self.snippet_dir}service.provider.txt")
-            else:
-                content = self.__get_snippet(f"{self.snippet_dir}service.txt")
-
+            content = self.__get_snippet(file_name="service.txt", state_manager=True)
             content = content.replace("$ModelClass$", app.model_name)
             content = content.replace("$App$", app.app_name_lower)
             content = content.replace("$Model$", app.model_name_lower)
@@ -1463,9 +1457,9 @@ class Command(BaseCommand):
             self.__data_parser(__source_class)
             self.__service_parser(__source_class)
 
-            if self.state_manager_provider:
+            if self.state_manager == StateManager.Provider:
                 self.__provider_parser(__source_class)
-            else:
+            if self.state_manager == StateManager.MobX:
                 self.__controller_parser(__source_class)
 
         except Exception as error:
@@ -1522,12 +1516,8 @@ class Command(BaseCommand):
         """
         __imports = ""
         __list_itens = []
-        try:
-            # TODO 2
-            if self.state_manager_provider:
-                snippet = self.__get_snippet(f"{self.snippet_dir}main.provider.txt")
-            else:
-                snippet = self.__get_snippet(f"{self.snippet_dir}main.txt")
+        try:    
+            snippet = self.__get_snippet(file_name="main.txt", state_manager=True)
 
             path_maindart = Path(f"{self.flutter_dir}/lib/main.dart")
             if self.__check_file_is_locked(path_maindart):
