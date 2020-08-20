@@ -1277,11 +1277,7 @@ class Command(BaseCommand):
 
     def __get_yaml_file(self):
         try:
-            # TODO: Tentar recuperar o arquivo sem precisar verificar o S.O.
-            if self.operation_system == 'windows':
-                return f"{self.flutter_dir}\\pubspec.yaml"
-            else:
-                return f"{self.flutter_dir}/pubspec.yaml"
+            return Path(f"{self.flutter_dir}/pubspec.yaml")
         except Exception as error:
             self.__message(f"Ocorreu um erro ao recuperar o arquivo Yaml:{error}", error=True)
 
