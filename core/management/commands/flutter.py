@@ -910,15 +910,15 @@ class Command(BaseCommand):
         except Exception as error:
             self.__message(f"Ocorreu um erro ao gerar a página da Widget {error}", error=True)
 
-    def __create_auth_application(self):
+    def __build_auth_app(self):
         """Método responsável por criar a app padrão de autenticação no projeto flutter
 
         Args:
             app {AppModel} -- Instância da classe AppModel
         """
         try:
-            __data_snippet = self.__get_snippet(f"{self.snippet_dir}auth_data.txt")
-            __model_snippet = self.__get_snippet(f"{self.snippet_dir}auth_model.txt")
+            __data_snippet = self.__get_snippet(file_name="auth_data.txt", state_manager=True)
+            __model_snippet = self.__get_snippet(file_name="auth_model.txt", state_manager=True)
 
             __auth_file = Path(f"{self.flutter_dir}/lib/apps/auth")
             if self.__check_dir(__auth_file):
@@ -935,19 +935,15 @@ class Command(BaseCommand):
             with open(__model_file, 'w', encoding='utf-8') as model_file:
                 model_file.write(__model_snippet)
 
+            __snippet = self.__get_snippet(file_name="auth_app.txt", state_manager=True)
             if self.state_manager_provider:
-                __snippet = self.__get_snippet(f"{self.snippet_dir}auth.provider.txt")
                 __file = Path("{}/lib/apps/auth/provider.dart".format(self.flutter_dir))
-                with open(__file, 'w', encoding='utf-8') as provider_file:
-                    provider_file.write(__snippet)
-                __service_snippet = self.__get_snippet(f"{self.snippet_dir}auth_service.provider.txt")
             else:
-                __controller_snippet = self.__get_snippet(f"{self.snippet_dir}auth_controller.txt")
-                __controller_file = Path("{}/lib/apps/auth/controller.dart".format(self.flutter_dir))
-                with open(__controller_file, 'w', encoding='utf-8') as controller_file:
-                    controller_file.write(__controller_snippet)
-                __service_snippet = self.__get_snippet(f"{self.snippet_dir}auth_service.txt")
+                __file = Path("{}/lib/apps/auth/controller.dart".format(self.flutter_dir))
+            with open(__file, 'w', encoding='utf-8') as provider_file:
+                    provider_file.write(__snippet)
 
+            __service_snippet = self.__get_snippet(file_name="auth_service.txt", state_manager=True)
             with open(__service_file, 'w', encoding='utf-8') as service_file:
                 service_file.write(__service_snippet)
 
@@ -1006,7 +1002,7 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(__controller_file):
                 return
 
-            content = self.__get_snippet(f"{self.snippet_dir}controller.txt")
+            content = self.__get_snippet(file_name="controller.txt", state_manager=True)
             content = content.replace("$ModelClass$", app.model_name)
             content = content.replace("$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
 
@@ -1602,7 +1598,7 @@ class Command(BaseCommand):
             self.__build_user_interface()
             self.__build_custom_dio()
             self._build_internationalization()
-        #     self.__create_auth_application()
+            self.__build_auth_app()
             # self.__build_flutter()
         #     return
         else:

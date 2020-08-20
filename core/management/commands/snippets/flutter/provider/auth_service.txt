@@ -32,7 +32,7 @@ class AuthService {
       final data = await _dio.getHttp();
       if (data != null) {
         for (final item in data) {
-          _itens.add(AuthModel.fromJson(item.toString()));
+          _itens.add(AuthModel.fromJson(item));
         }
       }
     } catch (error, exception) {
@@ -47,7 +47,7 @@ class AuthService {
       final CustomDio _dio = CustomDio(_url);
       final data = await _dio.getHttp();
       if (data != null) {
-        _auth = AuthModel.fromJson(data.toString());
+        _auth = AuthModel.fromJson(data);
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
@@ -59,9 +59,9 @@ class AuthService {
     String _url = "";
     try {
       final CustomDio _dio = CustomDio(_url);
-      final data = await _dio.putHttp(auth.toJson());
+      final data = await _dio.putHttp(auth.toJson(), auth.id);
       if (data != null) {
-        _auth = AuthModel.fromJson(data.toString());
+        _auth = AuthModel.fromJson(data);
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
@@ -75,7 +75,7 @@ class AuthService {
       final CustomDio _dio = CustomDio(_url);
       final data = await _dio.postHttp(auth.toJson());
       if (data != null) {
-        _auth = AuthModel.fromJson(data.toString());
+        _auth = AuthModel.fromJson(data);
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
@@ -87,9 +87,9 @@ class AuthService {
     String _url = "";
     try {
       final CustomDio _dio = CustomDio(_url);
-      final data = await _dio.deleteHttp(auth.toJson());
+      final data = await _dio.deleteHttp(auth.toJson(), auth.id);
       if (data != null) {
-        _auth = AuthModel.fromJson(data.toString());
+        _auth = AuthModel.fromJson(data);
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());

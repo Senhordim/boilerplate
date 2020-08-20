@@ -27,8 +27,8 @@ class $ModelClass$Service {
   $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model();
   List<$ModelClass$Model> _$ModelClassCamelCase$List = List<$ModelClass$Model>();
 
-  $ModelClass$Service({$ModelClass$Model _$ModelClassCamelCase$, List<$ModelClass$Model> _$ModelClassCamelCase$List}) {
-    if (_$ModelClassCamelCase$ != null) this._$ModelClassCamelCase$ = _$ModelClassCamelCase$;
+  $ModelClass$Service({$ModelClass$Model $ModelClassCamelCase$, List<$ModelClass$Model> $ModelClassCamelCase$List}) {
+    if ($ModelClassCamelCase$ != null) _$ModelClassCamelCase$ = $ModelClassCamelCase$;
   }
 
   Future<List<$ModelClass$Model>> fetchAll() async {
