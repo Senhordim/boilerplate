@@ -1255,19 +1255,18 @@ class Command(BaseCommand):
             if not self.__check_dir(self.app_configuration):
                 os.makedirs(self.app_configuration)
 
-                if self.state_manager_provider:
-                    _content_page = self.__get_snippet(f"{self.snippet_dir}settings_page.provider.txt")
-                    _content_controller = self.__get_snippet(f"{self.snippet_dir}settings.provider.txt")
-
+                _content_page = self.__get_snippet(file_name="settings_page.txt", state_manager=True)
+                _content_controller = self.__get_snippet(file_name="settings.txt", state_manager=True)
+                if self.state_manager == StateManager.Provider:
                     with open(self.app_configuration_profile_file, 'w', encoding='utf-8') as arquivo:
                         arquivo.write(_content_controller)
 
-                else:
-                    _content_page = self.__get_snippet(f"{self.snippet_dir}settings_page.txt")
-                    _content_controller = self.__get_snippet(f"{self.snippet_dir}settings_controller.txt")
-
+                elif self.state_manager ==StateManager.MobX:
                     with open(self.app_configuration_controller_file, 'w', encoding='utf-8') as arquivo:
                         arquivo.write(_content_controller)
+                elif self.state_manager == StateManager.Cubit:
+                    # TODO Cubit: Implementar settings para
+                    pass
 
                 with open(self.app_configuration_page_file, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(_content_page)
