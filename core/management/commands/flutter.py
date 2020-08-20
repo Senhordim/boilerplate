@@ -1389,15 +1389,9 @@ class Command(BaseCommand):
             for arquivo in ['widget', 'font']:
                 __path = Path(f"{self.ui_dir}{arquivo}.dart")
                 if arquivo == "font":
-                    __snippet = self.__get_snippet(
-                        Path(f"{self.snippet_dir}ui_{ arquivo}.txt"))
+                    __snippet = self.__get_snippet(Path(f"{self.snippet_dir}ui_{ arquivo}.txt"))
                 else:
-                    if self.state_manager_provider:
-                        __snippet = self.__get_snippet(
-                            Path(f"{self.snippet_dir}ui_{ arquivo}.provider.txt"))
-                    else:
-                        __snippet = self.__get_snippet(
-                            Path(f"{self.snippet_dir}ui_{ arquivo}.txt"))
+                    __snippet = self.__get_snippet(file_name="ui_widget.txt", state_manager=True)
                 if self.__check_file(__path) is False:
                     with open(__path, "w", encoding='utf-8') as arq:
                         arq.write(__snippet)
@@ -1660,12 +1654,7 @@ class Command(BaseCommand):
             self.__init_flutter()
             self.__create_utils()
             self.__build_settings_controller()
-
-        #     if options['init_provider']:
-        #         self.state_manager_provider = True
-        #     else:
-        #         self.state_manager_provider = False
-        #     self.__create_user_interface_directories()
+            self.__create_user_interface_directories()
         #     self.__http_dio_request()
         #     self.__create_auth_application()
         #     self.__localization_app()
