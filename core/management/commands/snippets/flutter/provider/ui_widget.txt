@@ -671,6 +671,27 @@ SnackBar customErrorSnackbar(String message, {int secondsDuration = 4}) {
 /// [Área para os widgets do cabeçalho da página/views e da barra de botões]
 ///
 
+
+class HeadWidget extends StatefulWidget {
+  final String assetImageHeadBackground;
+  final String webImageHeadBackground;
+  final double marginTitleTop;
+  final double marginTitleBottom;
+  final double marginTitleRight;
+  final double marginTitleLeft;
+
+  HeadWidget(
+      {this.assetImageHeadBackground = "",
+      this.webImageHeadBackground = "",
+      this.marginTitleTop = 36,
+      this.marginTitleBottom = 12,
+      this.marginTitleLeft = 12,
+      this.marginTitleRight = 45});
+
+  @override
+  _HeadWidgetState createState() => _HeadWidgetState();
+}
+
 /// Head da tela inicial
 class _HeadWidgetState extends State<HeadWidget> {
   /// Variável contendo o tipo da imagem a ser renderizada como background
@@ -681,10 +702,6 @@ class _HeadWidgetState extends State<HeadWidget> {
 
   /// String contendo o caminho a ser renderizado como background do cabeçalho
   String _urlPath;
-
-  /// Instanciando o controller da Autenticacao
-  AutenticacaoController _autenticacaoController =
-      GetIt.I<AutenticacaoController>();
 
   @override
   void initState() {
@@ -706,7 +723,7 @@ class _HeadWidgetState extends State<HeadWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: Util.getProportionScreenWidth(context, proportionScreen),
+      height: Util.getProportionScreenWidth(context, _proportionScreenDefault),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -739,7 +756,8 @@ class _HeadWidgetState extends State<HeadWidget> {
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 Text(
-                  _autenticacaoController.alunoModel.nome,
+                  // TODO Refactoring get User from Provider Auth
+                  "Username",
                   style: Theme.of(context).textTheme.headline5.copyWith(
                       fontWeight: FontWeight.w600,
                       wordSpacing: 0.08,
