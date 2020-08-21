@@ -47,7 +47,7 @@ class _$ModelClass$IndexPageState extends State<$ModelClass$IndexPage>
     return Stack(
       children: <Widget>[
         HeadWidget(),
-        ButtonBarWidget()
+        ContentWidget()
       ],
     );
   }

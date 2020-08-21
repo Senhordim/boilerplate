@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildGridView(BuildContext context) {
     return Stack(children: <Widget>[
       HeadWidget(),
-      ButtonBarWidget(
+      ContentWidget(
         gridButton: GridView.count(
           crossAxisCount: 2,
           children: List.generate(_itensMenuGridView.list.length, (index) {

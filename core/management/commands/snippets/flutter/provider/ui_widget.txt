@@ -773,18 +773,18 @@ class _HeadWidgetState extends State<HeadWidget> {
 }
 
 /// Barra de botões da tela inicial
-class ButtonBarWidget extends StatefulWidget {
+class ContentWidget extends StatefulWidget {
   final Widget widgetChild;
-  const ButtonBarWidget({
+  const ContentWidget({
     Key key,
     this.widgetChild,
   }) : super(key: key);
 
   @override
-  _ButtonBarWidgetState createState() => _ButtonBarWidgetState();
+  _ContentWidgetState createState() => _ContentWidgetState();
 }
 
-class _ButtonBarWidgetState extends State<ButtonBarWidget> {
+class _ContentWidgetState extends State<ContentWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
