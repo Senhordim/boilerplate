@@ -85,9 +85,6 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
   _listBuilder() {
     return BlocConsumer<$ModelClass$Cubit, $ModelClass$State>(
       listener: (context, state) {
-        if(state is $ModelClass$ProcessState){
-          CircularProgressIndicator();
-        }
         if (state is $ModelClass$ErrorState){
           _showMessage(state.error, error: true);
         }
@@ -97,6 +94,9 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
       },
       builder: (context, state) {
         final _$ModelClassCamelCase$Cubit = context.bloc<$ModelClass$Cubit>();
+        if (_$ModelClassCamelCase$Cubit.loading) {
+          return customProcessingCardModal(context);
+        }
         return _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List == null ? Container() : 
          Expanded(child: ListView.builder(
           itemCount: _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List.length,
