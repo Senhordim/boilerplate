@@ -83,7 +83,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
   }
 
   _listBuilder() {
-    BlocConsumer<$ModelClass$Cubit, $ModelClass$State>(
+    return BlocConsumer<$ModelClass$Cubit, $ModelClass$State>(
       listener: (context, state) {
         if(state is $ModelClass$ProcessState){
           CircularProgressIndicator();
@@ -97,7 +97,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
       },
       builder: (context, state) {
         final _$ModelClassCamelCase$Cubit = context.bloc<$ModelClass$Cubit>();
-        return ListView.builder(
+        return _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List == null? Container(): ListView.builder(
           itemCount: _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List.length,
           itemBuilder: (context, index) {
             $ModelClass$Model _$ModelClassCamelCase$ = _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List[index];
@@ -165,7 +165,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
   }
 
   Future<void> _loadData() async {
-    // TODO Implementar o método de reload
-    debugPrint("Carregando ...");
+    final _$ModelClassCamelCase$Cubit = context.bloc<$ModelClass$Cubit>();
+    await _$ModelClassCamelCase$Cubit.fetch();
   }
 }

@@ -31,9 +31,9 @@ class $ModelClass$Service {
     if ($ModelClassCamelCase$ != null) _$ModelClassCamelCase$ = $ModelClassCamelCase$;
   }
 
-  Future<List<$ModelClass$Model>> fetch() async {
+  Future<List<$ModelClass$Model>> fetch({String url}) async {
     try {
-      String _url;
+      String _url = url != null? url: _uri;
       _$ModelClassCamelCase$List?.clear();
       final CustomDio _dio = CustomDio(_url);
       _dio.makeHeadersAuthentication();
