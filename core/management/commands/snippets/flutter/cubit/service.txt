@@ -18,17 +18,17 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'model.dart';
-import '../../utils/config.dart';
-import '../../utils/custom_dio.dart';
-import '../../utils/util.dart';
+import '../../../utils/config.dart';
+import '../../../utils/custom_dio.dart';
+import '../../../utils/util.dart';
 
 class $ModelClass$Service {
   String _uri = "$App$/$Model$/";
   $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model();
   List<$ModelClass$Model> _$ModelClassCamelCase$List = List<$ModelClass$Model>();
 
-  $ModelClass$Service({$ModelClass$Model _$ModelClassCamelCase$, List<$ModelClass$Model> _$ModelClassCamelCase$List}) {
-    if (_$ModelClassCamelCase$ != null) __$ModelClassCamelCase$ = _$ModelClassCamelCase$;
+  $ModelClass$Service({$ModelClass$Model $ModelClassCamelCase$, List<$ModelClass$Model> $ModelClassCamelCase$List}) {
+    if ($ModelClassCamelCase$ != null) _$ModelClassCamelCase$ = $ModelClassCamelCase$;
   }
 
   Future<List<$ModelClass$Model>> fetchAll() async {
@@ -112,7 +112,7 @@ class $ModelClass$Service {
     try {
       final CustomDio _dio = CustomDio(_uri);
       final _data = FormData.fromMap($ModelClassCamelCase$.toJson());
-      final data = await _dio.putHttp(_data);
+      final data = await _dio.putHttp(_data, $ModelClassCamelCase$.id.toString());
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
@@ -142,7 +142,7 @@ class $ModelClass$Service {
     try {
       final CustomDio _dio = CustomDio(_uri);
       final _data = FormData.fromMap($ModelClassCamelCase$.toJson());
-      final data = await _dio.deleteHttp(_data);
+      final data = await _dio.deleteHttp(_data, $ModelClassCamelCase$.id.toString());
       if (data != null) {
         return true;
         _success("ok");
@@ -156,7 +156,7 @@ class $ModelClass$Service {
 
   void _success(String message, {int statusCode}) async {
     try {
-      debugPrint(message, status: statusCode);
+      debugPrint("Mensagem: $message, Status: $statusCode");
     } catch (e) {
       debugPrint("Ocorreu um erro no método error: $e");
     }
@@ -164,7 +164,7 @@ class $ModelClass$Service {
 
   void _error(String error, String exception, {int statusCode}) async {
     try {
-      debugPrint(error, exception, status: statusCode);
+      debugPrint("Error: $error, Exception: $exception");
     } catch (e) {
       debugPrint("Ocorreu um erro no método error: $e");
     }
