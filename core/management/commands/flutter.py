@@ -286,7 +286,7 @@ class Command(BaseCommand):
             self.app_configuration_page_file = f"{self.app_configuration}\\index.page.dart"
             self.app_configuration_controller_file = f"{self.app_configuration}\\controller.dart"
             self.app_configuration_profile_file = f"{self.app_configuration}\\model.dart"
-            self.app_configuration_cubit_file = f"{self.app_configuration}\\model.dart"
+            self.app_configuration_cubit_file = f"{self.app_configuration}\\cubit.dart"
             self.app_configuration_cubit_state_file = f"{self.app_configuration}\\state.dart"
 
         else:
@@ -1237,11 +1237,11 @@ class Command(BaseCommand):
                 if self.state_manager == StateManager.Provider:
                     with open(self.app_configuration_profile_file, 'w', encoding='utf-8') as arquivo:
                         arquivo.write(_content_controller)
-
                 elif self.state_manager ==StateManager.MobX:
                     with open(self.app_configuration_controller_file, 'w', encoding='utf-8') as arquivo:
                         arquivo.write(_content_controller)
                 elif self.state_manager == StateManager.Cubit:
+
                     with open(self.app_configuration_cubit_file, 'w', encoding='utf-8') as arquivo:
                         arquivo.write(_content_controller)
                     with open(self.app_configuration_cubit_state_file, 'w', encoding='utf-8') as arquivo:

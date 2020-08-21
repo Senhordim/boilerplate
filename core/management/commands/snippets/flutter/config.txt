@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 class Config {
   static const uri = "$DjangoAPIPath$";
+  // TODO: Verificar se a Url de autenticacao é igual à Url geral da API.
+  static const uriAuth = "$DjangoAPIPath$";
 
   //TODO: Setar o valor do Token
   static const DRFToken = "Token 128ad486de8ffb2c8def82e46a71adcacdb45df1";

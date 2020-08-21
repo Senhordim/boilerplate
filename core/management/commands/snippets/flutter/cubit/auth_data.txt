@@ -57,7 +57,7 @@ class AuthData {
       final _store = smbt.intMapStoreFactory.store(_storeName);
       final _data = await _store.find(_db);
       return _data.map((snapshot) {
-        final _result = AuthModel.fromMap(snapshot.value);
+        final _result = AuthModel.fromJson(snapshot.value);
       }).toList();
     } catch (e) {
       return null;
@@ -71,7 +71,7 @@ class AuthData {
       _db = await initDb();
       final _store = smbt.intMapStoreFactory.store(_storeName);
       final _data = await _store.findFirst(_db);
-      return AuthModel.fromMap(_data.value);
+      return AuthModel.fromJson(_data.value);
     } catch (e) {
       return null;
     } finally {
@@ -79,11 +79,11 @@ class AuthData {
     }
   }
 
-  Future<bool> save(AuthModel Auth) async {
+  Future<bool> save(AuthModel auth) async {
     try {
       _db = await initDb();
       final _store = smbt.intMapStoreFactory.store(_storeName);
-      await _store.add(_db, Auth.toMap());
+      await _store.add(_db, auth.toJson());
       return true;
     } catch (error) {
       return false;

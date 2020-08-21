@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../../../utils/config.dart';
-import '../../../utils/util.dart';
-import '../../../utils/custom_dio.dart';
+import '../../utils/config.dart';
+import '../../utils/util.dart';
+import '../../utils/custom_dio.dart';
 
 import 'model.dart';
 
@@ -140,12 +140,12 @@ class AuthService {
       final CustomDio _dio = CustomDio(_url);
       final data = await _dio.getHttp();
       if (data != null) {
-        return true;
+        return AuthModel.fromJson(data);
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
     }
-    return false;
+    return null;
   }
 
   Future<bool> disableAccount() async {
