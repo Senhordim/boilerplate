@@ -664,6 +664,24 @@ class Command(BaseCommand):
             self.__message(f"Ocorreu o erro {error} ao chamar o __register_provider", error=True)
         return __import_provider, __register_provider
 
+    def __register_cubit(self):
+        __reegister = ""
+        __import = ""
+        try:
+            for app in FLUTTER_APPS:
+                __current_app = AppModel(self.flutter_project, app)
+                __app = __current_app.app_name
+                for model in __current_app.models:
+                    __import += f"import 'apps/{__app.lower()}/{model[1].lower()}/cubit.dart';\n"
+                    __reegister += f"BlocProvider<{model[1].title()}Cubit>(create: (_) => {model[1].title()}Cubit(),),\n"
+
+            __import += f"import 'apps/auth/cubit.dart';\n"
+            __reegister += f"BlocProvider<SettingsCubit>(create: (_) => SettingsCubit(),),\n"
+            __reegister += f"BlocProvider<AuthCubit>(create: (_) => AuthCubit(),),\n"
+        except Exception as error:
+            self.__message(f"Ocorreu o erro {error} ao chamar o __reegister", error=True)
+        return __import, __reegister
+
     def __mapping_all_application(self):
         try:
             __imports_views = ""
@@ -1601,7 +1619,7 @@ class Command(BaseCommand):
         """
         __imports = ""
         __list_itens = []
-        try:    
+        try:
             snippet = self.__get_snippet(file_name="main.txt", state_manager=True)
 
             path_maindart = Path(f"{self.flutter_dir}/lib/main.dart")
@@ -1623,13 +1641,15 @@ class Command(BaseCommand):
                 snippet = snippet.replace('$ImportProvider$', __import)
                 snippet = snippet.replace('$RegisterProviders$', __register)
             if self.state_manager == StateManager.MobX:
-                import pdb; pdb.set_trace()
                 snippet = snippet.replace('$ImportViews$', __import_views)
                 snippet = snippet.replace('$RegisterControllers$', __register_controller)
                 snippet = snippet.replace('$ImportController$', __import_controllers)
             if self.state_manager == StateManager.Cubit:
-                # TODO Cubit Implementar
-                snippet = ""
+                __import_controllers += f"import 'apps/configuracao/cubit.dart';"
+                __import, __register = self.__register_cubit()
+                snippet = snippet.replace('$ImportController$', __import_controllers)
+                snippet = snippet.replace('$ImportCubit$', __import)
+                snippet = snippet.replace('$RegisterProviders$', __register)
 
             snippet = snippet.replace('$Listviews$', __views)
 
