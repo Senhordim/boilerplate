@@ -1,4 +1,4 @@
-/// View/Page para detalhamento de um Atendimento
+// TODO Ajustar o posicionamento do componente de detalhe na tela tomando como base o realizaro no projeto SIGE
 
 /// [Travar o arquivo]
 /// Caso deseje "travar" o arquivo para não ser parseado novamente

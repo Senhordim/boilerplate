@@ -1,6 +1,4 @@
-/// View/Page para listagem dos registro do $ModelClass$
-/// O método fetchAll é invocado no método initState que ocorre apenas
-/// apenas no primeiro momento de construção da View/Page. 
+// TODO Ajustar o posicionamento do componente de detalhe na tela tomando como base o realizaro no projeto SIGE
 
 /// [Travar o arquivo]
 /// Caso deseje "travar" o arquivo para não ser parseado novamente
@@ -95,6 +93,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
       builder: (context, state) {
         final _$ModelClassCamelCase$Cubit = context.bloc<$ModelClass$Cubit>();
         if (_$ModelClassCamelCase$Cubit.loading) {
+          // TODO Verificar como centralizar o card do loading
           return customProcessingCardModal(context);
         }
         return _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List == null ? Container() : 
