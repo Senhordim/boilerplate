@@ -168,6 +168,19 @@ class AppModel:
         except Exception as error:
             self.__message(f"Erro no get_path_provider_file {error}", error=True)
 
+    def get_path_cubit_file(self):
+        """Método para recuperar o caminho para o arquivo provider.dart
+        da app
+
+        Returns:
+            String -- Caminho do arquivo controller.dart
+        """
+        try:
+            return Path("{}/lib/apps/{}/{}/cubit.dart".format(self.path_flutter, self.app_name_lower,
+                                                                 self.model_name_lower))
+        except Exception as error:
+            self.__message(f"Erro no get_path_provider_file {error}", error=True)
+
     def get_path_service_file(self):
         """Método para recuperar o caminho do arquivo service.dart
 
@@ -273,6 +286,8 @@ class Command(BaseCommand):
             self.app_configuration_page_file = f"{self.app_configuration}\\index.page.dart"
             self.app_configuration_controller_file = f"{self.app_configuration}\\controller.dart"
             self.app_configuration_profile_file = f"{self.app_configuration}\\model.dart"
+            self.app_configuration_cubit_file = f"{self.app_configuration}\\model.dart"
+            self.app_configuration_cubit_state_file = f"{self.app_configuration}\\state.dart"
 
         else:
             self.project = _path_project.split("/")[-1:][0]
@@ -942,8 +957,12 @@ class Command(BaseCommand):
             if self.state_manager == StateManager.MobX:
                 __file = Path("{}/lib/apps/auth/controller.dart".format(self.flutter_dir))
             if self.state_manager == StateManager.Cubit:
-                # TODO Cubit: Implementar 
-                pass
+                __snippet_cubit_state = self.__get_snippet(file_name="auth_state.txt", state_manager=True)
+                __cubit_state_file = Path(
+                        "{}/lib/apps/auth/state.dart".format(self.flutter_dir))
+                with open(__cubit_state_file, 'w', encoding='utf-8') as cubit_state_file:
+                    cubit_state_file.write(__snippet_cubit_state)
+                __file = Path("{}/lib/apps/auth/cubit.dart".format(self.flutter_dir))
 
             with open(__file, 'w', encoding='utf-8') as provider_file:
                     provider_file.write(__snippet)
@@ -953,7 +972,7 @@ class Command(BaseCommand):
                 service_file.write(__service_snippet)
 
         except Exception as error:
-            self.__message(f"Ocorreu um erro ao gerar a app de autentição {error}", error=True)
+            self.__message(f"Ocorreu um erro ao gerar a app de autenticação {error}", error=True)
 
     def __data_parser(self, app):
         """Método responsável por criar o arquivo de data baseado na App e no Models
@@ -1223,8 +1242,11 @@ class Command(BaseCommand):
                     with open(self.app_configuration_controller_file, 'w', encoding='utf-8') as arquivo:
                         arquivo.write(_content_controller)
                 elif self.state_manager == StateManager.Cubit:
-                    # TODO Cubit: Implementar settings para
-                    pass
+                    with open(self.app_configuration_cubit_file, 'w', encoding='utf-8') as arquivo:
+                        arquivo.write(_content_controller)
+                    with open(self.app_configuration_cubit_state_file, 'w', encoding='utf-8') as arquivo:
+                        __content = self.__get_snippet(file_name="settings_state.txt", state_manager=True)
+                        arquivo.write(__content)
 
                 with open(self.app_configuration_page_file, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(_content_page)
@@ -1400,6 +1422,7 @@ class Command(BaseCommand):
             __service_file = __source_class.get_path_service_file()
             __controller_file = __source_class.get_path_controller_file()
             __provider_file = __source_class.get_path_provider_file()
+            __cubit_file = __source_class.get_path_cubit_file()
 
             __views = __source_class.get_path_files_views()
 
@@ -1447,8 +1470,9 @@ class Command(BaseCommand):
                     with open(__controller_file, 'w', encoding='utf-8') as arquivo:
                         arquivo.write(f"// Controller do {__model_name}")
             if self.state_manager == StateManager.Cubit:
-                # TODO Cubit: Implementar
-                pass
+                if not self.__check_file(__cubit_file):
+                    with open(__cubit_file, 'w', encoding='utf-8') as arquivo:
+                        arquivo.write(f"// Cubit do {__model_name}")
 
             self.__create_update_page_parser(__source_class)
             self.__detailpage_parser(__source_class)
@@ -1614,8 +1638,7 @@ class Command(BaseCommand):
             self.__build_custom_dio()
             self._build_internationalization()
             self.__build_auth_app()
-            self.__build_flutter()
-        #     return
+            # self.__build_flutter()
         else:
             self.__message(
                 "É necessário passar pelo menos um dos parâmetros a seguir: --init_provider, --init_mobx, --init_cubit,"

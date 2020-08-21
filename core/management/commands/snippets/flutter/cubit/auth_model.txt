@@ -1,5 +1,4 @@
-import 'package:help/apps/auth/data.dart';
-import 'package:help/apps/usuario/cliente/model.dart';
+import 'data.dart';
 
 class AuthModel {
   String id;

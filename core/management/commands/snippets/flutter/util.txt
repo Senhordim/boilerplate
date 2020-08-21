@@ -4,6 +4,7 @@
 import 'dart:math';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+
 class Process {
   static Process _instance;
 
@@ -216,53 +217,5 @@ class Util {
   ///      Double
   static double getProportionScreenHeight(BuildContext context, double proportion){
     return MediaQuery.of(context).size.height * proportion;
-  }
-}
-
-
-class Process {
-  static final Process _process = Process._internal();
-  factory Process() {
-    return _process;
-  }
-  Process._internal();
-
-  bool processing = true;
-  bool success;
-  int statusCode = 0;
-  String message = '';
-  String friendlyMessage = 'Ocorreu um erro, favor tentar novamente.';
-  String httpHeader = '';
-  String httpData = '';
-  String error = '';
-  String exception = '';
-
-  finishSuccess(String message, {int status, String data, String header}) {
-    success = true;
-    message = message;
-    statusCode = status ?? 0;
-  }
-
-  finishError(String message, String exception,
-      {int status, String data, String header}) {
-    success = false;
-    error = message;
-    httpHeader = header;
-    httpData = data;
-    statusCode = status ?? 0;
-    exception = exception;
-    debugPrint("Processo finalizado com erro:\n StatusCode -> $statusCode\nException -> $exception\nError -> $error\nHttp Data -> $httpData\n Http Header -> $httpHeader");
-
-  }
-
-  bool get isSuccess {
-    if (success == null || success == false) return false;
-    return true;
-  }
-
-  @override
-  String toString() {
-    String _result = "===\nProcesso:\nStatusCode -> $statusCode\nException -> $exception\nError -> $error\nHttp Data -> $httpData\n Http Header -> $httpHeader\n===";
-    return _result;
   }
 }

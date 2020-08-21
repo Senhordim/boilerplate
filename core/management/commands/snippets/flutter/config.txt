@@ -9,14 +9,14 @@ class Config {
   static const DRFToken = "Token 128ad486de8ffb2c8def82e46a71adcacdb45df1";
 
   static const String uri_media = "$DjangoAPIPath$media/";
-
   static const String app_title = "$AppName$";
+  static const bool usingURL = false;
+  static const double marginHead = 0.25;
   
 }
 
 class DebugPrint {
   static const bool debuggingMode = true;
-
   static void imprimir(String texto) {
     if (debuggingMode) {
       developer.log(texto.toLowerCase(), name: 'Debug:');
