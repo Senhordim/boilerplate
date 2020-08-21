@@ -31,7 +31,7 @@ class $ModelClass$Service {
     if ($ModelClassCamelCase$ != null) _$ModelClassCamelCase$ = $ModelClassCamelCase$;
   }
 
-  Future<List<$ModelClass$Model>> fetchAll() async {
+  Future<List<$ModelClass$Model>> fetch() async {
     try {
       String _url;
       _$ModelClassCamelCase$List?.clear();

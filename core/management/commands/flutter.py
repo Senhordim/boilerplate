@@ -181,6 +181,19 @@ class AppModel:
         except Exception as error:
             self.__message(f"Erro no get_path_provider_file {error}", error=True)
 
+    def get_path_cubit_state_file(self):
+        """Método para recuperar o caminho para o arquivo provider.dart
+        da app
+
+        Returns:
+            String -- Caminho do arquivo controller.dart
+        """
+        try:
+            return Path("{}/lib/apps/{}/{}/state.dart".format(self.path_flutter, self.app_name_lower,
+                                                                 self.model_name_lower))
+        except Exception as error:
+            self.__message(f"Erro no get_path_provider_file {error}", error=True)
+
     def get_path_service_file(self):
         """Método para recuperar o caminho do arquivo service.dart
 
@@ -1064,6 +1077,45 @@ class Command(BaseCommand):
         except Exception as error:
             self.__message(f"Erro ao executar o __provider_parser: {error}", error=True)
 
+    def __cubit_parser(self, app):
+        """Método responsável por criar o arquivo provider do Model
+
+        Args:
+            app {AppModel} -- Instância da class AppModel
+        """
+        try:
+            if app.model is None:
+                print("Informe o App")
+                return
+            
+            __file_cubit = app.get_path_cubit_file()
+            __file_cubit_state = app.get_path_cubit_state_file()
+
+            if self.__check_file_is_locked(__file_cubit):
+                print("Arquivo travado")
+                return
+
+            content = self.__get_snippet(file_name="cubit.txt", state_manager=True)
+            content = content.replace("$ModelClass$", app.model_name)
+            content = content.replace("$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
+
+            with open(__file_cubit, 'w', encoding='utf-8') as file_cubit:
+                file_cubit.write(content)
+
+            if self.__check_file_is_locked(__file_cubit_state):
+                print("Arquivo travado")
+                return
+
+            content = self.__get_snippet(file_name="state.txt", state_manager=True)
+            content = content.replace("$ModelClass$", app.model_name)
+            content = content.replace("$ModelClassCamelCase$", self.__to_camel_case(app.model_name, True))
+
+            with open(__file_cubit_state, 'w', encoding='utf-8') as file_sate_cubit:
+                file_sate_cubit.write(content)
+
+        except Exception as error:
+            self.__message(f"Erro ao executar o __cubit_parser: {error}", error=True)
+
     def __service_parser(self, app):
         """Método responsável por criar o arquivo de service do Model
 
@@ -1423,6 +1475,7 @@ class Command(BaseCommand):
             __controller_file = __source_class.get_path_controller_file()
             __provider_file = __source_class.get_path_provider_file()
             __cubit_file = __source_class.get_path_cubit_file()
+            __cubit_state_file = __source_class.get_path_cubit_state_file()
 
             __views = __source_class.get_path_files_views()
 
@@ -1473,6 +1526,9 @@ class Command(BaseCommand):
                 if not self.__check_file(__cubit_file):
                     with open(__cubit_file, 'w', encoding='utf-8') as arquivo:
                         arquivo.write(f"// Cubit do {__model_name}")
+                if not self.__check_file(__cubit_state_file):
+                    with open(__cubit_state_file, 'w', encoding='utf-8') as arquivo:
+                        arquivo.write(f"// State Cubit do {__model_name}")
 
             self.__create_update_page_parser(__source_class)
             self.__detailpage_parser(__source_class)
@@ -1488,6 +1544,8 @@ class Command(BaseCommand):
                 self.__provider_parser(__source_class)
             if self.state_manager == StateManager.MobX:
                 self.__controller_parser(__source_class)
+            if self.state_manager == StateManager.Cubit:
+                self.__cubit_parser(__source_class)
 
         except Exception as error:
             self.__message(f"Error ao executar source. \n {error}", error=True)

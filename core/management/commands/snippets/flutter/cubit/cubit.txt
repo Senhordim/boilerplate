@@ -25,8 +25,9 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'model.dart';
 import 'service.dart';
+import 'data.dart';
 
-part '$modelClass$_state.dart';
+part 'state.dart';
 
 class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
   $ModelClass$Service _service;
@@ -41,7 +42,7 @@ class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
   Future<void> fetch($ModelClass$Model $modelClass$) async {
     try {
       emit($ModelClass$ProcessState());
-      $ModelClassCamelCase$List = await _service.fetch()
+      $ModelClassCamelCase$List = await _service.fetch();
       emit($ModelClass$SuccessState(
         successMessage: "Dados carregados com sucesso."),
       );
