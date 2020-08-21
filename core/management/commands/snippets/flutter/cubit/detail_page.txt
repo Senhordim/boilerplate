@@ -39,7 +39,7 @@ class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage>
     return BlocConsumer<$ModelClass$Cubit, $ModelClass$State>(
       listener: (context, state) {},
       builder: (context, state) {
-        _$Model$ = context.bloc<$ModelClass$Cubit>().animalModel;
+        _$Model$ = context.bloc<$ModelClass$Cubit>().$Model$Model;
         return Scaffold(
           key: _scaffoldKey,
           extendBodyBehindAppBar: true,
