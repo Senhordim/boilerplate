@@ -729,10 +729,10 @@ class _HeadWidgetState extends State<HeadWidget> {
 
 /// Barra de botões da tela inicial
 class ButtonBarWidget extends StatefulWidget {
-  final Widget gridButton;
+  final Widget widgetChild;
   const ButtonBarWidget({
     Key key,
-    this.gridButton,
+    this.widgetChild,
   }) : super(key: key);
 
   @override
@@ -747,6 +747,6 @@ class _ButtonBarWidgetState extends State<ButtonBarWidget> {
             top: Util.getProportionScreenWidth(
                     context, _proportionScreenDefault) -
                 125),
-        child: widget.gridButton);
+        child: widget.widgetChild);
   }
 }
