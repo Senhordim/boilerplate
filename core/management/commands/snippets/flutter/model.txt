@@ -14,11 +14,10 @@
 import '../../../utils/util.dart';
 
 class $ModelClass$Model {  
-  int id;
+  String id;
   String nextUrl;
   String previousUrl;
   $AttributeClass$
-
 
   $ModelClass$Model({
     this.id,
@@ -28,17 +27,20 @@ class $ModelClass$Model {
   });
 
   $ModelClass$Model.fromJson(Map<String, dynamic> json) {
-    id = json.containsKey('id') ? json['id'] : 0;
-    nextUrl = json.containsKey('nextUrl') ? json['nextUrl'] : "";
-    previousUrl = json.containsKey('previousUrl') ? json['previousUrl'] : "";
-    $ParserFromJson$
+    try{
+      id = json.containsKey('id') ? json['id'] : "";
+      nextUrl = json.containsKey('nextUrl') ? json['nextUrl'] : "";
+      previousUrl = json.containsKey('previousUrl') ? json['previousUrl'] : "";
+      $ParserFromJson$
+    } catch (e){
+
+    }
   }
 
   Map<String, dynamic> toJson() => {
       "nextUrl": nextUrl == null ? null : nextUrl,
       "previousUrl": previousUrl == null ? null : previousUrl,
       $ParserToMap$
-
   };
  
   /// Sobscrevendo o método toString para retornar todos os atributos da classe.

@@ -97,7 +97,8 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
       },
       builder: (context, state) {
         final _$ModelClassCamelCase$Cubit = context.bloc<$ModelClass$Cubit>();
-        return _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List == null? Container(): ListView.builder(
+        return _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List == null ? Container() : 
+         Expanded(child: ListView.builder(
           itemCount: _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List.length,
           itemBuilder: (context, index) {
             $ModelClass$Model _$ModelClassCamelCase$ = _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List[index];
@@ -117,7 +118,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
               ),
             );
           },
-        );
+        ));
       },
     );
   }

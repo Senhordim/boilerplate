@@ -340,14 +340,14 @@ class Command(BaseCommand):
                       'String', 'String', 'double', 'String', 'String', 'int',
                       'String', 'String', 'bool', 'String', 'int', 'int',
                       'String', 'int', 'String', 'DateTime', 'String',
-                      'String', 'int', 'int']
+                      'String', 'String', 'int']
 
     _tipos_sqlite = ['INT', 'INT', 'BLANK_CHOICE_DASH', 'BIGINT', 'BIGINT', 'TEXT',
                      'BOOLEAN', 'TEXT', 'TEXT', 'DATE', 'DATETIME', 'DOUBLE',
                      'INT', 'TEXT', 'TEXT', 'TEXT', 'TEXT', 'TEXT', 'TEXT',
                      'FLOAT', 'TEXT', 'TEXT', 'INT', 'TEXT', 'TEXT', 'BOOLEAN',
                      'TEXT', 'INT', 'INT', 'TEXT', 'SMALLINT', 'TEXT',
-                     'DATETIME', 'TEXT', 'TEXT', 'INT', 'INT']
+                     'DATETIME', 'TEXT', 'TEXT', 'TEXT', 'INT']
 
     def add_arguments(self, parser):
         """Método inicial para informar quais parâmetros serão aceitos
@@ -1217,7 +1217,7 @@ class Command(BaseCommand):
                             __model.lower(), __name_dart, __name)
                 else:
                     if __name_dart.startswith("fk"):
-                        content_from_json += "{1} = json['{2}'] == null ? 0 : json['{2}'];\n        ".format(
+                        content_from_json += "{1} = json['{2}'] == null ? \"\" : json['{2}'];\n        ".format(
                             __model.lower(), __name_dart, __name)
                     else:
                         content_from_json += "{1} = json['{2}'] == null ? \"\" : json['{2}'];\n        ".format(

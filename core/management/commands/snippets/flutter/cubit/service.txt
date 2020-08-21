@@ -39,13 +39,14 @@ class $ModelClass$Service {
       _dio.makeHeadersAuthentication();
       final dataResponse = await _dio.getHttp();
       if (dataResponse != null) {
-        final String _next = dataResponse.containsKey('nextUrl') ? dataResponse["next"] : "";
-        final String _previous = dataResponse.containsKey('previousUrl') ?dataResponse["previous"]: "";
-        final _dataItens = dataResponse.containsKey('results')? dataResponse["results"]: dataResponse;
-        for (var data in _dataItens) {
+        // TODO: Verificar como validar se tem a chave ou não na List
+        // final String _next = dataResponse.containsKey('nextUrl') ? dataResponse["next"] : "";
+        // final String _previous = dataResponse.containsKey('previousUrl') ?dataResponse["previous"]: "";
+        // final _dataItens = dataResponse.containsKey('results')? dataResponse["results"]: dataResponse;
+        for (var data in dataResponse) {
           $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
-          _$ModelClassCamelCase$.nextUrl = _next;
-          _$ModelClassCamelCase$.previousUrl = _previous;
+          // _$ModelClassCamelCase$.nextUrl = _next;
+          // _$ModelClassCamelCase$.previousUrl = _previous;
           _$ModelClassCamelCase$List.add(_$ModelClassCamelCase$);
         }
         _success("ok");
