@@ -1536,13 +1536,14 @@ class Command(BaseCommand):
                 return
 
             snippet = snippet.replace('$project$', self.flutter_project)
-            snippet = snippet.replace('$RegisterControllers$', __register_controller)
-            snippet = snippet.replace('$ImportViews$', __import_views)
             if self.state_manager == StateManager.Provider:
                 __import, __register = self.__register_provider()
                 snippet = snippet.replace('$ImportProvider$', __import)
                 snippet = snippet.replace('$RegisterProviders$', __register)
             if self.state_manager == StateManager.MobX:
+                import pdb; pdb.set_trace()
+                snippet = snippet.replace('$ImportViews$', __import_views)
+                snippet = snippet.replace('$RegisterControllers$', __register_controller)
                 snippet = snippet.replace('$ImportController$', __import_controllers)
             if self.state_manager == StateManager.Cubit:
                 # TODO Cubit Implementar
@@ -1559,11 +1560,16 @@ class Command(BaseCommand):
             __snippet_page = self.__get_snippet(file_name="home.page.txt", state_manager=True)
             __menu_home_page_itens = self.__build_menu_home_page_itens()
 
-            __snippet_page = __snippet_page.replace("$ImportViews$", __import_views)
-            __snippet_page = __snippet_page.replace("$ItenMenu$", __menu_home_page_itens)
+            if self.state_manager == StateManager.Provider:
+                __snippet_page = __snippet_page.replace("$ImportViews$", __import_views)
+                __snippet_page = __snippet_page.replace("$ItenMenu$", __menu_home_page_itens)
+            if self.state_manager == StateManager.Cubit:
+                # TODO Cubit Implementar
+                pass
 
-            with open(path_homepage, 'w', encoding='utf-8') as home_page_dart:
-                home_page_dart.write(__snippet_page)
+            if self.state_manager == StateManager.Provider or self.state_manager == StateManager.Cubit:
+                with open(path_homepage, 'w', encoding='utf-8') as home_page_dart:
+                    home_page_dart.write(__snippet_page)
 
         except Exception as error:
             self.__message("Error Replace Main \n{}".format(error), error=True)
@@ -1608,7 +1614,7 @@ class Command(BaseCommand):
             self.__build_custom_dio()
             self._build_internationalization()
             self.__build_auth_app()
-            # self.__build_flutter()
+            self.__build_flutter()
         #     return
         else:
             self.__message(
