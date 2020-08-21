@@ -1662,14 +1662,10 @@ class Command(BaseCommand):
             __snippet_page = self.__get_snippet(file_name="home.page.txt", state_manager=True)
             __menu_home_page_itens = self.__build_menu_home_page_itens()
 
-            if self.state_manager == StateManager.Provider:
+            if self.state_manager == StateManager.Provider or self.state_manager == StateManager.Cubit:
                 __snippet_page = __snippet_page.replace("$ImportViews$", __import_views)
                 __snippet_page = __snippet_page.replace("$ItenMenu$", __menu_home_page_itens)
-            if self.state_manager == StateManager.Cubit:
-                # TODO Cubit Implementar
-                pass
 
-            if self.state_manager == StateManager.Provider or self.state_manager == StateManager.Cubit:
                 with open(path_homepage, 'w', encoding='utf-8') as home_page_dart:
                     home_page_dart.write(__snippet_page)
 
