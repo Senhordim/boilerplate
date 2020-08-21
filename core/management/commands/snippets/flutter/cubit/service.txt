@@ -145,7 +145,6 @@ class $ModelClass$Service {
       final data = await _dio.deleteHttp(_data, $ModelClassCamelCase$.id.toString());
       if (data != null) {
         return true;
-        _success("ok");
       }
       return false;
     } catch (error, exception) {
