@@ -582,6 +582,7 @@ Widget customProcessingCardModal(BuildContext context) {
           child: Column(
             children: [
               CircularProgressIndicator(),
+              SizedBox(height: 16,),
               Text(
                 AppLocalizations.of(context)
                     .translate("custom_processing_card_label"),
