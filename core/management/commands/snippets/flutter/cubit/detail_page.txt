@@ -1,4 +1,3 @@
-// TODO Ajustar o posicionamento do componente de detalhe na tela tomando como base o realizaro no projeto SIGE
 
 /// [Travar o arquivo]
 /// Caso deseje "travar" o arquivo para não ser parseado novamente
@@ -11,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../user_interface/font.dart';
 import '../../../../user_interface/widget.dart';
 import '../../../../utils/localization.dart';
+import '../../../../utils/config.dart';
 import '../../../../utils/util.dart';
 import '../model.dart';
 import '../cubit.dart';
@@ -76,8 +76,12 @@ class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage>
     return SingleChildScrollView(
       child: Container(
         height: MediaQuery.of(context).size.height,
-        child: Padding(
+        child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+          margin: EdgeInsets.only(
+               top: Util.getProportionScreenHeight(
+                    context, Config.marginHead),
+             ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[

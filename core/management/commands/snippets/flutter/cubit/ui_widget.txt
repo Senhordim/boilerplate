@@ -701,7 +701,7 @@ class HeadWidget extends StatefulWidget {
   HeadWidget(
       {this.assetImageHeadBackground = "",
       this.webImageHeadBackground = "",
-      this.marginTitleTop = 36,
+      this.marginTitleTop = 80,
       this.marginTitleBottom = 12,
       this.marginTitleLeft = 12,
       this.marginTitleRight = 45});

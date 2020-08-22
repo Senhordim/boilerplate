@@ -1,4 +1,3 @@
-// TODO Verificar por que não está carregando o formulário
 
 /// [Travar o arquivo]
 /// Caso deseje "travar" o arquivo para não ser parseado novamente
@@ -10,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../user_interface/font.dart';
 import '../../../../user_interface/widget.dart';
+import '../../../../utils/config.dart';
 import '../../../../utils/util.dart';
 import '../cubit.dart';
 import '../model.dart';
@@ -67,8 +67,11 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
           minHeight: MediaQuery.of(context).size.height
         ),
         child: Container(
-        child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+         margin: EdgeInsets.only(
+               top: Util.getProportionScreenHeight(
+                    context, Config.marginHead),
+             ),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -85,8 +88,6 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
                 },
                 builder: (context, state) {
                     _$Model$ = context.bloc<$ModelClass$Cubit>().$Model$Model;
-                    $EditedAttributes$
-                    
                     return Stack(
                   children : <Widget>[
                     Column(
@@ -100,10 +101,8 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
                 },
                 )
                 
-
               ],
             ),
-          ),
         ),
       ),
     );
@@ -132,10 +131,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
             context: context,
             onPress: () {
               if (_form$ModelClass$.currentState.validate()) {
-                setState(() {
-                    $AttributesData$
-                    _post();
-                });
+                _post();
               }
             },
           ),

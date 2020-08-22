@@ -1,4 +1,3 @@
-// TODO Ajustar o posicionamento do componente de detalhe na tela tomando como base o realizaro no projeto SIGE
 
 /// [Travar o arquivo]
 /// Caso deseje "travar" o arquivo para não ser parseado novamente
@@ -48,7 +47,9 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
       body: _buildBody(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => $ModelClass$AddPage()));
+        },
       ),
     );
   }
@@ -92,32 +93,41 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
       },
       builder: (context, state) {
         final _$ModelClassCamelCase$Cubit = context.bloc<$ModelClass$Cubit>();
-        if (_$ModelClassCamelCase$Cubit.loading) {
+        if (state is $ModelClass$ProcessState) {
           // TODO Verificar como centralizar o card do loading
           return customProcessingCardModal(context);
         }
-        return _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List == null ? Container() : 
-         Expanded(child: ListView.builder(
-          itemCount: _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List.length,
-          itemBuilder: (context, index) {
-            $ModelClass$Model _$ModelClassCamelCase$ = _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List[index];
-            return GestureDetector(
-              onTap: () {
-                _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$Model = _$ModelClassCamelCase$;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => $ModelClass$DetailPage(),
+        return _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List == null 
+           ? Container() 
+           : Expanded(
+            child: Container(
+             margin: EdgeInsets.only(
+               top: Util.getProportionScreenHeight(
+                    context, Config.marginHead),
+             ),
+             child: ListView.builder(
+              itemCount: _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List.length,
+              itemBuilder: (context, index) {
+                $ModelClass$Model _$ModelClassCamelCase$ = _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List[index];
+                return GestureDetector(
+                  onTap: () {
+                    _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$Model = _$ModelClassCamelCase$;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => $ModelClass$DetailPage(),
+                      ),
+                    );
+                  },
+                  child: customCard(
+                    context: context,
+                    child: Text(_$ModelClassCamelCase$.toString()),
                   ),
                 );
               },
-              child: customCard(
-                context: context,
-                child: Text(_$ModelClassCamelCase$.toString()),
-              ),
-            );
-          },
-        ));
+            )
+          )
+        );
       },
     );
   }

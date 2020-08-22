@@ -1,5 +1,3 @@
-// TODO Verificar por que não está carregando o formulário com os dados
-
 /// [Travar o arquivo]
 /// Caso deseje "travar" o arquivo para não ser parseado novamente
 /// pelo manage do Django adicione um # antes da palavra abaixo
@@ -11,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../user_interface/font.dart';
 import '../../../../user_interface/widget.dart';
 import '../../../../utils/localization.dart';
+import '../../../../utils/config.dart';
 import '../../../../utils/util.dart';
 import '../model.dart';
 import '../cubit.dart';
@@ -78,8 +77,11 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
           minHeight: MediaQuery.of(context).size.height
         ),
         child: Container(
-        child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+            margin: EdgeInsets.only(
+               top: Util.getProportionScreenHeight(
+                    context, Config.marginHead),
+             ),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -102,7 +104,6 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
                 )
               ],
             ),
-          ),
         ),
       ),
     );
