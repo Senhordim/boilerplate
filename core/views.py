@@ -1019,8 +1019,8 @@ class BaseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
             for form_formset in formset_inlines:
                 if not form_formset.is_valid():
                     return self.render_to_response(self.get_context_data(form=form))
-            try:  # Adicionado para corrigir o erro.
-                self.object = form.save()  # TODO Verificar com o Lucas por que o erro nessa linha
+            try:
+                self.object = form.save()  
                 for formset in formset_inlines:
                     formset.instance = self.object
                     formset.save()

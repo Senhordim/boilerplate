@@ -35,8 +35,6 @@ class _SettingsIndexPageState extends State<SettingsIndexPage> {
   Widget _buildBody() {
     return Container(
       height: 300,
-      // TODO: Implementar a checagem
-      // color: _settings.lightTheme == true? Colors.white: Colors.black,
       child: Center(
           child: Column(
         children: <Widget>[

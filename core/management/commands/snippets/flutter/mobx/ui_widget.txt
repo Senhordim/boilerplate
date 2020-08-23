@@ -595,6 +595,38 @@ Widget customProcessingCardModal(BuildContext context) {
   );
 }
 
+
+/// Componente visual para mostrar um card centralizado enquando o usuário aguarda
+/// o processamento da operação.
+///
+///    Parameters:
+///
+///      context -> BuildContext contendo o contexto do App
+Widget customProcessingCardModalCenter(BuildContext context) {
+  return Container(
+    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height / 2),
+    child: Align(
+      alignment: Alignment.center,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 16),
+          child: Column(
+            children: [
+              const CircularProgressIndicator(),
+              SizedBox(height: 16,),
+              Text(
+                AppLocalizations.of(context)
+                    .translate("custom_processing_card_label"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+
 /// Componente para mostrar a mensagem de erro para o usuário na UI
 Widget customErrorMessage(BuildContext context,
     {String title, String message}) {

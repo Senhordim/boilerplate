@@ -116,13 +116,11 @@ class CustomDioInterceptor extends InterceptorsWrapper {
 
   @override
   Future onResponse(Response response) {
-    // TODO Dio: Implementar o tratamento de retorno com sucesso
     return super.onResponse(response);
   }
 
   @override
   Future onError(DioError err) {
-    // TODO Dio: Implementar o tratatamento de retorno com erro
     return super.onError(err);
   }
 }

@@ -155,7 +155,6 @@ class $ModelClass$Service {
 
   void _success(String message, {int statusCode}) async {
     try {
-      // TODO: Estudar como repassar o sucesso para outra camada.
       debugPrint(message);
     } catch (e) {
       debugPrint("Ocorreu um erro no método error: $e");
@@ -164,7 +163,6 @@ class $ModelClass$Service {
 
   void _error(String error, String exception, {int statusCode}) async {
     try {
-      // TODO: Estudar como repassar o erro para a outra camada
       debugPrint("Ocorreu o erro: $error");
     } catch (e) {
       debugPrint("Ocorreu um erro no método error: $e");

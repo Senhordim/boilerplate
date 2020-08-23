@@ -94,8 +94,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
       builder: (context, state) {
         final _$ModelClassCamelCase$Cubit = context.bloc<$ModelClass$Cubit>();
         if (state is $ModelClass$ProcessState) {
-          // TODO Verificar como centralizar o card do loading
-          return customProcessingCardModal(context);
+          return customProcessingCardModalCenter(context);
         }
         return _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List == null 
            ? Container() 
