@@ -144,7 +144,12 @@ class $ModelClass$Data {
     try {
       _db = await initDb();
       var _store = smbt.intMapStoreFactory.store(_storeName);
-      // TODO: Implementar o Update
+      final finder = smbt.Finder(filter: smbt.Filter.byKey($modelClass$.id));
+      await _store.update(
+        _db,
+        $modelClass$.toJson(),
+        finder: finder,
+      );
       return true;
     } catch (error, exception) {
       return false;
