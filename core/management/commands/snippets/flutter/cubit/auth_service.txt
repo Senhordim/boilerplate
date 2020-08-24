@@ -83,7 +83,7 @@ class AuthService {
       final data = await _dio.getHttp();
       if (data != null) {
         for (final item in data) {
-          auth = AuthModel.fromJson(item);
+          auth = AuthModel.fromMap(item);
         }
       }
     } catch (error, exception) {
@@ -140,7 +140,7 @@ class AuthService {
       final CustomDio _dio = CustomDio(_url);
       final data = await _dio.getHttp();
       if (data != null) {
-        return AuthModel.fromJson(data);
+        return AuthModel.fromMap(data);
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());

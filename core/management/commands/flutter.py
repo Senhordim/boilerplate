@@ -1257,7 +1257,7 @@ class Command(BaseCommand):
             content = content.replace("$AttributeClass$", content_atributes)
             content = content.replace("$StringReturn$", content_string_return)
             content = content.replace("$Model$", app.model_name_lower)
-            content = content.replace("$ParserFromJson$", content_from_json)
+            content = content.replace("$ParserfromMap$", content_from_json)
             content = content.replace("$ParserToMap$", content_to_map)
             content = content.replace("$project$", self.flutter_project)
             content = content.replace("$ConstructorModelClass$", content_constructor)

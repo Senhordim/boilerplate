@@ -45,7 +45,7 @@ class AuthModel {
     }
   }
 
-  AuthModel.fromJson(Map<String, dynamic> json) {
+  AuthModel.fromMap(Map<String, dynamic> json) {
     id = json['id'];
     uuid = json['uuid'];
     name = json['name'];
@@ -59,7 +59,7 @@ class AuthModel {
     token = json['token'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['uuid'] = this.uuid;

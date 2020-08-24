@@ -42,7 +42,7 @@ class $ModelClass$Service {
       var data = await _dio.getHttp();
       if (data != null) {
         for (var item in data){
-          _itens.add($ModelClass$Model.fromJson(item));
+          _itens.add($ModelClass$Model.fromMap(item));
         }
       }
     } catch (error, exception) {
@@ -63,7 +63,7 @@ class $ModelClass$Service {
       CustomDio _dio = CustomDio(url);
       var data = await _dio.getHttp();
       if (data != null) {
-        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
+        _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
       }
     } catch (error, exception) {
         _error(error.toString(), exception.toString());
@@ -81,9 +81,9 @@ class $ModelClass$Service {
 
     try {
       CustomDio _dio = CustomDio(url);
-      var data = await _dio.putHttp($ModelClassCamelCase$.toJson(), $ModelClassCamelCase$.id.toString());
+      var data = await _dio.putHttp($ModelClassCamelCase$.toMap(), $ModelClassCamelCase$.id.toString());
       if (data != null) {
-        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
+        _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
@@ -101,9 +101,9 @@ class $ModelClass$Service {
 
     try {
       CustomDio _dio = CustomDio(url);
-      var data = await _dio.postHttp($ModelClassCamelCase$.toJson());
+      var data = await _dio.postHttp($ModelClassCamelCase$.toMap());
       if (data != null) {
-        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
+        _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
@@ -121,7 +121,7 @@ class $ModelClass$Service {
 
     try {
       CustomDio _dio = CustomDio(url);
-      var data = await _dio.deleteHttp($ModelClassCamelCase$.toJson(), $ModelClassCamelCase$.id.toString());
+      var data = await _dio.deleteHttp($ModelClassCamelCase$.toMap(), $ModelClassCamelCase$.id.toString());
       if (data != null) {
         _success("ok");
         return true;

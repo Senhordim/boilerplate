@@ -2,8 +2,8 @@
 /// 
 /// Os Métodos padrões gerados são:
 ///     toString() -> Sobrescreve o toString para trazer todos os atributos da classe.
-///     fromJson() -> Realiza o parser do Json para o Model.
-///     toJson()   -> Realiza o parser do Model para Json.
+///     fromMap() -> Realiza o parser do Json para o Model.
+///     toMap()   -> Realiza o parser do Model para Json.
 ///
 
 /// [Travar o arquivo]
@@ -26,18 +26,18 @@ class $ModelClass$Model {
     $ConstructorModelClass$
   });
 
-  $ModelClass$Model.fromJson(Map<String, dynamic> json) {
+  $ModelClass$Model.fromMap(Map<String, dynamic> json) {
     try{
       id = json.containsKey('id') ? json['id'] : "";
       nextUrl = json.containsKey('nextUrl') ? json['nextUrl'] : "";
       previousUrl = json.containsKey('previousUrl') ? json['previousUrl'] : "";
-      $ParserFromJson$
+      $ParserfromMap$
     } catch (e){
 
     }
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
       "nextUrl": nextUrl == null ? null : nextUrl,
       "previousUrl": previousUrl == null ? null : previousUrl,
       $ParserToMap$

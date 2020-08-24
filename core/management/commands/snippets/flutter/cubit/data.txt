@@ -55,7 +55,7 @@ class $ModelClass$Data {
       var _store = smbt.intMapStoreFactory.store(_storeName);
       var _data = await _store.find(_db);
       return _data.map((snapshot){
-        final _result = $ModelClass$Model.fromJson(snapshot.value);
+        final _result = $ModelClass$Model.fromMap(snapshot.value);
       }).toList();
     } catch (e) {
       return null;
@@ -73,7 +73,7 @@ class $ModelClass$Data {
       _db = await initDb();
       var _store = smbt.intMapStoreFactory.store(_storeName);
       var _data = await _store.findFirst(_db);
-      return $ModelClass$Model.fromJson(_data.value);
+      return $ModelClass$Model.fromMap(_data.value);
     } catch (e) {
       return null;
     } finally {
@@ -89,7 +89,7 @@ class $ModelClass$Data {
     try {
       _db = await initDb();
       var _store = smbt.intMapStoreFactory.store(_storeName);
-      await _store.add(_db, $modelClass$.toJson());
+      await _store.add(_db, $modelClass$.toMap());
       return true;
     } catch (error, exception) {
       return false;
@@ -143,7 +143,7 @@ class $ModelClass$Data {
       final finder = smbt.Finder(filter: smbt.Filter.byKey($modelClass$.id));
       await _store.update(
         _db,
-        $modelClass$.toJson(),
+        $modelClass$.toMap(),
         finder: finder,
       );
       return true;
