@@ -78,8 +78,8 @@ class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
   Future<void> post($ModelClass$Model $ModelClassCamelCase$) async {
     try {
       emit($ModelClass$ProcessState());
-      // TODO Cubit: Implementar consulta ao servico e tratamento do retorno
       _isLoading();
+       $ModelClassCamelCase$Model = await _service.post($ModelClassCamelCase$);
       emit($ModelClass$SuccessState(
         successMessage: "Dados salvos com sucesso."),
       );
@@ -93,8 +93,8 @@ class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
   Future<void> put($ModelClass$Model $ModelClassCamelCase$) async {
     try {
       emit($ModelClass$ProcessState());
-      // TODO Cubit: Implementar consulta ao servico e tratamento do retorno
       _isLoading();
+      $ModelClassCamelCase$Model = await _service.post($ModelClassCamelCase$);
       emit($ModelClass$SuccessState(
         successMessage: "Dado atualizado com sucesso."),
       );
@@ -108,8 +108,8 @@ class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
   Future<void> patch($ModelClass$Model $ModelClassCamelCase$) async {
     try {
       emit($ModelClass$ProcessState());
-      // TODO Cubit: Implementar consulta ao servico e tratamento do retorno
       _isLoading();
+      // TODO Cubit: Implementar consulta ao servico e tratamento do retorno
       emit($ModelClass$SuccessState(
         successMessage: "Dado atualizado com sucesso."),
       );
@@ -123,8 +123,8 @@ class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
   Future<void> delete($ModelClass$Model $ModelClassCamelCase$) async {
     try {
       emit($ModelClass$ProcessState());
-      // TODO Cubit: Implementar consulta ao servico e tratamento do retorno
       _isLoading();
+      // TODO Cubit: Implementar consulta ao servico e tratamento do retorno
       emit($ModelClass$SuccessState(
         successMessage: "Dado deletado com sucesso."),
       );
