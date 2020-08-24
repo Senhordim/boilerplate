@@ -56,7 +56,7 @@ class $ModelClass$Service {
     return _$ModelClassCamelCase$List;
   }
 
-  Future<List<$ModelClass$Model>> getMorel(String uri) async {
+  Future<List<$ModelClass$Model>> getMore(String uri) async {
     try {
       final CustomDio _dio = CustomDio(uri);
       _dio.makeHeadersAuthentication();

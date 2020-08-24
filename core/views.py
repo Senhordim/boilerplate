@@ -237,8 +237,7 @@ class BaseListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
                 except Exception as e:
                     pass
 
-                if hasattr(self.model, field) and field is not '' and (
-                        field in ['pk', 'id'] or (field.split('__')[-1] in ['pk', 'id'])):
+                if hasattr(self.model, field) and field != '' and (field in ['pk', 'id'] or (field.split('__')[-1] in ['pk', 'id'])):
                     # se for um atributo de relacionamento então olha se é numero pois pk só aceita numero.
                     if not param_filter or (param_filter and param_filter.isnumeric()):
                         query_params |= Q(**{field: param_filter})
