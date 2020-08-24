@@ -24,7 +24,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
   with SingleTickerProviderStateMixin{
   final _scaffoldKey = GlobalKey<ScaffoldState>();  
   AnimationController _animationController;
-  $ModelClass$Model _$Model$ = $ModelClass$Model();
+  $ModelClass$Model _$Model$;
   final _form$ModelClass$ = GlobalKey<FormState>();
   $Attributes$
 
@@ -146,6 +146,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
   void _post() async {
     final _$Model$Cubit = context.bloc<$ModelClass$Cubit>();
     try{
+      _$Model$ = $ModelClass$Model();
       $GetValuesControllers$
       _$Model$Cubit.$Model$Model = _$Model$;
       _$Model$Cubit.post(_$Model$);
