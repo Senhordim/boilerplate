@@ -45,10 +45,8 @@ class AppModel:
             if model_name is not None:
                 self.model = self.app.get_model(self.model_name)
             else:
-                self.models = (
-                    (x, x.__name__.strip(), x.__name__.strip().lower())
-                    for x in self.app.get_models()
-                )
+                self.models = ((x, x.__name__.strip(), x.__name__.strip().lower())
+                               for x in self.app.get_models())
             self.operation_system = platform.system().lower()
 
         except Exception as error:
@@ -84,11 +82,8 @@ class AppModel:
             String -- Caminho do diretório do model no projeto Flutter
         """
         try:
-            return Path(
-                "{}/lib/apps/{}/{}".format(
-                    self.path_flutter, self.app_name_lower, self.model_name_lower
-                )
-            )
+            return Path("{}/lib/apps/{}/{}".format(
+                self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
             self.__message(f"Erro no get_path_app_model_dir {error}", error=True)
 
@@ -99,11 +94,8 @@ class AppModel:
             String -- Caminho do diretório views no projeto Flutter
         """
         try:
-            return Path(
-                "{}/lib/apps/{}/{}/pages/".format(
-                    self.path_flutter, self.app_name_lower, self.model_name_lower
-                )
-            )
+            return Path("{}/lib/apps/{}/{}/pages/".format(
+                self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
             self.__message(f"Erro no get_path_views_dir {error}", error=True)
 
@@ -114,31 +106,16 @@ class AppModel:
             String's -- Caminho de cada arquivo das páginas na create, detail, index, list e update
         """
         try:
-            __create = Path(
-                "{}/lib/apps/{}/{}/pages/create.dart".format(
-                    self.path_flutter, self.app_name_lower, self.model_name_lower
-                )
-            )
-            __detail = Path(
-                "{}/lib/apps/{}/{}/pages/detail.dart".format(
-                    self.path_flutter, self.app_name_lower, self.model_name_lower
-                )
-            )
-            __index = Path(
-                "{}/lib/apps/{}/{}/pages/index.dart".format(
-                    self.path_flutter, self.app_name_lower, self.model_name_lower
-                )
-            )
-            __list = Path(
-                "{}/lib/apps/{}/{}/pages/list.dart".format(
-                    self.path_flutter, self.app_name_lower, self.model_name_lower
-                )
-            )
-            __update = Path(
-                "{}/lib/apps/{}/{}/pages/update.dart".format(
-                    self.path_flutter, self.app_name_lower, self.model_name_lower
-                )
-            )
+            __create = Path("{}/lib/apps/{}/{}/pages/create.dart".format(
+                self.path_flutter, self.app_name_lower, self.model_name_lower))
+            __detail = Path("{}/lib/apps/{}/{}/pages/detail.dart".format(
+                self.path_flutter, self.app_name_lower, self.model_name_lower))
+            __index = Path("{}/lib/apps/{}/{}/pages/index.dart".format(
+                self.path_flutter, self.app_name_lower, self.model_name_lower))
+            __list = Path("{}/lib/apps/{}/{}/pages/list.dart".format(
+                self.path_flutter, self.app_name_lower, self.model_name_lower))
+            __update = Path("{}/lib/apps/{}/{}/pages/update.dart".format(
+                self.path_flutter, self.app_name_lower, self.model_name_lower))
 
             return __create, __detail, __index, __list, __update
         except Exception as error:
@@ -151,11 +128,8 @@ class AppModel:
             String -- Caminho do arquivo data.dart
         """
         try:
-            return Path(
-                "{}/lib/apps/{}/{}/data.dart".format(
-                    self.path_flutter, self.app_name_lower, self.model_name_lower
-                )
-            )
+            return Path("{}/lib/apps/{}/{}/data.dart".format(
+                self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
             self.__message(f"Erro no get_path_data_file: {error}", error=True)
 
@@ -166,11 +140,8 @@ class AppModel:
             String -- Caminho do arquivo model.dart
         """
         try:
-            return Path(
-                "{}/lib/apps/{}/{}/model.dart".format(
-                    self.path_flutter, self.app_name_lower, self.model_name_lower
-                )
-            )
+            return Path("{}/lib/apps/{}/{}/model.dart".format(
+                self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
             self.__message(f"Erro no get_path_model_file {error}", error=True)
 
@@ -182,11 +153,8 @@ class AppModel:
             String -- Caminho do arquivo controller.dart
         """
         try:
-            return Path(
-                "{}/lib/apps/{}/{}/controller.dart".format(
-                    self.path_flutter, self.app_name_lower, self.model_name_lower
-                )
-            )
+            return Path("{}/lib/apps/{}/{}/controller.dart".format(
+                self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
             self.__message(f"Erro no get_path_controller_file {error}", error=True)
 
@@ -198,11 +166,8 @@ class AppModel:
             String -- Caminho do arquivo controller.dart
         """
         try:
-            return Path(
-                "{}/lib/apps/{}/{}/provider.dart".format(
-                    self.path_flutter, self.app_name_lower, self.model_name_lower
-                )
-            )
+            return Path("{}/lib/apps/{}/{}/provider.dart".format(
+                self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
             self.__message(f"Erro no get_path_provider_file {error}", error=True)
 
@@ -214,11 +179,8 @@ class AppModel:
             String -- Caminho do arquivo controller.dart
         """
         try:
-            return Path(
-                "{}/lib/apps/{}/{}/cubit.dart".format(
-                    self.path_flutter, self.app_name_lower, self.model_name_lower
-                )
-            )
+            return Path("{}/lib/apps/{}/{}/cubit.dart".format(
+                self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
             self.__message(f"Erro no get_path_provider_file {error}", error=True)
 
@@ -230,11 +192,8 @@ class AppModel:
             String -- Caminho do arquivo controller.dart
         """
         try:
-            return Path(
-                "{}/lib/apps/{}/{}/state.dart".format(
-                    self.path_flutter, self.app_name_lower, self.model_name_lower
-                )
-            )
+            return Path("{}/lib/apps/{}/{}/state.dart".format(
+                self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
             self.__message(f"Erro no get_path_provider_file {error}", error=True)
 
@@ -245,25 +204,17 @@ class AppModel:
             String -- Caminho do arquivo service.dart
         """
         try:
-            return Path(
-                "{}/lib/apps/{}/{}/service.dart".format(
-                    self.path_flutter, self.app_name_lower, self.model_name_lower
-                )
-            )
+            return Path("{}/lib/apps/{}/{}/service.dart".format(
+                self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
             self.__message(f"Erro no get_path_service_file {error}", error=True)
 
     def print_string(self):
         """Método para imprimir o object
         """
-        print(
-            "App: {} Name: {} - {}".format(self.app, self.app_name, self.app_name_lower)
-        )
-        print(
-            "Model: {} Name: {} - {}".format(
-                self.model, self.model_name, self.model_name_lower
-            )
-        )
+        print("App: {} Name: {} - {}".format(self.app, self.app_name, self.app_name_lower))
+        print("Model: {} Name: {} - {}".format(self.model, self.model_name, self.model_name_lower)
+              )
         print("")
         print("Caminhos:")
         print(f"Diretório App {self.get_path_app_dir()}")
@@ -275,18 +226,12 @@ class AppModel:
         print(f"Service {self.get_path_service_file()}")
         c, d, i, l, u = self.get_path_files_views()
         print("")
-        print(
-            "views \nCreate: {}\nDetail: {}\nIndex: {}\nList: {}\nUpdate: {}".format(
-                c, d, i, l, u
-            )
-        )
+        print("views \nCreate: {}\nDetail: {}\nIndex: {}\nList: {}\nUpdate: {}".format(c, d, i, l, u))
 
         print("Models (Generator)")
         if self.models is not None:
             for __model in self.models:
-                print(
-                    "Model: {} Name: {} - {}".format(__model[0], __model[1], __model[2])
-                )
+                print("Model: {} Name: {} - {}".format(__model[0], __model[1], __model[2]))
         else:
             print("None")
 
@@ -339,8 +284,7 @@ class Command(BaseCommand):
         if self.operation_system == "windows":
             self.project = os.getcwd().split("\\")[-1:][0]
             self.flutter_dir = "{}\\Flutter\\{}".format(
-                "\\".join(os.getcwd().split("\\")[:-2]), self.project.lower()
-            )
+                "\\".join(os.getcwd().split("\\")[:-2]), self.project.lower())
             self.project = self.project.replace("-", "").replace("_", "")
             self.flutter_project = "{}".format(self.project)
             self.utils_dir = "{}\\lib\\utils\\".format(self.flutter_dir)
@@ -348,39 +292,30 @@ class Command(BaseCommand):
             self.config_file = "{}\\lib\\utils\\config.dart".format(self.flutter_dir)
             self.util_file = "{}\\lib\\utils\\util.dart".format(self.flutter_dir)
             self.process_controller_file = "{}\\lib\\utils\\process.controller.dart".format(
-                self.flutter_dir
-            )
+                self.flutter_dir)
             self.process_provider_file = "{}\\lib\\utils\\process.provider.dart".format(
-                self.flutter_dir
-            )
+                self.flutter_dir)
             self.snippet_dir = "{}\\{}".format(
-                self.path_core, "management\\commands\\snippets\\flutter\\"
-            )
+                self.path_core, "management\\commands\\snippets\\flutter\\")
 
             # Criando o path da APP de configuração
             self.app_configuration = "{}\\lib\\apps\\configuracao\\".format(
-                self.flutter_dir
-            )
+                self.flutter_dir)
             self.app_configuration_page_file = (
-                f"{self.app_configuration}\\index.page.dart"
-            )
+                f"{self.app_configuration}\\index.page.dart")
             self.app_configuration_controller_file = (
-                f"{self.app_configuration}\\controller.dart"
-            )
+                f"{self.app_configuration}\\controller.dart")
             self.app_configuration_profile_file = (
-                f"{self.app_configuration}\\model.dart"
-            )
+                f"{self.app_configuration}\\model.dart")
             self.app_configuration_cubit_file = f"{self.app_configuration}\\cubit.dart"
             self.app_configuration_cubit_state_file = (
-                f"{self.app_configuration}\\state.dart"
-            )
+                f"{self.app_configuration}\\state.dart")
 
         else:
             self.project = _path_project.split("/")[-1:][0]
             self.project = self.project.replace("-", "").replace("_", "")
             self.flutter_dir = "{}/Flutter/{}".format(
-                "/".join(_path_project.split("/")[:-2]), self.project.lower()
-            )
+                "/".join(_path_project.split("/")[:-2]), self.project.lower())
 
             # Concatenando o nome do projeto Django com o prefixo flutter
             self.flutter_project = "{}".format(self.project)
@@ -389,22 +324,18 @@ class Command(BaseCommand):
             self.config_file = "{}/lib/utils/config.dart".format(self.flutter_dir)
             self.util_file = "{}/lib/utils/util.dart".format(self.flutter_dir)
             self.process_controller_file = "{}/lib/utils/process.controller.dart".format(
-                self.flutter_dir
-            )
+                self.flutter_dir)
             self.snippet_dir = "{}/{}".format(
-                self.path_core, "management/commands/snippets/flutter/"
-            )
+                self.path_core, "management/commands/snippets/flutter/")
 
             # Criando o path da APP de configuração
             self.app_configuration = "{}/lib/apps/configuracao/".format(
                 self.flutter_dir
             )
             self.app_configuration_page_file = (
-                f"{self.app_configuration}/index.page.dart"
-            )
+                f"{self.app_configuration}/index.page.dart")
             self.app_configuration_controller_file = (
-                f"{self.app_configuration}/controller.dart"
-            )
+                f"{self.app_configuration}/controller.dart")
 
         self.current_app_model = None
 
@@ -413,123 +344,36 @@ class Command(BaseCommand):
     )
 
     _tipos_originais = [
-        "SmallAutoField",
-        "AutoField",
-        "BLANK_CHOICE_DASH",
-        "BigAutoField",
-        "BigIntegerField",
-        "BinaryField",
-        "BooleanField",
-        "CharField",
-        "CommaSeparatedIntegerField",
-        "DateField",
-        "DateTimeField",
-        "DecimalField",
-        "DurationField",
-        "EmailField",
-        "Empty",
-        "FileField",
-        "Field",
-        "FieldDoesNotExist",
-        "FilePathField",
-        "FloatField",
-        "GenericIPAddressField",
-        "IPAddressField",
-        "IntegerField",
-        "FieldFile",
-        "NOT_PROVIDED",
-        "NullBooleanField",
-        "ImageField",
-        "PositiveIntegerField",
-        "PositiveSmallIntegerField",
-        "SlugField",
-        "SmallIntegerField",
-        "TextField",
-        "TimeField",
-        "URLField",
-        "UUIDField",
-        "ForeignKey",
-        "OneToOneField",
+        "SmallAutoField", "AutoField", "BLANK_CHOICE_DASH", "BigAutoField", "BigIntegerField",
+        "BinaryField", "BooleanField", "CharField", "CommaSeparatedIntegerField",
+        "DateField", "DateTimeField", "DecimalField", "DurationField",
+        "EmailField", "Empty", "FileField", "Field", "FieldDoesNotExist",
+        "FilePathField", "FloatField", "GenericIPAddressField", "IPAddressField",
+        "IntegerField", "FieldFile", "NOT_PROVIDED", "NullBooleanField", "ImageField",
+        "PositiveIntegerField", "PositiveSmallIntegerField", "SlugField", "SmallIntegerField",
+        "TextField", "TimeField", "URLField", "UUIDField", "ForeignKey", "OneToOneField",
     ]
 
     _tipos_flutter = [
-        "int",
-        "int",
-        "BLANK_CHOICE_DASH",
-        "int",
-        "int",
-        "String",
-        "bool",
-        "String",
-        "String",
-        "DateTime",
-        "DateTime",
-        "double",
-        "int",
-        "String",
-        "String",
-        "String",
-        "String",
-        "String",
-        "String",
-        "double",
-        "String",
-        "String",
-        "int",
-        "String",
-        "String",
-        "bool",
-        "String",
-        "int",
-        "int",
-        "String",
-        "int",
-        "String",
-        "DateTime",
-        "String",
-        "String",
-        "String",
-        "int",
+        "int", "int", "BLANK_CHOICE_DASH",
+        "int", "int", "String", "bool", "String",
+        "String", "DateTime", "DateTime", "double", "int",
+        "String", "String", "String", "String", "String", "String",
+        "double", "String", "String", "int", "String", "String",
+        "bool", "String", "int", "int", "String", "int",
+        "String", "DateTime", "String", "String", "String", "int",
     ]
 
     _tipos_sqlite = [
-        "INT",
-        "INT",
-        "BLANK_CHOICE_DASH",
-        "BIGINT",
-        "BIGINT",
-        "TEXT",
-        "BOOLEAN",
-        "TEXT",
-        "TEXT",
-        "DATE",
-        "DATETIME",
-        "DOUBLE",
-        "INT",
-        "TEXT",
-        "TEXT",
-        "TEXT",
-        "TEXT",
-        "TEXT",
-        "TEXT",
-        "FLOAT",
-        "TEXT",
-        "TEXT",
-        "INT",
-        "TEXT",
-        "TEXT",
-        "BOOLEAN",
-        "TEXT",
-        "INT",
-        "INT",
-        "TEXT",
-        "SMALLINT",
-        "TEXT",
-        "DATETIME",
-        "TEXT",
-        "TEXT",
-        "TEXT",
-        "INT",
+        "INT", "INT", "BLANK_CHOICE_DASH",
+        "BIGINT", "BIGINT", "TEXT",
+        "BOOLEAN", "TEXT", "TEXT",
+        "DATE", "DATETIME", "DOUBLE", "INT",
+        "TEXT", "TEXT", "TEXT", "TEXT",
+        "TEXT", "TEXT", "FLOAT",
+        "TEXT", "TEXT", "INT", "TEXT", "TEXT",
+        "BOOLEAN", "TEXT", "INT", "INT", "TEXT",
+        "SMALLINT", "TEXT", "DATETIME", "TEXT", "TEXT", "TEXT", "INT",
     ]
 
     def add_arguments(self, parser):
@@ -543,44 +387,32 @@ class Command(BaseCommand):
             "--app", action="store_true", dest="app", help="Criar a App e seus models"
         )
         parser.add_argument(
-            "--app_model",
-            action="store_true",
-            dest="app_model",
-            help="Criar a App e o Model informado",
-        )
+            "--app_model", action="store_true", dest="app_model",
+            help="Criar a App e o Model informado")
+
         parser.add_argument(
-            "--main", action="store_true", dest="main", help="Renderizar a main.dart"
-        )
+            "--main", action="store_true", dest="main", help="Renderizar a main.dart")
         parser.add_argument(
-            "--yaml", action="store_true", dest="yaml", help="Refatorando o YAML"
-        )
+            "--yaml", action="store_true", dest="yaml", help="Refatorando o YAML")
+
         parser.add_argument(
-            "--build_mobx",
-            action="store_true",
-            dest="build_mobx",
-            help="Gerar os arquivos do MobX",
-        )
+            "--build_mobx", action="store_true", dest="build_mobx",
+            help="Gerar os arquivos do MobX")
+
         parser.add_argument(
-            "--init_provider",
-            action="store_true",
-            dest="init_provider",
+            "--init_provider", action="store_true", dest="init_provider",
             help="Gerar o projeto Flutter utilizando o Provider como gerencia de estado.",
         )
         parser.add_argument(
-            "--init_mobx",
-            action="store_true",
-            dest="init_mobx",
+            "--init_mobx", action="store_true", dest="init_mobx",
             help="Gerar o projeto Flutter utilizando o MobX como gerencia de estado.",
         )
         parser.add_argument(
-            "--init_cubit",
-            action="store_true",
-            dest="init_cubit",
+            "--init_cubit", action="store_true", dest="init_cubit",
             help="Gerar o projeto Flutter utilizando o Cubit como gerencia de estado.",
         )
         parser.add_argument(
-            "--clear", action="store_true", dest="clear", help="Limpar projeto flutter."
-        )
+            "--clear", action="store_true", dest="clear", help="Limpar projeto flutter.")
 
     """
     #################################################################
@@ -629,15 +461,8 @@ class Command(BaseCommand):
             Boolean -- True se for para ser ignorado.
         """
         try:
-            __ignore_fields = [
-                "id",
-                "enabled",
-                "deleted",
-                "createdOn",
-                "created_on",
-                "updatedOn",
-                "updatedOn",
-            ]
+            __ignore_fields = ["id", "enabled", "deleted", "createdOn",
+                               "created_on", "updatedOn", "updatedOn", ]
             return field in __ignore_fields
         except Exception as error:
             self.__message(
@@ -763,8 +588,7 @@ class Command(BaseCommand):
         except Exception as error:
             self.__message(
                 f"Ocorreu erro ao verificar se o arquivo está travado: {error}",
-                error=True,
-            )
+                error=True, )
             return True
 
     """
@@ -780,8 +604,7 @@ class Command(BaseCommand):
             if not self.__check_dir(self.flutter_dir):
                 self.__message("Criando o projeto flutter.")
                 __cmd_flutter_create = "flutter create --androidx {}".format(
-                    self.flutter_dir
-                )
+                    self.flutter_dir)
                 subprocess.call(__cmd_flutter_create, shell=True)
                 self.__message("Projeto criado com sucesso.")
         except Exception as error:
@@ -833,8 +656,7 @@ class Command(BaseCommand):
         except Exception as error:
             self.__message(
                 f"Ocorreu o erro {error} ao chamar o __build_menu_home_page_itens",
-                error=True,
-            )
+                error=True, )
 
     def __register_provider(self):
         __register_provider = ""
@@ -852,8 +674,7 @@ class Command(BaseCommand):
             __register_provider += f"ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider(),),\n"
         except Exception as error:
             self.__message(
-                f"Ocorreu o erro {error} ao chamar o __register_provider", error=True
-            )
+                f"Ocorreu o erro {error} ao chamar o __register_provider", error=True)
         return __import_provider, __register_provider
 
     def __register_cubit(self):
@@ -874,8 +695,7 @@ class Command(BaseCommand):
             __reegister += f"BlocProvider<AuthCubit>(create: (_) => AuthCubit(),),\n"
         except Exception as error:
             self.__message(
-                f"Ocorreu o erro {error} ao chamar o __reegister", error=True
-            )
+                f"Ocorreu o erro {error} ao chamar o __reegister", error=True)
         return __import, __reegister
 
     def __mapping_all_application(self):
@@ -892,30 +712,21 @@ class Command(BaseCommand):
                 for model in __current_app.models:
                     __model = model[1]
                     __imports_views += "import 'apps/{}/{}/pages/list.dart' as {}Views;\n".format(
-                        __app, __model.lower(), f"{__app.title()}{__model}"
-                    )
+                        __app, __model.lower(), f"{__app.title()}{__model}")
                     __list_views += "Itens(title: '{}', icon: FontAwesomeIcons.folderOpen, uri: {}.{}ListPage()),\n".format(
                         model[0]._meta.verbose_name,
                         f"{__app.title()}{__model}",
-                        __model,
-                    )
+                        __model, )
                     __imports_controllers += f"import 'apps/{__app.lower()}/{__model.lower()}/controller.dart' as {__app.title()}{__model.title()}Controller;\n"
                     __controller_model = (
-                        f"{__app.title()}{__model.title()}Controller.{__model}"
-                    )
+                        f"{__app.title()}{__model.title()}Controller.{__model}")
                     __controllers_models += f"getIt.registerSingleton<{__controller_model}Controller>({__controller_model}Controller(), instanceName: '{__app.title()}{__model.title()}Controller');\n    "
 
-            return (
-                __imports_views,
-                __imports_controllers,
-                __controllers_models,
-                __list_views,
-            )
+            return (__imports_views, __imports_controllers, __controllers_models, __list_views,)
 
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro no Mapping All Application: {error}", error=True
-            )
+                f"Ocorreu um erro no Mapping All Application: {error}", error=True)
 
     def __indexpage_parser(self, app):
         """Método para criar a página index do Model
@@ -932,8 +743,7 @@ class Command(BaseCommand):
             content = ParserContent(
                 ["$ModelClass$", "$ModelClassCamelCase$", "$project$"],
                 [app.model_name, self.__to_camel_case(app.model_name, True),
-                    self.flutter_project.lower(),
-                ],
+                 self.flutter_project.lower(), ],
                 self.__get_snippet(file_name="index_page.txt", state_manager=True),
             ).replace()
 
@@ -942,8 +752,7 @@ class Command(BaseCommand):
 
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao gerar a página da Index {error}", error=True
-            )
+                f"Ocorreu um erro ao gerar a página da Index {error}", error=True)
 
     def __listpage_parser(self, app):
         """Método para criar a página de listagem do Model
@@ -958,8 +767,8 @@ class Command(BaseCommand):
 
             content = ParserContent(
                 ["$App$", "$Model$", "$ModelClass$", "$ModelClassCamelCase$", "$project$"],
-                [app.app_name, app.model_name_lower, app.model_name,  self.__to_camel_case(app.model_name, True), self.flutter_project],
-                self.__get_snippet(file_name="list_page.txt", state_manager=True),
+                [app.app_name, app.model_name_lower, app.model_name, self.__to_camel_case(app.model_name, True),
+                 self.flutter_project], self.__get_snippet(file_name="list_page.txt", state_manager=True)
             ).replace()
 
             with open(__listpage_file, "w", encoding="utf-8") as page:
@@ -967,8 +776,7 @@ class Command(BaseCommand):
 
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao gerar a página da Listagem {error}", error=True
-            )
+                f"Ocorreu um erro ao gerar a página da Listagem {error}", error=True)
 
     def __get_attributes_data(self, attribute, model_name, name, name_title):
         """
@@ -987,39 +795,30 @@ class Command(BaseCommand):
             if attribute == "int":
                 if f"id{model_name.lower()}" == name.lower():
                     __attribute = "{0}_{1}.id = int.tryParse(_{1}Form{2}.text ?? 0);\n".format(
-                        " " * 16, self.__to_camel_case(model_name, True), name_title
-                    )
+                        " " * 16, self.__to_camel_case(model_name, True), name_title)
                 else:
                     __attribute = "{0}_{1}.{2} = int.tryParse(_{1}Form{3}.text ?? 0);\n".format(
-                        " " * 16,
-                        self.__to_camel_case(model_name, True),
-                        name,
-                        name_title,
-                    )
+                        " " * 16, self.__to_camel_case(model_name, True), name,
+                        name_title)
 
             elif attribute == "double":
                 __attribute = "{0}_{1}.{2} = double.tryParse(_{1}Form{3}.text ?? 0.0);\n".format(
-                    " " * 16, self.__to_camel_case(model_name, True), name, name_title
-                )
+                    " " * 16, self.__to_camel_case(model_name, True), name, name_title)
 
             elif attribute == "bool":
                 __attribute = "{0}_{1}.{2} = _{1}Form{3}.text ?? true;\n".format(
-                    " " * 16, self.__to_camel_case(model_name, True), name, name_title
-                )
+                    " " * 16, self.__to_camel_case(model_name, True), name, name_title)
 
             elif attribute == "DateTime":
                 __attribute = '{0}_{1}.{2} = _{1}Form{3}.text != "" ?Util.convertDate(_{1}Form{3}.text): null;\n'.format(
-                    " " * 16, self.__to_camel_case(model_name, True), name, name_title
-                )
+                    " " * 16, self.__to_camel_case(model_name, True), name, name_title)
 
             else:
                 __attribute = '{0}_{1}.{2} = _{1}Form{3}.text ?? "";\n'.format(
-                    " " * 16, self.__to_camel_case(model_name, True), name, name_title
-                )
+                    " " * 16, self.__to_camel_case(model_name, True), name, name_title)
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao executar o __get_attributes: {error}", error=True
-            )
+                f"Ocorreu um erro ao executar o __get_attributes: {error}", error=True)
         finally:
             return __attribute
 
@@ -1038,36 +837,26 @@ class Command(BaseCommand):
             if attribute == "int":
                 if f"id{model_name.lower()}" == name.lower():
                     __controllers_data = "{0}_{1}.id = int.tryParse(_{1}Form{2}.text ?? 0);\n".format(
-                        " " * 6, self.__to_camel_case(model_name, True), name_title
-                    )
+                        " " * 6, self.__to_camel_case(model_name, True), name_title)
                 else:
                     __controllers_data = "{0}_{1}.{2} = int.tryParse(_{1}Form{3}.text ?? 0);\n".format(
-                        " " * 6,
-                        self.__to_camel_case(model_name, True),
-                        name,
-                        name_title,
-                    )
+                        " " * 6, self.__to_camel_case(model_name, True), name, name_title)
             elif attribute == "double":
                 __controllers_data = "{0}_{1}.{2} = double.tryParse(_{1}Form{3}.text ?? 0.0);\n".format(
-                    " " * 6, self.__to_camel_case(model_name, True), name, name_title
-                )
+                    " " * 6, self.__to_camel_case(model_name, True), name, name_title)
             elif attribute == "bool":
                 __controllers_data = "{0}_{1}.{2} = _{1}Form{3}.text ?? true;\n".format(
-                    " " * 6, self.__to_camel_case(model_name, True), name, name_title
-                )
+                    " " * 6, self.__to_camel_case(model_name, True), name, name_title)
             elif attribute == "DateTime":
                 __controllers_data = '{0}_{1}.{2} = _{1}Form{3}.text != ""? Util.convertDate(_{1}Form{3}.text) : null;\n'.format(
-                    " " * 6, self.__to_camel_case(model_name, True), name, name_title
-                )
+                    " " * 6, self.__to_camel_case(model_name, True), name, name_title)
             else:
                 __controllers_data = "{0}_{1}.{2} = _{1}Form{3}.text;\n".format(
-                    " " * 6, self.__to_camel_case(model_name, True), name, name_title
-                )
+                    " " * 6, self.__to_camel_case(model_name, True), name, name_title)
         except Exception as error:
             self.__message(
                 f"Ocorreu um erro ao executar o __get_controller_data: {error}",
-                error=True,
-            )
+                error=True)
         finally:
             return __controllers_data
 
@@ -1076,15 +865,13 @@ class Command(BaseCommand):
             if createpage is True:
                 __createpage_file = Path(f"{app.get_path_views_dir()}/create.dart")
                 content = self.__get_snippet(
-                    file_name="create_page.txt", state_manager=True
-                )
+                    file_name="create_page.txt", state_manager=True)
                 if self.__check_file_is_locked(__createpage_file):
                     return
             else:
                 __createpage_file = Path(f"{app.get_path_views_dir()}/update.dart")
                 content = self.__get_snippet(
-                    file_name="update_page.txt", state_manager=True
-                )
+                    file_name="update_page.txt", state_manager=True)
                 if self.__check_file_is_locked(__createpage_file):
                     return
 
@@ -1107,30 +894,25 @@ class Command(BaseCommand):
 
                 field_type = (
                     str(str(type(field)).split(".")[-1:])
-                    .replace('["', "")
-                    .replace("'>\"]", "")
-                )
+                        .replace('["', "")
+                        .replace("'>\"]", ""))
+
                 attribute = self._tipos_flutter[self._tipos_originais.index(field_type)]
                 content_attributes += "  final _{0}Form{1} = TextEditingController();\n".format(
-                    self.__to_camel_case(app.model_name, True), __nameTitle
-                )
+                    self.__to_camel_case(app.model_name, True), __nameTitle)
                 text_field = content_form
                 controller = "_{}Form{}".format(
-                    self.__to_camel_case(app.model_name, True), __nameTitle
-                )
+                    self.__to_camel_case(app.model_name, True), __nameTitle)
                 text_field = text_field.replace("$controller$", controller)
                 text_field = text_field.replace(
-                    "$Field$", str(field.verbose_name).replace("R$", "R\$")
-                )
+                    "$Field$", str(field.verbose_name).replace("R$", "R\$"))
                 text_fiels += text_field
 
                 attributes_data += self.__get_attributes_data(
-                    attribute, app.model_name, __name, __nameTitle
-                )
+                    attribute, app.model_name, __name, __nameTitle)
 
                 get_controllers_data += self.__get_controllers_data(
-                    attribute, app.model_name, __name, __nameTitle
-                )
+                    attribute, app.model_name, __name, __nameTitle)
 
                 clear_data += "    {}.clear();\n".format(controller)
 
@@ -1138,19 +920,18 @@ class Command(BaseCommand):
                     __name = "id"
 
                 edited_attributes += "      {}.text = _{}.{}.toString();\n".format(
-                    controller, self.__to_camel_case(app.model_name, True), __name
-                )
+                    controller, self.__to_camel_case(app.model_name, True), __name)
 
             content = ParserContent(
                 ["$app$", "$App$", "$Model$", "$model$",
-                    "$ModelClass$", "$ModelClassCamelCase$", 
-                    "$project$", "$Attributes$", "$Form$", "$AttributesData$", "$ClearData$", 
-                    "$EditedAttributes$", "$GetValuesControllers$",],
+                 "$ModelClass$", "$ModelClassCamelCase$",
+                 "$project$", "$Attributes$", "$Form$", "$AttributesData$", "$ClearData$",
+                 "$EditedAttributes$", "$GetValuesControllers$", ],
                 [app.app_name_lower, app.app_name_lower,
-                    self.__to_camel_case(app.model_name, True), app.model_name_lower, 
-                    app.model_name, self.__to_camel_case(app.model_name, True), 
-                    self.flutter_project, content_attributes, text_fiels, attributes_data, 
-                    clear_data, edited_attributes, get_controllers_data],
+                 self.__to_camel_case(app.model_name, True), app.model_name_lower,
+                 app.model_name, self.__to_camel_case(app.model_name, True),
+                 self.flutter_project, content_attributes, text_fiels, attributes_data,
+                 clear_data, edited_attributes, get_controllers_data],
                 content,
             ).replace()
 
@@ -1159,8 +940,7 @@ class Command(BaseCommand):
 
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao gerar a página da Create {error}", error=True
-            )
+                f"Ocorreu um erro ao gerar a página da Create {error}", error=True)
 
     def __detailpage_parser(self, app):
         """Método para criar a página de detalhamento do Model
@@ -1176,10 +956,10 @@ class Command(BaseCommand):
 
             content = ParserContent(
                 ["$App$", "$app$", "$Model$", "$ModelClassCamelCase$",
-                "$model$", "$ModelClass$", "$project$"],
+                 "$model$", "$ModelClass$", "$project$"],
                 [app.app_name, app.app_name_lower, self.__to_camel_case(
-                app.model_name, True), self.__to_camel_case(app.model_name, True), 
-                app.model_name_lower, app.model_name, self.flutter_project],
+                    app.model_name, True), self.__to_camel_case(app.model_name, True),
+                 app.model_name_lower, app.model_name, self.flutter_project],
                 self.__get_snippet(file_name="detail_page.txt", state_manager=True),
             ).replace()
 
@@ -1188,8 +968,7 @@ class Command(BaseCommand):
 
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao gerar a página da Detail {error}", error=True
-            )
+                f"Ocorreu um erro ao gerar a página da Detail {error}", error=True)
 
     def __widget_parser(self, app):
         """Método para criar o widget do Model
@@ -1204,16 +983,15 @@ class Command(BaseCommand):
                 return
 
             content = ParserContent(["$ModelClass$"], [app.model_name],
-                self.__get_snippet(f"{self.snippet_dir}widget.txt"),
-            ).replace()
+                                    self.__get_snippet(f"{self.snippet_dir}widget.txt"),
+                                    ).replace()
 
             with open(__widget_file, "w", encoding="utf-8") as page:
                 page.write(content)
 
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao gerar a página da Widget {error}", error=True
-            )
+                f"Ocorreu um erro ao gerar a página da Widget {error}", error=True)
 
     def __build_auth_app(self):
         """Método responsável por criar a app padrão de autenticação no projeto flutter
@@ -1223,11 +1001,9 @@ class Command(BaseCommand):
         """
         try:
             __data_snippet = self.__get_snippet(
-                file_name="auth_data.txt", state_manager=True
-            )
+                file_name="auth_data.txt", state_manager=True)
             __model_snippet = self.__get_snippet(
-                file_name="auth_model.txt", state_manager=True
-            )
+                file_name="auth_model.txt", state_manager=True)
 
             __auth_file = Path(f"{self.flutter_dir}/lib/apps/auth")
             if self.__check_dir(__auth_file):
@@ -1238,8 +1014,7 @@ class Command(BaseCommand):
             __data_file = Path("{}/lib/apps/auth/data.dart".format(self.flutter_dir))
             __model_file = Path("{}/lib/apps/auth/model.dart".format(self.flutter_dir))
             __service_file = Path(
-                "{}/lib/apps/auth/service.dart".format(self.flutter_dir)
-            )
+                "{}/lib/apps/auth/service.dart".format(self.flutter_dir))
 
             with open(__data_file, "w", encoding="utf-8") as data_file:
                 data_file.write(__data_snippet)
@@ -1259,12 +1034,11 @@ class Command(BaseCommand):
             if self.state_manager == StateManager.Cubit:
                 __snippet_cubit_state = self.__get_snippet(
                     file_name="auth_state.txt", state_manager=True)
-                
+
                 __cubit_state_file = Path(
                     "{}/lib/apps/auth/state.dart".format(self.flutter_dir))
 
                 with open(__cubit_state_file, "w", encoding="utf-8") as cubit_state_file:
-
                     cubit_state_file.write(__snippet_cubit_state)
                 __file = Path("{}/lib/apps/auth/cubit.dart".format(self.flutter_dir))
 
@@ -1278,8 +1052,7 @@ class Command(BaseCommand):
 
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao gerar a app de autenticação {error}", error=True
-            )
+                f"Ocorreu um erro ao gerar a app de autenticação {error}", error=True)
 
     def __data_parser(self, app):
         """Método responsável por criar o arquivo de data baseado na App e no Models
@@ -1294,9 +1067,9 @@ class Command(BaseCommand):
                 return
 
             content = ParserContent(
-                ["$ModelClass$", "$modelClass$", "$project$"], 
+                ["$ModelClass$", "$modelClass$", "$project$"],
                 [app.model_name, app.model_name_lower, self.flutter_project],
-                self.__get_snippet(f"{self.snippet_dir}data.txt"),).replace()
+                self.__get_snippet(f"{self.snippet_dir}data.txt"), ).replace()
 
             with open(__data_file, "w", encoding="utf-8") as data_helper:
                 data_helper.write(content)
@@ -1311,16 +1084,15 @@ class Command(BaseCommand):
             __dio_file = Path(f"{self.flutter_dir}/lib/utils/custom_dio.dart")
 
             content = ParserContent(
-                ["$project$",],
-                [self.flutter_project,],
+                ["$project$", ],
+                [self.flutter_project, ],
                 self.__get_snippet(f"{self.snippet_dir}/custom_dio.txt")).replace()
 
             with open(__dio_file, "w", encoding="utf-8") as http_request:
                 http_request.write(content)
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao criar o Dio Request {error}", error=True
-            )
+                f"Ocorreu um erro ao criar o Dio Request {error}", error=True)
 
     def __controller_parser(self, app):
         """Método responsável por criar o arquivo controller do Model
@@ -1338,7 +1110,7 @@ class Command(BaseCommand):
                 return
 
             content = ParserContent(
-                ["$ModelClass$", "$ModelClassCamelCase$",],
+                ["$ModelClass$", "$ModelClassCamelCase$", ],
                 [app.model_name, self.__to_camel_case(app.model_name, True)],
                 self.__get_snippet(file_name="controller.txt", state_manager=True)).replace()
 
@@ -1435,11 +1207,11 @@ class Command(BaseCommand):
 
             content = ParserContent(
                 ["$ModelClass$", "$App$", "$Model$",
-                    "$ModelClassCamelCase$", "$project$", ],
+                 "$ModelClassCamelCase$", "$project$", ],
                 [app.model_name, app.app_name_lower, app.model_name_lower,
-                    self.__to_camel_case(app.model_name, True), self.flutter_project],
+                 self.__to_camel_case(app.model_name, True), self.flutter_project],
                 self.__get_snippet(file_name="service.txt", state_manager=True)).replace()
- 
+
             if not self.__check_file(__service_file):
                 os.makedirs(__service_file)
 
@@ -1477,39 +1249,32 @@ class Command(BaseCommand):
 
                 field_type = (
                     str(str(type(field)).split(".")[-1:])
-                    .replace('["', "")
-                    .replace("'>\"]", "")
-                )
+                        .replace('["', "")
+                        .replace("'>\"]", ""))
                 attribute = self._tipos_flutter[self._tipos_originais.index(field_type)]
 
                 content_atributes += "{} {};\n  ".format(attribute, __name_dart)
                 content_string_return += "{}: ${}\\n".format(
-                    __name_dart.upper(), __name_dart
-                )
+                    __name_dart.upper(), __name_dart)
 
                 content_constructor += "this.{},\n".format(__name_dart)
 
                 if str(attribute) == "DateTime":
                     content_from_json += "{1} = Util.convertDate(json['{2}']) == null ? null:  Util.convertDate(json['{2}']);\n        ".format(
-                        __model.lower(), __name_dart, __name
-                    )
+                        __model.lower(), __name_dart, __name)
                 elif str(attribute) == "double":
                     content_from_json += "{1} = json['{2}'] == null ? null : double.parse(json['{2}']) ;\n        ".format(
-                        __model.lower(), __name_dart, __name
-                    )
+                        __model.lower(), __name_dart, __name)
                 elif str(attribute) == "bool":
                     if __name_dart.lower() == "enabled":
                         content_from_json += "{1} = json['{2}'] == null ? true : json['{2}'] ;\n        ".format(
-                            __model.lower(), __name_dart, __name
-                        )
+                            __model.lower(), __name_dart, __name)
                     elif __name_dart.lower() == "deleted":
                         content_from_json += "{1} = json['{2}'] == null ? false : json['{2}'];\n        ".format(
-                            __model.lower(), __name_dart, __name
-                        )
+                            __model.lower(), __name_dart, __name)
                     else:
                         content_from_json += "{1} = json['{2}'] == null ? true : json['{2}'];\n        ".format(
-                            __model.lower(), __name_dart, __name
-                        )
+                            __model.lower(), __name_dart, __name)
                 else:
                     if __name_dart.startswith("fk"):
                         content_from_json += "{1} = json['{2}'] == null ? \"\" : json['{2}'];\n        ".format(
@@ -1523,44 +1288,38 @@ class Command(BaseCommand):
                 if str(field_type) == "DateTimeField":
                     if __name_dart in ("createdOn", "updatedOn"):
                         content_to_map += "'{0}': this.{1}.toString(),\n        ".format(
-                            __name, __name_dart
-                        )
+                            __name, __name_dart)
                     else:
                         content_to_map += "'{0}': this.{1} != null? Util.stringDateTimeSplit(this.{1}, returnType: \"dt\"): null, \n".format(
-                            __name, __name_dart
-                        )
+                            __name, __name_dart)
                     continue
                 if str(field_type) == "DateField":
                     content_to_map += "'{0}': this.{1} != null ?Util.stringDateTimeSplit(this.{1}, returnType: \"d\"): null, \n".format(
-                        __name, __name_dart
-                    )
+                        __name, __name_dart)
                     continue
                 if str(field_type) == "TimeField":
                     content_to_map += "'{0}': this.{1} != null ?Util.stringDateTimeSplit(this.{1}, returnType: \"t\"): null, \n".format(
-                        __name, __name_dart
-                    )
+                        __name, __name_dart)
                     continue
                 if str(attribute) == "bool":
                     if __name_dart.lower() == "enabled":
                         content_to_map += "'{0}': this.{1} != null? this.{1}: true,\n        ".format(
-                            __name, __name_dart
-                        )
+                            __name, __name_dart)
                     elif __name_dart.lower() == "deleted":
                         content_to_map += "'{0}': this.{1} != null? this.{1}: false,\n        ".format(
-                            __name, __name_dart
-                        )
+                            __name, __name_dart)
                     else:
                         content_to_map += "'{0}': this.{1} != null? this.{1}: true,\n        ".format(
-                            __name, __name_dart
-                        )
+                            __name, __name_dart)
                     continue
                 content_to_map += "'{0}': this.{1} != null? this.{1}: \"\",\n        ".format(
-                    __name, __name_dart
-                )
+                    __name, __name_dart)
 
             content = ParserContent(
-                ["$ModelClass$", "$AttributeClass$", "$StringReturn$", "$Model$", "$ParserfromMap$", "$ParserToMap$", "$project$", "$ConstructorModelClass$",],
-                [app.model_name, content_atributes, content_string_return, app.model_name_lower, content_from_json, content_to_map, self.flutter_project, content_constructor],
+                ["$ModelClass$", "$AttributeClass$", "$StringReturn$", "$Model$", "$ParserfromMap$", "$ParserToMap$",
+                 "$project$", "$ConstructorModelClass$", ],
+                [app.model_name, content_atributes, content_string_return, app.model_name_lower, content_from_json,
+                 content_to_map, self.flutter_project, content_constructor],
                 content).replace()
 
             if not self.__check_file(__model_file):
@@ -1603,44 +1362,34 @@ class Command(BaseCommand):
                 os.makedirs(self.app_configuration)
 
                 _content_page = self.__get_snippet(
-                    file_name="settings_page.txt", state_manager=True
-                )
+                    file_name="settings_page.txt", state_manager=True)
                 _content_controller = self.__get_snippet(
-                    file_name="settings.txt", state_manager=True
-                )
+                    file_name="settings.txt", state_manager=True)
                 if self.state_manager == StateManager.Provider:
                     with open(
-                        self.app_configuration_profile_file, "w", encoding="utf-8"
-                    ) as arquivo:
+                            self.app_configuration_profile_file, "w", encoding="utf-8") as arquivo:
                         arquivo.write(_content_controller)
                 elif self.state_manager == StateManager.MobX:
                     with open(
-                        self.app_configuration_controller_file, "w", encoding="utf-8"
-                    ) as arquivo:
+                            self.app_configuration_controller_file, "w", encoding="utf-8") as arquivo:
                         arquivo.write(_content_controller)
                 elif self.state_manager == StateManager.Cubit:
-
                     with open(
-                        self.app_configuration_cubit_file, "w", encoding="utf-8"
-                    ) as arquivo:
+                            self.app_configuration_cubit_file, "w", encoding="utf-8") as arquivo:
                         arquivo.write(_content_controller)
                     with open(
-                        self.app_configuration_cubit_state_file, "w", encoding="utf-8"
-                    ) as arquivo:
+                            self.app_configuration_cubit_state_file, "w", encoding="utf-8") as arquivo:
                         __content = self.__get_snippet(
-                            file_name="settings_state.txt", state_manager=True
-                        )
+                            file_name="settings_state.txt", state_manager=True)
                         arquivo.write(__content)
 
                 with open(
-                    self.app_configuration_page_file, "w", encoding="utf-8"
-                ) as arquivo:
+                        self.app_configuration_page_file, "w", encoding="utf-8") as arquivo:
                     arquivo.write(_content_page)
 
         except Exception as error:
             self.__message(
-                f"Erro ao executar o __build_settings_controller: {error}", error=True
-            )
+                f"Erro ao executar o __build_settings_controller: {error}", error=True)
 
     """
     #################################################################
@@ -1653,8 +1402,7 @@ class Command(BaseCommand):
             return Path(f"{self.flutter_dir}/pubspec.yaml")
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao recuperar o arquivo Yaml:{error}", error=True
-            )
+                f"Ocorreu um erro ao recuperar o arquivo Yaml:{error}", error=True)
 
     def __add_packages(self):
         """
@@ -1693,22 +1441,17 @@ class Command(BaseCommand):
             __util_snippet = self.__get_snippet(f"{self.snippet_dir}util.txt")
 
             __controller_snippet = self.__get_snippet(
-                file_name="process.txt", state_manager=True
-            )
+                file_name="process.txt", state_manager=True)
 
             if self.__check_file(self.config_file) is False:
-                __config_snippet = __config_snippet.replace("$AppName$", SYSTEM_NAME)
-                __config_snippet = __config_snippet.replace("$DjangoAPIPath$", API_PATH)
+                __config_snippet = ParserContent(["$AppName$", "$DjangoAPIPath$"],
+                                                 [SYSTEM_NAME, API_PATH], __config_snippet).replace()
                 with open(self.config_file, "w", encoding="utf-8") as config:
                     config.write(__config_snippet)
             else:
                 if self.__check_file_is_locked(self.config_file) is False:
-                    __config_snippet = __config_snippet.replace(
-                        "$AppName$", SYSTEM_NAME
-                    )
-                    __config_snippet = __config_snippet.replace(
-                        "$DjangoAPIPath$", API_PATH
-                    )
+                    __config_snippet = ParserContent(["$AppName$", "$DjangoAPIPath$"],
+                                                     [SYSTEM_NAME, API_PATH], __config_snippet).replace()
                     with open(self.config_file, "w", encoding="utf-8") as config:
                         config.write(__config_snippet)
 
@@ -1723,29 +1466,21 @@ class Command(BaseCommand):
             if self.state_manager == StateManager.Provider:
                 if self.__check_file(self.process_provider_file) is False:
                     with open(
-                        self.process_provider_file, "w", encoding="utf-8"
-                    ) as process_provider:
+                            self.process_provider_file, "w", encoding="utf-8") as process_provider:
                         process_provider.write(__controller_snippet)
                 else:
                     if self.__check_file_is_locked(self.process_provider_file) is False:
                         with open(
-                            self.process_provider_file, "w", encoding="utf-8"
-                        ) as process_provider:
+                                self.process_provider_file, "w", encoding="utf-8") as process_provider:
                             process_provider.write(__controller_snippet)
             elif self.state_manager == StateManager.MobX:
                 if self.__check_file(self.process_controller_file) is False:
                     with open(
-                        self.process_controller_file, "w", encoding="utf-8"
-                    ) as process_controller:
+                            self.process_controller_file, "w", encoding="utf-8") as process_controller:
                         process_controller.write(__controller_snippet)
                 else:
-                    if (
-                        self.__check_file_is_locked(self.process_controller_file)
-                        is False
-                    ):
-                        with open(
-                            self.process_controller_file, "w", encoding="utf-8"
-                        ) as process_controller:
+                    if self.__check_file_is_locked(self.process_controller_file) is False:
+                        with open(self.process_controller_file, "w", encoding="utf-8") as process_controller:
                             process_controller.write(__controller_snippet)
             elif self.state_manager == StateManager.Cubit:
                 pass
@@ -1770,12 +1505,10 @@ class Command(BaseCommand):
                 __path = Path(f"{self.ui_dir}{arquivo}.dart")
                 if arquivo == "font":
                     __snippet = self.__get_snippet(
-                        Path(f"{self.snippet_dir}ui_{arquivo}.txt")
-                    )
+                        Path(f"{self.snippet_dir}ui_{arquivo}.txt"))
                 else:
                     __snippet = self.__get_snippet(
-                        file_name="ui_widget.txt", state_manager=True
-                    )
+                        file_name="ui_widget.txt", state_manager=True)
                 if self.__check_file(__path) is False:
                     with open(__path, "w", encoding="utf-8") as arq:
                         arq.write(__snippet)
@@ -1786,8 +1519,7 @@ class Command(BaseCommand):
 
         except Exception as error:
             self.__message(
-                f"Erro ao criar a estrutura de arquivos da UI {error}", error=True
-            )
+                f"Erro ao criar a estrutura de arquivos da UI {error}", error=True)
 
     def __create_source_from_model(self):
         """Método para criar as apps quando a App e Model forem informados
@@ -1795,12 +1527,10 @@ class Command(BaseCommand):
         self.__message("Criando as apps baseado na App e no Model")
         try:
             self.__create_source(
-                self.current_app_model.app_name, self.current_app_model.model_name
-            )
+                self.current_app_model.app_name, self.current_app_model.model_name)
         except Exception as error:
             self.__message(
-                f"Erro ao executar o Create App From Model: {error}", error=True
-            )
+                f"Erro ao executar o Create App From Model: {error}", error=True)
 
     def __create_source_from_generators(self):
         """
@@ -1812,8 +1542,7 @@ class Command(BaseCommand):
                 self.__create_source(self.current_app_model.app_name, model[1])
         except Exception as error:
             self.__message(
-                f"Erro ao executar o Create Apps From Generators: {error}", error=True
-            )
+                f"Erro ao executar o Create Apps From Generators: {error}", error=True)
 
     def __create_source(self, app_name, model_name):
         """
@@ -1829,11 +1558,9 @@ class Command(BaseCommand):
                 return
 
             __source_class = AppModel(self.flutter_dir, app_name, model_name)
-
             __app_name = __source_class.app_name
             __model_name = __source_class.model_name
             __model = __source_class.model
-
             __model_dir = __source_class.get_path_app_model_dir()
             __views_dir = __source_class.get_path_views_dir()
             __data_file = __source_class.get_path_data_file()
@@ -1843,13 +1570,11 @@ class Command(BaseCommand):
             __provider_file = __source_class.get_path_provider_file()
             __cubit_file = __source_class.get_path_cubit_file()
             __cubit_state_file = __source_class.get_path_cubit_state_file()
-
             __views = __source_class.get_path_files_views()
 
             if not self.__check_dir(__model_dir):
                 self.__message(
-                    f"Criando diretório source do {__app_name}.{__model_name}"
-                )
+                    f"Criando diretório source do {__app_name}.{__model_name}")
                 os.makedirs(__model_dir)
 
             if not self.__check_dir(__views_dir):
@@ -1887,10 +1612,12 @@ class Command(BaseCommand):
                 if not self.__check_file(__provider_file):
                     with open(__provider_file, "w", encoding="utf-8") as arquivo:
                         arquivo.write(f"// Provider do {__model_name}")
+
             if self.state_manager == StateManager.MobX:
                 if not self.__check_file(__controller_file):
                     with open(__controller_file, "w", encoding="utf-8") as arquivo:
                         arquivo.write(f"// Controller do {__model_name}")
+
             if self.state_manager == StateManager.Cubit:
                 if not self.__check_file(__cubit_file):
                     with open(__cubit_file, "w", encoding="utf-8") as arquivo:
@@ -1957,8 +1684,7 @@ class Command(BaseCommand):
 
         except Exception as error:
             self.__message(
-                f"Erro ao executar o localizations app. \n {error}", error=True
-            )
+                f"Erro ao executar o localizations app. \n {error}", error=True)
 
     """
     #################################################################
@@ -1979,18 +1705,12 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(path_maindart):
                 return
 
-            (
-                __import_views,
-                __import_controllers,
-                __register_controller,
-                __views,
-            ) = self.__mapping_all_application()
+            (__import_views, __import_controllers, __register_controller, __views,) = self.__mapping_all_application()
 
             __import_controllers += f"import 'apps/configuracao/model.dart';"
             __import_views += f"import 'apps/configuracao/index.page.dart';\n"
             __register_controller += (
-                "getIt.registerSingleton<SettingsController>(SettingsController());"
-            )
+                "getIt.registerSingleton<SettingsController>(SettingsController());")
 
             if __import_views is None or __import_controllers is None:
                 return
@@ -2002,9 +1722,7 @@ class Command(BaseCommand):
                 snippet = snippet.replace("$RegisterProviders$", __register)
             if self.state_manager == StateManager.MobX:
                 snippet = snippet.replace("$ImportViews$", __import_views)
-                snippet = snippet.replace(
-                    "$RegisterControllers$", __register_controller
-                )
+                snippet = snippet.replace("$RegisterControllers$", __register_controller)
                 snippet = snippet.replace("$ImportController$", __import_controllers)
             if self.state_manager == StateManager.Cubit:
                 __import_controllers += f"import 'apps/configuracao/cubit.dart';"
@@ -2022,18 +1740,12 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(path_homepage):
                 return
             __snippet_page = self.__get_snippet(
-                file_name="home.page.txt", state_manager=True
-            )
+                file_name="home.page.txt", state_manager=True)
             __menu_home_page_itens = self.__build_menu_home_page_itens()
 
-            if (
-                self.state_manager == StateManager.Provider
-                or self.state_manager == StateManager.Cubit
-            ):
+            if self.state_manager == StateManager.Provider or self.state_manager == StateManager.Cubit:
                 __snippet_page = __snippet_page.replace("$ImportViews$", __import_views)
-                __snippet_page = __snippet_page.replace(
-                    "$ItenMenu$", __menu_home_page_itens
-                )
+                __snippet_page = __snippet_page.replace("$ItenMenu$", __menu_home_page_itens)
 
                 with open(path_homepage, "w", encoding="utf-8") as home_page_dart:
                     home_page_dart.write(__snippet_page)
@@ -2049,15 +1761,9 @@ class Command(BaseCommand):
     """
 
     def call_methods(self, options):
-        if (
-            options["init_provider"] is False
-            and options["init_mobx"] is False
-            and options["init_cubit"] is False
-        ):
-            self.__message(
-                "É obrigatório informar o state manager que será utilizado no projeto Flutter",
-                error=True,
-            )
+        if options["init_provider"] is False and options["init_mobx"] is False and options["init_cubit"] is False:
+            self.__message("É obrigatório informar o state manager que será utilizado no projeto Flutter",
+                           error=True)
         if options["init_provider"]:
             self.state_manager = StateManager.Provider
         elif options["init_mobx"]:
@@ -2093,8 +1799,7 @@ class Command(BaseCommand):
             self.__message(
                 "É necessário passar pelo menos um dos parâmetros a seguir: --init_provider, --init_mobx, --init_cubit,"
                 " --main, --yaml, --build_mobx",
-                error=True,
-            )
+                error=True, )
 
     def handle(self, *args, **options):
         """Método invocado internamente pelo Command logo após a
@@ -2107,8 +1812,7 @@ class Command(BaseCommand):
         if app is None and model is None and FLUTTER_APPS == []:
             self.__message(
                 f"Você não configurou o FLUTTER_APPS no settings e também não informou uma APP para ser gerada.",
-                error=True,
-            )
+                error=True)
             return
 
         if app and model:
