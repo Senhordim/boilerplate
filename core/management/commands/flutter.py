@@ -219,7 +219,8 @@ class AppModel:
     def print_string(self):
         """Método para imprimir o object
         """
-        print("App: {} Name: {} - {}".format(self.app, self.app_name, self.app_name_lower))
+        print("App: {} Name: {} - {}".format(self.app,
+                                             self.app_name, self.app_name_lower))
         print("Model: {} Name: {} - {}".format(self.model, self.model_name, self.model_name_lower)
               )
         print("")
@@ -233,7 +234,8 @@ class AppModel:
         print(f"Service {self.get_path_service_file()}")
         c, d, i, l, u = self.get_path_files_views()
         print("")
-        print("views \nCreate: {}\nDetail: {}\nIndex: {}\nList: {}\nUpdate: {}".format(c, d, i, l, u))
+        print("views \nCreate: {}\nDetail: {}\nIndex: {}\nList: {}\nUpdate: {}".format(
+            c, d, i, l, u))
 
         print("Models (Generator)")
         if self.models is not None:
@@ -299,8 +301,10 @@ class Command(BaseCommand):
             self.flutter_project = "{}".format(self.project)
             self.utils_dir = "{}\\lib\\utils\\".format(self.flutter_dir)
             self.ui_dir = "{}\\lib\\user_interface\\".format(self.flutter_dir)
-            self.config_file = "{}\\lib\\utils\\config.dart".format(self.flutter_dir)
-            self.util_file = "{}\\lib\\utils\\util.dart".format(self.flutter_dir)
+            self.config_file = "{}\\lib\\utils\\config.dart".format(
+                self.flutter_dir)
+            self.util_file = "{}\\lib\\utils\\util.dart".format(
+                self.flutter_dir)
             self.process_controller_file = "{}\\lib\\utils\\process.controller.dart".format(
                 self.flutter_dir)
             self.process_provider_file = "{}\\lib\\utils\\process.provider.dart".format(
@@ -342,13 +346,16 @@ class Command(BaseCommand):
             # Criando o path da APP de configuração
             self.app_configuration = "{}/lib/apps/configuracao/".format(
                 self.flutter_dir)
-            self.app_configuration_page_file = (f"{self.app_configuration}/index.page.dart")
-            self.app_configuration_controller_file = (f"{self.app_configuration}/controller.dart")
+            self.app_configuration_page_file = (
+                f"{self.app_configuration}/index.page.dart")
+            self.app_configuration_controller_file = (
+                f"{self.app_configuration}/controller.dart")
 
         self.current_app_model = None
 
     BASE_DIR = os.path.dirname(
-        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        os.path.dirname(os.path.dirname(
+            os.path.dirname(os.path.abspath(__file__))))
     )
 
     _tipos_originais = [
@@ -755,7 +762,8 @@ class Command(BaseCommand):
                 ["$ModelClass$", "$ModelClassCamelCase$", "$project$"],
                 [app.model_name, self.__to_camel_case(app.model_name, True),
                  self.flutter_project.lower(), ],
-                self.__get_snippet(file_name="index_page.txt", state_manager=True),
+                self.__get_snippet(
+                    file_name="index_page.txt", state_manager=True),
             ).replace()
 
             with open(__indexpage_file, "w", encoding="utf-8") as page:
@@ -777,7 +785,8 @@ class Command(BaseCommand):
                 return
 
             content = ParserContent(
-                ["$App$", "$Model$", "$ModelClass$", "$ModelClassCamelCase$", "$project$"],
+                ["$App$", "$Model$", "$ModelClass$",
+                    "$ModelClassCamelCase$", "$project$"],
                 [app.app_name, app.model_name_lower, app.model_name, self.__to_camel_case(app.model_name, True),
                  self.flutter_project], self.__get_snippet(file_name="list_page.txt", state_manager=True)
             ).replace()
@@ -874,13 +883,15 @@ class Command(BaseCommand):
     def __create_update_page_parser(self, app, createpage=True):
         try:
             if createpage is True:
-                __createpage_file = Path(f"{app.get_path_views_dir()}/create.dart")
+                __createpage_file = Path(
+                    f"{app.get_path_views_dir()}/create.dart")
                 content = self.__get_snippet(
                     file_name="create_page.txt", state_manager=True)
                 if self.__check_file_is_locked(__createpage_file):
                     return
             else:
-                __createpage_file = Path(f"{app.get_path_views_dir()}/update.dart")
+                __createpage_file = Path(
+                    f"{app.get_path_views_dir()}/update.dart")
                 content = self.__get_snippet(
                     file_name="update_page.txt", state_manager=True)
                 if self.__check_file_is_locked(__createpage_file):
@@ -906,10 +917,11 @@ class Command(BaseCommand):
 
                 field_type = (
                     str(str(type(field)).split(".")[-1:])
-                        .replace('["', "")
-                        .replace("'>\"]", ""))
+                    .replace('["', "")
+                    .replace("'>\"]", ""))
 
-                attribute = self._tipos_flutter[self._tipos_originais.index(field_type)]
+                attribute = self._tipos_flutter[self._tipos_originais.index(
+                    field_type)]
                 content_attributes += "  final _{0}Form{1} = TextEditingController();\n".format(
                     self.__to_camel_case(app.model_name, True), __nameTitle)
                 text_field = content_form
@@ -940,7 +952,8 @@ class Command(BaseCommand):
                  "$project$", "$Attributes$", "$Form$", "$AttributesData$", "$ClearData$",
                  "$EditedAttributes$", "$GetValuesControllers$", ],
                 [app.app_name_lower, app.app_name_lower,
-                 self.__to_camel_case(app.model_name, True), app.model_name_lower,
+                 self.__to_camel_case(
+                     app.model_name, True), app.model_name_lower,
                  app.model_name, self.__to_camel_case(app.model_name, True),
                  self.flutter_project, content_attributes, text_fiels, attributes_data,
                  clear_data, edited_attributes, get_controllers_data],
@@ -972,7 +985,8 @@ class Command(BaseCommand):
                 [app.app_name, app.app_name_lower, self.__to_camel_case(
                     app.model_name, True), self.__to_camel_case(app.model_name, True),
                  app.model_name_lower, app.model_name, self.flutter_project],
-                self.__get_snippet(file_name="detail_page.txt", state_manager=True),
+                self.__get_snippet(
+                    file_name="detail_page.txt", state_manager=True),
             ).replace()
 
             with open(__detailpage_file, "w", encoding="utf-8") as page:
@@ -995,7 +1009,8 @@ class Command(BaseCommand):
                 return
 
             content = ParserContent(["$ModelClass$"], [app.model_name],
-                                    self.__get_snippet(f"{self.snippet_dir}widget.txt"),
+                                    self.__get_snippet(
+                                        f"{self.snippet_dir}widget.txt"),
                                     ).replace()
 
             with open(__widget_file, "w", encoding="utf-8") as page:
@@ -1023,8 +1038,10 @@ class Command(BaseCommand):
 
             os.makedirs(__auth_file)
 
-            __data_file = Path("{}/lib/apps/auth/data.dart".format(self.flutter_dir))
-            __model_file = Path("{}/lib/apps/auth/model.dart".format(self.flutter_dir))
+            __data_file = Path(
+                "{}/lib/apps/auth/data.dart".format(self.flutter_dir))
+            __model_file = Path(
+                "{}/lib/apps/auth/model.dart".format(self.flutter_dir))
             __service_file = Path(
                 "{}/lib/apps/auth/service.dart".format(self.flutter_dir))
 
@@ -1038,7 +1055,8 @@ class Command(BaseCommand):
                 file_name="auth_app.txt", state_manager=True)
 
             if self.state_manager == StateManager.Provider:
-                __file = Path("{}/lib/apps/auth/provider.dart".format(self.flutter_dir))
+                __file = Path(
+                    "{}/lib/apps/auth/provider.dart".format(self.flutter_dir))
 
             if self.state_manager == StateManager.MobX:
                 __file = Path(
@@ -1059,7 +1077,8 @@ class Command(BaseCommand):
             with open(__file, "w", encoding="utf-8") as provider_file:
                 provider_file.write(__snippet)
 
-            __service_snippet = self.__get_snippet(file_name="auth_service.txt", state_manager=True)
+            __service_snippet = self.__get_snippet(
+                file_name="auth_service.txt", state_manager=True)
 
             with open(__service_file, "w", encoding="utf-8") as service_file:
                 service_file.write(__service_snippet)
@@ -1267,11 +1286,13 @@ class Command(BaseCommand):
 
                 field_type = (
                     str(str(type(field)).split(".")[-1:])
-                        .replace('["', "")
-                        .replace("'>\"]", ""))
-                attribute = self._tipos_flutter[self._tipos_originais.index(field_type)]
+                    .replace('["', "")
+                    .replace("'>\"]", ""))
+                attribute = self._tipos_flutter[self._tipos_originais.index(
+                    field_type)]
 
-                content_atributes += "{} {};\n  ".format(attribute, __name_dart)
+                content_atributes += "{} {};\n  ".format(
+                    attribute, __name_dart)
                 content_string_return += "{}: ${}\\n".format(
                     __name_dart.upper(), __name_dart)
 
@@ -1347,7 +1368,8 @@ class Command(BaseCommand):
                 model_file.write(content)
 
         except Exception as error:
-            self.__message(f"Erro ao realizar o parser do model: {error}", error=True)
+            self.__message(
+                f"Erro ao realizar o parser do model: {error}", error=True)
 
     """
     #################################################################
@@ -1431,7 +1453,8 @@ class Command(BaseCommand):
 
             snippet = ParserContent(
                 ["$AppPackage$", "$AppDescription$"],
-                [self.project.lower(), f"Projeto Flutter do sistema Django {self.project}"],
+                [self.project.lower(),
+                 f"Projeto Flutter do sistema Django {self.project}"],
                 self.__get_snippet(file_name="yaml.txt", state_manager=True)).replace()
 
             with open(__path, "w", encoding="utf-8") as yaml_file:
@@ -1603,19 +1626,24 @@ class Command(BaseCommand):
 
                 if __views is not None:
                     with open(__views[0], "w", encoding="utf-8") as pagina:
-                        pagina.write(f"// Create Page {__app_name} {__model_name}")
+                        pagina.write(
+                            f"// Create Page {__app_name} {__model_name}")
 
                     with open(__views[1], "w", encoding="utf-8") as pagina:
-                        pagina.write(f"// Detail Page {__app_name} {__model_name}")
+                        pagina.write(
+                            f"// Detail Page {__app_name} {__model_name}")
 
                     with open(__views[2], "w", encoding="utf-8") as pagina:
-                        pagina.write(f"// Index Page {__app_name} {__model_name}")
+                        pagina.write(
+                            f"// Index Page {__app_name} {__model_name}")
 
                     with open(__views[3], "w", encoding="utf-8") as pagina:
-                        pagina.write(f"// List Page {__app_name} {__model_name}")
+                        pagina.write(
+                            f"// List Page {__app_name} {__model_name}")
 
                     with open(__views[4], "w", encoding="utf-8") as pagina:
-                        pagina.write(f"// Update Page {__app_name} {__model_name}")
+                        pagina.write(
+                            f"// Update Page {__app_name} {__model_name}")
 
             if not self.__check_file(__model_file):
                 with open(__model_file, "w", encoding="utf-8") as arquivo:
@@ -1678,7 +1706,8 @@ class Command(BaseCommand):
         try:
             snippet = self.__get_snippet(f"{self.snippet_dir}localization.txt")
 
-            path_localization = os.path.join(self.utils_dir, "localization.dart")
+            path_localization = os.path.join(
+                self.utils_dir, "localization.dart")
 
             if self.__check_file_is_locked(path_localization):
                 return
@@ -1694,12 +1723,14 @@ class Command(BaseCommand):
                 os.makedirs(__lang_dir)
 
             if not self.__check_file(__pt_br):
-                snippet = self.__get_snippet(f"{self.snippet_dir}pt_language.txt")
+                snippet = self.__get_snippet(
+                    f"{self.snippet_dir}pt_language.txt")
                 with open(__pt_br, "w", encoding="utf-8") as pt_json:
                     pt_json.write(snippet)
 
             if not self.__check_file(__en_us):
-                snippet = self.__get_snippet(f"{self.snippet_dir}en_language.txt")
+                snippet = self.__get_snippet(
+                    f"{self.snippet_dir}en_language.txt")
                 with open(__en_us, "w", encoding="utf-8") as en_json:
                     en_json.write(snippet)
 
@@ -1727,7 +1758,8 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(path_maindart):
                 return
 
-            (__import_views, __import_controllers, __register_controller, __views,) = self.__mapping_all_application()
+            (__import_views, __import_controllers, __register_controller,
+             __views,) = self.__mapping_all_application()
 
             __import_controllers += f"import 'apps/configuracao/model.dart';"
             __import_views += f"import 'apps/configuracao/index.page.dart';\n"
@@ -1744,12 +1776,15 @@ class Command(BaseCommand):
                 snippet = snippet.replace("$RegisterProviders$", __register)
             if self.state_manager == StateManager.MobX:
                 snippet = snippet.replace("$ImportViews$", __import_views)
-                snippet = snippet.replace("$RegisterControllers$", __register_controller)
-                snippet = snippet.replace("$ImportController$", __import_controllers)
+                snippet = snippet.replace(
+                    "$RegisterControllers$", __register_controller)
+                snippet = snippet.replace(
+                    "$ImportController$", __import_controllers)
             if self.state_manager == StateManager.Cubit:
                 __import_controllers += f"import 'apps/configuracao/cubit.dart';"
                 __import, __register = self.__register_cubit()
-                snippet = snippet.replace("$ImportController$", __import_controllers)
+                snippet = snippet.replace(
+                    "$ImportController$", __import_controllers)
                 snippet = snippet.replace("$ImportCubit$", __import)
                 snippet = snippet.replace("$RegisterProviders$", __register)
 
