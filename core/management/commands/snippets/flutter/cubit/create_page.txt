@@ -122,20 +122,28 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
   }
 
   Widget _createButton(context){
-    return  Padding(
-      padding: const EdgeInsets.only(top: 24.0),
-      child: Container(
-          width: MediaQuery.of(context).size.width,
-          child: customRaisedButton(
-            label: 'Salvar',
-            context: context,
-            onPress: () {
-              if (_form$ModelClass$.currentState.validate()) {
-                _post();
-              }
-            },
-          ),
-        ),
+    return BlocConsumer<$ModelClass$Cubit, $ModelClass$State>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        if (state is $ModelClass$ProcessState) {
+          return customProcessingWidget(context, isCircularIndicator: false);
+        }
+        return  Padding(
+          padding: const EdgeInsets.only(top: 24.0),
+          child: Container(
+              width: MediaQuery.of(context).size.width,
+              child: customRaisedButton(
+                label: 'Salvar',
+                context: context,
+                onPress: () {
+                  if (_form$ModelClass$.currentState.validate()) {
+                    _post();
+                  }
+                },
+              ),
+            ),
+        );
+      },
     );
   }
 

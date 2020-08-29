@@ -660,6 +660,35 @@ Widget customProcessingCardModal(BuildContext context) {
   );
 }
 
+
+/// Componente visual para mostrar um elemento de loading customizado
+///     Parameters: 
+          context -> BuildContext contendo o contexto do App
+          isCircularIndicator -> bool indicando se o widget é CircularProgressIndicator
+          lineHeigth -> double contendo a espesura da linha
+          lineColor -> Color contendo a cor de foreground
+          backgroundColor -> Color contendo a cor de background
+Widget customProcessingWidget(
+  BuildContext context, {
+  bool isCircularIndicator = true,
+  double lineHeigth,
+  Color lineColor,
+  Color backgroundColor,
+}) {
+  if (isCircularIndicator == true) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      child: CircularProgressIndicator(),
+    );
+  }
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 12.0),
+    child: LinearProgressIndicator(
+      backgroundColor: Colors.white,
+    ),
+  );
+}
+
 /// Componente visual para mostrar um card centralizado enquando o usuário aguarda
 /// o processamento da operação.
 ///
