@@ -18,14 +18,21 @@ class CustomDio extends DioForNative {
       {String token, String contentType = "application/json; charset=utf-8"}) {
     Map<String, String> headersMap;
     try {
-      headersMap = {
-        'Content-Type': contentType,
-        // 'Authorization': 'Bearer ' + token ?? Config.DRFToken,
-      };
+      if (token != null && token.isNotEmpty) {
+        headersMap = {
+          'Content-Type': contentType,
+          'Authorization': token,
+        };
+      } else {
+        headersMap = {
+          'Content-Type': contentType,
+          'Authorization': Config.DRFToken
+        };
+      }
     } catch (e) {
-      
+      debugPrint("Erro ao criar o cabeçalho da requisição ${e.toString()}");
     }
-    this.options.headers = headersMap;
+    options.headers = headersMap;
     return headersMap;
   }
 
@@ -108,7 +115,6 @@ class CustomDio extends DioForNative {
 class CustomDioInterceptor extends InterceptorsWrapper {
   @override
   Future onRequest(RequestOptions options) {
-    options.headers = {'Content-Type': 'application/json'};
     options.connectTimeout = 50000;
     options.receiveTimeout = 50000;
     return super.onRequest(options);
