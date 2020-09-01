@@ -1,5 +1,6 @@
 class ParserContent:
-    """Classe responsável por realizar o Parser dos valores dos models"""
+    """Class responsible for parsing the content of the snippets for the final files
+    with the interpolation of the variables with the attributes of the model"""
 
     def __init__(self, keys: list, contents: list, snippet: str):
         super().__init__()
@@ -8,31 +9,27 @@ class ParserContent:
         self.contents = contents
 
     def replace(self) -> str:
-        """Método para realizar o replace das chaves do snippet pelo conteúdo.
+        """Method to replace the snippet keys by the content..
 
         Returns:
-            str: Conteúdo a ser salvo no arquivo definitivo da class/model.
+            str: Content to be saved in the definitive class / model file.
 
         Raises:
-            Quando os valores de keys e contents tem tamanho diferentes.
-            Quando algum valor de keys contents ou snippet não for informado.
+            When the values of keys and contents have different sizes.
+            When any value of keys contents or snippet is not informed.
         """
         data_result = ""
         try:
-            if (
-                len(self.keys) == 0
-                or len(self.contents) == 0
-                or len(self.snippet.strip()) == 0
-            ):
+            if len(self.keys) == 0 or len(self.contents) == 0 or len(self.snippet.strip()) == 0:
                 raise Exception(
-                    "É necessário informar os valores keys, contents e snippet, e os mesmo não podem ser brancos."
+                    "It is necessary to inform the keys, contents and snippet values, and they cannot be white."
                 )
             if len(self.keys) != len(self.contents):
-                raise Exception("Tamanho dos atributos keys e contents deve ser igual.")
+                raise Exception("Size of keys and contents attributes must be the same.")
             for index, key in enumerate(self.keys):
                 self.snippet = self.snippet.replace(key, self.contents[index])
             data_result = self.snippet
         except Exception as error:
-            return f"\nOcorreu o erro: \n    {error}.\n"
+            return f"\nError occurred: \n    {error}.\n"
 
         return data_result.strip()
