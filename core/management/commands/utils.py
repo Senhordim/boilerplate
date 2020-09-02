@@ -63,7 +63,7 @@ class Utils(object):
                 __app_config = apps.get_app_config(app_name.lower())
                 return __app_config.verbose_name.title() or app_name
         except Exception as error:
-            Utils.show_message(f"Error in Utils.get_verbose_name: {error}", error=True)
+            Utils.show_message(f"Error in Utils.get_verbose_name: {error}")
 
     @staticmethod
     def check_dir(path: str) -> bool:
