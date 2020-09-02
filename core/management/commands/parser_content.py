@@ -18,7 +18,6 @@ class ParserContent:
             When the values of keys and contents have different sizes.
             When any value of keys contents or snippet is not informed.
         """
-        data_result = ""
         try:
             if len(self.keys) == 0 or len(self.contents) == 0 or len(self.snippet.strip()) == 0:
                 raise Exception(
@@ -28,8 +27,7 @@ class ParserContent:
                 raise Exception("Size of keys and contents attributes must be the same.")
             for index, key in enumerate(self.keys):
                 self.snippet = self.snippet.replace(key, self.contents[index])
-            data_result = self.snippet
+            return self.snippet.strip()
         except Exception as error:
             return f"\nError occurred: \n    {error}.\n"
 
-        return data_result.strip()

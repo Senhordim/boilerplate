@@ -25,7 +25,6 @@ class Command(BaseCommand):
         super().__init__()
         self.path_root = os.getcwd()
         self.path_core = os.path.join(self.BASE_DIR, "core")
-        # Área para recuperar os Snippets para serem utilizados nos métodos
         self._snippet_index_view = self._get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/index_view.txt"))
         self._snippet_crud_view = self._get_snippet(
@@ -119,12 +118,6 @@ class Command(BaseCommand):
             dest='format',
             help='Aplicar PEP8 nos arquivos'
         )
-
-    """
-    #################################################################
-    Área dos método internos
-    #################################################################    
-    """
 
     def _get_verbose_name(self, app_name=None, model_name=None):
         """Method get verbose name class
