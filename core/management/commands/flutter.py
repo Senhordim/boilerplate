@@ -21,15 +21,14 @@ class StateManager(Enum):
 
 
 class AppModel:
-    """Classe auxiliar para encapsular os métodos de acesso 
-    aos snippets e templates, bem como os método e funções recorrentes
+    """Auxiliary class for accessing template files as well as recurring methods
 
     Arguments:
-        path_flutter {String} -- Path do projeto Flutter
-        app_name {String} -- Nome da App a ser mapeada
+        path_flutter {String} -- Flutter project path
+        app_name {String} -- Name of the App to be mapped
 
     Keyword Arguments:
-        model_name {String} -- Nome do model a ser mapeado (default: {None})
+        model_name {String} -- Name of the model to be mapped (default: {None})
     """
 
     def __init__(self, path_flutter, app_name, model_name=None):
@@ -52,11 +51,14 @@ class AppModel:
         except Exception as error:
             raise error
 
-    def __message(self, message, error=False):
-        """Método para retornar mensagems ao prompt(Terminal)
+    @staticmethod
+    def __message(message, error=False):
+        """Static method responsible for friendly display of messages on the console
 
         Arguments:
-            message {str} -- Mensagem a ser exibida
+            message {str} -- Message to be displayed on the terminal
+            error {bool} -- Attribute that determines whether the message is an error,
+                            being an error message the execution of the program is ended
         """
         if error:
             sys.stdout.write(message)
@@ -65,46 +67,46 @@ class AppModel:
             sys.stdout.write(message)
 
     def get_path_app_dir(self):
-        """Método para retornar o path da app no projeto Flutter
+        """Method to return the app path in the Flutter project
 
         Returns:
-            String -- Caminho do diretório da app no projeto Flutter
+            String -- Path of the app directory in the Flutter project
         """
         try:
             return Path("{}/lib/apps/{}".format(self.path_flutter, self.app_name_lower))
         except Exception as error:
-            self.__message(f"Erro no get_path_app_dir: {error}", error=True)
+            self.__message(f"Error in get_path_app_dir: {error}", error=True)
 
     def get_path_app_model_dir(self):
-        """Método para retornar o path do model no projeto Flutter
+        """ Method to return the model path in the Flutter project
 
         Returns:
-            String -- Caminho do diretório do model no projeto Flutter
+            String -- Model directory path in the Flutter project
         """
         try:
             return Path("{}/lib/apps/{}/{}".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
             self.__message(
-                f"Erro no get_path_app_model_dir {error}", error=True)
+                f"Error in get_path_app_model_dir {error}", error=True)
 
     def get_path_views_dir(self):
-        """Método para retornar o path do diretório views
+        """Method to return the views directory path
 
         Returns:
-            String -- Caminho do diretório views no projeto Flutter
+            String -- Views directory path in the Flutter project
         """
         try:
             return Path("{}/lib/apps/{}/{}/pages/".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
-            self.__message(f"Erro no get_path_views_dir {error}", error=True)
+            self.__message(f"Error in get_path_views_dir {error}", error=True)
 
     def get_path_files_views(self):
-        """Método para retornar os arquivos das páginas no projeto Flutter
+        """Method to return the files of the pages in the Flutter project
 
         Returns:
-            String's -- Caminho de cada arquivo das páginas na create, detail, index, list e update
+            List<String> -- Path of each page file in create, detail, index, list and update
         """
         try:
             __create = Path("{}/lib/apps/{}/{}/pages/create.dart".format(
@@ -121,104 +123,101 @@ class AppModel:
             return __create, __detail, __index, __list, __update
         except Exception as error:
             self.__message(
-                f"Erro no get_path_files_views: {error}", error=True)
+                f"Error in get_path_files_views: {error}", error=True)
 
     def get_path_data_file(self):
-        """Método para recuperar o caminho do arquivo data.dart
+        """Method to retrieve data.dart file path
 
         Returns:
-            String -- Caminho do arquivo data.dart
+            String -- Path to file data.dart
         """
         try:
             return Path("{}/lib/apps/{}/{}/data.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
-            self.__message(f"Erro no get_path_data_file: {error}", error=True)
+            self.__message(f"Error in get_path_data_file: {error}", error=True)
 
     def get_path_model_file(self):
-        """Método para recuperar o caminho do arquivo model.dart
+        """Method to retrieve the model.dart file path
 
         Returns:
-            String -- Caminho do arquivo model.dart
+            String -- Path to file model.dart
         """
         try:
             return Path("{}/lib/apps/{}/{}/model.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
-            self.__message(f"Erro no get_path_model_file {error}", error=True)
+            self.__message(f"Error in get_path_model_file {error}", error=True)
 
     def get_path_controller_file(self):
-        """Método para recuperar o caminho para o arquivo controller.dart
-        da app
+        """Method to retrieve the path to the controller.dart file
 
         Returns:
-            String -- Caminho do arquivo controller.dart
+            String -- Path to file controller.dart
         """
         try:
             return Path("{}/lib/apps/{}/{}/controller.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
             self.__message(
-                f"Erro no get_path_controller_file {error}", error=True)
+                f"Error in get_path_controller_file {error}", error=True)
 
     def get_path_provider_file(self):
-        """Método para recuperar o caminho para o arquivo provider.dart
-        da app
+        """Method to retrieve the path to the provider.dart file
 
         Returns:
-            String -- Caminho do arquivo controller.dart
+            String -- Path to file controller.dart
         """
         try:
             return Path("{}/lib/apps/{}/{}/provider.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
             self.__message(
-                f"Erro no get_path_provider_file {error}", error=True)
+                f"Error in get_path_provider_file {error}", error=True)
 
     def get_path_cubit_file(self):
-        """Método para recuperar o caminho para o arquivo provider.dart
-        da app
+        """Method to retrieve the path to the cubit.dart file
 
         Returns:
-            String -- Caminho do arquivo controller.dart
+            String -- Path to file cubti.dart
         """
         try:
             return Path("{}/lib/apps/{}/{}/cubit.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
             self.__message(
-                f"Erro no get_path_provider_file {error}", error=True)
+                f"Error in get_path_provider_file {error}", error=True)
 
     def get_path_cubit_state_file(self):
-        """Método para recuperar o caminho para o arquivo provider.dart
-        da app
+        """Method to retrieve the path to the state of cubit file
 
         Returns:
-            String -- Caminho do arquivo controller.dart
+            String -- Path to file controller.dart
         """
         try:
             return Path("{}/lib/apps/{}/{}/state.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
             self.__message(
-                f"Erro no get_path_provider_file {error}", error=True)
+                f"Error in get_path_provider_file {error}", error=True)
 
     def get_path_service_file(self):
-        """Método para recuperar o caminho do arquivo service.dart
+        """Method to retrieve the path to the service.dart file
 
         Returns:
-            String -- Caminho do arquivo service.dart
+            String -- Path to file service.dart
         """
         try:
             return Path("{}/lib/apps/{}/{}/service.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
             self.__message(
-                f"Erro no get_path_service_file {error}", error=True)
+                f"Error in get_path_service_file {error}", error=True)
 
     def print_string(self):
-        """Método para imprimir o object
+        """Method for printing class attributes to assist in debugging the script
         """
+
         print("App: {} Name: {} - {}".format(self.app,
                                              self.app_name, self.app_name_lower))
         print("Model: {} Name: {} - {}".format(self.model, self.model_name, self.model_name_lower)
@@ -246,10 +245,10 @@ class AppModel:
             print("None")
 
     def check_inherited_base(self, model):
-        """ Método para verificar se o model herda de Base
+        """ Method to check if the model that was passed to be parsed inherits from the Base Model class of Nuvols Core
 
         Returns:
-            Bool -- True se herdar e False se não herdar
+            Bool -- True when method inherits from class false when not inheriting
         """
         try:
             __instance = apps.get_app_config(self.app_name_lower)
@@ -257,18 +256,17 @@ class AppModel:
             return issubclass(__model, Base)
         except Exception as error:
             self.__message(
-                f"Erro ao executar o método check_inherited_base: {error}")
+                f"Error in check_inherited_base: {error}")
             return False
 
     def get_app_model_name(self, title_case=False):
-        """Método para retornar uma String com o nome da App e do Model no formato
-        NomeAppNomeModel.
+        """ Method to return a String with the name of the App and Model in NomeAppNomeModel format.
 
         Arguments:
-            title_case {Boolean} -- Determina se o return deve ser NomeAppNomeModel ou nomeAppNomeModel
+            title_case {bool} -- Determines whether the return should be AppNameModelName or AppNameModelName
 
         Returns:
-            String -- String no formato NomeAppModel ou nomeAppModel
+            String -- String in the format NomeAppModel or nomeAppModel
         """
         try:
             if title_case is True:
@@ -276,12 +274,14 @@ class AppModel:
             return f"{self.app_name}{self.model_name}"
         except Exception as error:
             self.__message(
-                f"Erro ao executar o método get_app_model_name: {error}")
+                f"Error in get_app_model_name: {error}")
             return None
 
 
 class Command(BaseCommand):
-    help = "Manager para automatizar a geração do app em Flutter"
+    help = """Manager responsible for generating the flutter project as well as performing other operations such as 
+              configuring the pubspec.yaml file, changing the code of the main.dart class and also generating the 
+              codes for each app based on the models of the Django project"""
 
     def __init__(self):
         super().__init__()
@@ -312,7 +312,6 @@ class Command(BaseCommand):
             self.snippet_dir = "{}\\{}".format(
                 self.path_core, "management\\commands\\snippets\\flutter\\")
 
-            # Criando o path da APP de configuração
             self.app_configuration = "{}\\lib\\apps\\configuracao\\".format(
                 self.flutter_dir)
             self.app_configuration_page_file = (
@@ -324,14 +323,11 @@ class Command(BaseCommand):
             self.app_configuration_cubit_file = f"{self.app_configuration}\\cubit.dart"
             self.app_configuration_cubit_state_file = (
                 f"{self.app_configuration}\\state.dart")
-
         else:
             self.project = _path_project.split("/")[-1:][0]
             self.project = self.project.replace("-", "").replace("_", "")
             self.flutter_dir = "{}/Flutter/{}".format(
                 "/".join(_path_project.split("/")[:-2]), self.project.lower())
-
-            # Concatenando o nome do projeto Django com o prefixo flutter
             self.flutter_project = "{}".format(self.project)
             self.utils_dir = "{}/lib/utils/".format(self.flutter_dir)
             self.ui_dir = "{}/lib/user_interface/".format(self.flutter_dir)
@@ -342,8 +338,6 @@ class Command(BaseCommand):
                 self.flutter_dir)
             self.snippet_dir = "{}/{}".format(
                 self.path_core, "management/commands/snippets/flutter/")
-
-            # Criando o path da APP de configuração
             self.app_configuration = "{}/lib/apps/configuracao/".format(
                 self.flutter_dir)
             self.app_configuration_page_file = (
@@ -360,39 +354,29 @@ class Command(BaseCommand):
 
     _tipos_originais = [
         "SmallAutoField", "AutoField", "BLANK_CHOICE_DASH", "BigAutoField", "BigIntegerField",
-        "BinaryField", "BooleanField", "CharField", "CommaSeparatedIntegerField",
+        "BinaryField", "boolField", "CharField", "CommaSeparatedIntegerField",
         "DateField", "DateTimeField", "DecimalField", "DurationField",
         "EmailField", "Empty", "FileField", "Field", "FieldDoesNotExist",
         "FilePathField", "FloatField", "GenericIPAddressField", "IPAddressField",
-        "IntegerField", "FieldFile", "NOT_PROVIDED", "NullBooleanField", "ImageField",
+        "IntegerField", "FieldFile", "NOT_PROVIDED", "NullboolField", "ImageField",
         "PositiveIntegerField", "PositiveSmallIntegerField", "SlugField", "SmallIntegerField",
         "TextField", "TimeField", "URLField", "UUIDField", "ForeignKey", "OneToOneField",
     ]
 
-    _tipos_flutter = [
-        "int", "int", "BLANK_CHOICE_DASH",
-        "int", "int", "String", "bool", "String",
-        "String", "DateTime", "DateTime", "double", "int",
-        "String", "String", "String", "String", "String", "String",
-        "double", "String", "String", "int", "String", "String",
-        "bool", "String", "int", "int", "String", "int",
-        "String", "DateTime", "String", "String", "String", "int",
-    ]
+    _tipos_flutter = ["int", "int", "BLANK_CHOICE_DASH",
+                      "int", "int", "String", "bool", "String", "String", "DateTime", "DateTime", "double", "int",
+                      "String", "String", "String", "String", "String", "String", "double", "String", "String",
+                      "int", "String", "String", "bool", "String", "int", "int", "String", "int", "String",
+                      "DateTime", "String", "String", "String", "int", ]
 
-    _tipos_sqlite = [
-        "INT", "INT", "BLANK_CHOICE_DASH",
-        "BIGINT", "BIGINT", "TEXT",
-        "BOOLEAN", "TEXT", "TEXT",
-        "DATE", "DATETIME", "DOUBLE", "INT",
-        "TEXT", "TEXT", "TEXT", "TEXT",
-        "TEXT", "TEXT", "FLOAT",
-        "TEXT", "TEXT", "INT", "TEXT", "TEXT",
-        "BOOLEAN", "TEXT", "INT", "INT", "TEXT",
-        "SMALLINT", "TEXT", "DATETIME", "TEXT", "TEXT", "TEXT", "INT",
-    ]
+    _tipos_sqlite = ["INT", "INT", "BLANK_CHOICE_DASH", "BIGINT", "BIGINT", "TEXT", "BOOLEAN", "TEXT", "TEXT",
+                     "DATE", "DATETIME", "DOUBLE", "INT", "TEXT", "TEXT", "TEXT", "TEXT",
+                     "TEXT", "TEXT", "FLOAT", "TEXT", "TEXT", "INT", "TEXT", "TEXT",
+                     "BOOLEAN", "TEXT", "INT", "INT", "TEXT", "SMALLINT", "TEXT",
+                     "DATETIME", "TEXT", "TEXT", "TEXT", "INT", ]
 
     def add_arguments(self, parser):
-        """Método inicial para informar quais parâmetros serão aceitos
+        """Method for adding positional arguments (required) and optional arguments
         """
 
         parser.add_argument("App", type=str, nargs="?")
@@ -429,53 +413,48 @@ class Command(BaseCommand):
         parser.add_argument(
             "--clear", action="store_true", dest="clear", help="Limpar projeto flutter.")
 
-    """
-    #################################################################
-    Área dos método internos
-    #################################################################
-    """
-
-    def __contain_number(self, text):
-        """Método para verificar se nome exixtem Número
+    def __contain_number(self, text) -> bool:
+        """Method to check the text passed as a parameter has numeric characters
 
         Arguments:
-            text {String} -- Nome a ser testado
+            text {String} -- Text to be validated
 
         Returns:
-            Boolean -- True se existir algum número no text
+            bool -- True if there is any number in the text parameter
         """
         try:
             return any(character.isdigit() for character in text)
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro no Contain Number: {error}", error=True)
+                f"Error in Contain Number: {error}", error=True)
             return False
 
-    def __check_dir(self, path):
-        """Método para verificar se o diretório existe
+    def __check_dir(self, path) -> bool:
+        """Method to check if the directory exists
 
         Arguments:
-            path {str} -- Caminho do diretório
+            path {str} -- Directory path
 
         Returns:
-            Boolean -- Verdadeiro se existir o diretório e Falso se não.
+            bool -- True if the directory exists and False if not.
         """
 
         try:
             return os.path.isdir(path)
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro no Check Dir: {error}", error=True)
+                f"Error in _-check_dir: {error}", error=True)
             return False
 
-    def __ignore_base_fields(self, field):
-        """Método para verificar se o campo deve ser ignorado no parser
+    def __ignore_base_fields(self, field) -> bool:
+        """Method to check if the model attribute should be ignored in the parser process according to
+           tuple __ignore_fields
 
         Arguments:
-            field {String} -- Nome do campo
+            field {String} -- Field name
 
         Returns:
-            Boolean -- True se for para ser ignorado.
+            bool -- True if it is to be ignored.
         """
         try:
             __ignore_fields = ["id", "enabled", "deleted", "createdOn",
@@ -483,13 +462,15 @@ class Command(BaseCommand):
             return field in __ignore_fields
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro ao validar os campos do Base: {error}", error=True)
+                f"Error in __ignore_base_fields: {error}", error=True)
 
     def __message(self, message, error=False):
-        """Método para retornar mensagems ao prompt(Terminal)
+        """Method for displaying friendly messages on the flow of script execution on the terminal.
 
         Arguments:
-            message {str} -- Mensagem a ser exibida
+            message {str} -- Message to be displayed on the terminal
+            error {bool} -- Attribute that determines whether the message is an error,
+                            being an error message the execution of the program is ended
         """
         if error:
             self.stdout.write(self.style.ERROR(message))
@@ -498,10 +479,12 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(message))
 
     def __to_camel_case(self, text, flutter=False):
-        """Método para convert a váriavel de snake_case para camelCase
+        """Method to convert the text passed in the text parameter from the snake_case format to the camelCase format
 
         Arguments:
-            str {str} -- String convertida
+            str {str} -- Text to be converted
+            flutter {bool} -- Determines whether the CamelCase return should be camelCase or CamelCase
+                              (default: {False})
         """
         try:
             components = text.split("_")
@@ -512,23 +495,23 @@ class Command(BaseCommand):
                 return components[0] + "".join(x.title() for x in components[1:])
             return components[0] + "".join(x.title() for x in components[1:])
         except Exception as error:
-            self.__message(f"Ocorreu um erro no Camel Case: {error}")
+            self.__message(f"Error in Camel Case: {error}")
             return None
 
     def __get_snippet(self, path=None, file_name=None, state_manager=False):
-        """Método para recuperar o texto a ser utilizado na
-        configuração do novo elemento
+        """Method to retrieve the value of the snippet file to be converted by merging with the values based on models
+           from the Django project
 
         Arguments:
-            path {str} -- Caminho absoluto para o arquivo opcional,
-                          deve ser passado quando o path do snippet é no diretório flutter mesmo
-            file_name {str} -- Nome do arquivo do snippet no formato XPTO.txt, deve ser passado em conjunto
-                               com o state_manager=True para recuperar o snippet do state manage correto
-            state_manager {bool} -- Valor para determinar se o snippet será recuperado levando em consideração
-                                    o state_manager escolhido
+            path {str} - Absolute path to the optional file,
+                         must be passed when the snippet path is in the same flutter directory
+            file_name {str} - Name of the snippet file in XPTO.txt format, must be passed together
+                              with state_manager = True to retrieve the correct state manage snippet
+            state_manager {bool} - Value to determine whether the snippet will be retrieved taking into account
+                                   the chosen state_manager
 
         Returns:
-            str -- Texto a ser utilizado para interpolar os dados do models
+            str -- Text to be used to interpolate model data
         """
 
         try:
@@ -545,35 +528,34 @@ class Command(BaseCommand):
                 with open(path, encoding="utf-8") as arquivo:
                     return arquivo.read()
         except Exception as e:
-            self.__message(f"Erro no get_snippet {e}", error=True)
+            self.__message(f"Error in get_snippet {e}", error=True)
             sys.exit()
 
     def __check_file(self, path):
-        """Método para verificar se o arquivo existe
+        """Method to check if the file passed as a parameter exists
 
-        Arguments:
-            path {str} -- Caminho para o arquivo
+         Arguments:
+             path {str} - Path to the file
 
-        Returns:
-            Boolean -- Verdadeiro se existir o arquivo e False se não.
+         Returns:
+             bool - True if the file exists and False if not.
         """
 
         try:
             return os.path.isfile(path)
         except Exception as e:
-            self.__message(f"Erro no check_file {e}", error=True)
+            self.__message(f"Error in check_file {e}", error=True)
             sys.exit()
 
     def __check_content(self, path, text_check):
-        """Método para verificar se determinado texto existe
-        dentro de determinado arquivo
+        """Method to check if the text exists within the file
 
-        Arguments:
-            path {str} -- Caminho absoluto para o arquivo a ser analisado
-            text_check {str} -- Texto a ser pesquisado dentro do arquivo informado
+         Arguments:
+             path {str} - Absolute path to the file to be analyzed
+             text_check {str} - Text to be searched within the given file
 
-        Returns:
-            Boolean -- Verdadeiro se o conteúdo for encontrado e False se não.
+         Returns:
+             bool - True if the content is found and False if not.
         """
 
         try:
@@ -586,15 +568,15 @@ class Command(BaseCommand):
             self.__message(e)
             return False
 
-    def __check_file_is_locked(self, path):
-        """ Método para verificar se o arquivo está travado
-        evitando assim que seja parseado novamente
+    def __check_file_is_locked(self, path: str) -> bool:
+        """ Method to check if the file is locked
+         thus preventing it from being parsed again
 
-        Arguments:
-            path {str} -- Caminho absoluto para o arquivo a ser analisado
+         Arguments:
+             path {str} - Absolute path to the file to be analyzed
 
-        Returns:
-            Boolean -- Verdadeiro se contiver a palavra #FileLocked
+         Returns:
+             bool - True if it contains the word #FileLocked
         """
         try:
             if self.__check_file(path):
@@ -603,18 +585,12 @@ class Command(BaseCommand):
                     return "#FileLocked" in content
         except Exception as error:
             self.__message(
-                f"Ocorreu erro ao verificar se o arquivo está travado: {error}",
+                f"Error in __check_file_is_locked: {error}",
                 error=True, )
             return True
 
-    """
-    #################################################################
-    Área para Criar o projeto Flutter
-    #################################################################
-    """
-
     def __init_flutter(self):
-        """Método para iniciar o projeto Flutter
+        """Method responsible for creating the basic structure of the flutter project
         """
         try:
             if not self.__check_dir(self.flutter_dir):
@@ -625,12 +601,12 @@ class Command(BaseCommand):
                 self.__message("Projeto criado com sucesso.")
         except Exception as error:
             self.__message(
-                f"Erro ao executar o init do Flutter: {error}", error=True)
+                f"Error in __init_flutter: {error}", error=True)
 
     def __build_flutter(self):
         """
-        Método para quando o usuário criar o protejo flutter serem
-        chamados os métodos __add_packages, __replace_main e __build_mobx
+        Method to update the project dependency package, run the pub get command to download the dependency packages
+        and also update the main.dart file based on the corresponding state manager snippet
         """
         try:
             if self.__check_dir(self.flutter_dir):
@@ -652,16 +628,11 @@ class Command(BaseCommand):
                     self.__build_mobx()
 
         except Exception as error:
-            self.__message(
-                f"Erro ao executar o __build_flutter: {error}", error=True)
-
-    """
-    #################################################################
-    Área para métodos assincronos
-    #################################################################
-    """
+            self.__message(f"Error in __build_flutter: {error}", error=True)
 
     def __build_menu_home_page_itens(self):
+        """Method responsible for generating the flutter code that creates the navigation component using cards
+           from the APP's home screen."""
         try:
             __itens_menu = ""
             for app in FLUTTER_APPS:
@@ -669,14 +640,16 @@ class Command(BaseCommand):
                 __app = __current_app.app_name
                 for model in __current_app.models:
                     __model = model[1]
-                    __itens_menu += f"list.add(Itens(title: '{__model.title()}',icon: FontAwesomeIcons.folderOpen,uri: {__app.title()}{__model.title()}Views.{__model.title()}ListPage(),),);"
+                    __itens_menu += f"list.add(Itens(title: '{__model.title()}'"
+                    __itens_menu += f",icon: FontAwesomeIcons.folderOpen,uri: {__app.title()}{__model.title()}"
+                    __itens_menu += f"Views.{__model.title()}ListPage(),),);"
             return __itens_menu
         except Exception as error:
-            self.__message(
-                f"Ocorreu o erro {error} ao chamar o __build_menu_home_page_itens",
-                error=True)
+            self.__message(f"Error in __build_menu_home_page_itens: {error}", error=True)
 
     def __register_provider(self):
+        """Method responsible for registering the Provider's of the classes in the main.dart file when choosing the
+           Provider state manager"""
         __register_provider = ""
         __import_provider = ""
         try:
@@ -685,38 +658,39 @@ class Command(BaseCommand):
                 __app = __current_app.app_name
                 for model in __current_app.models:
                     __import_provider += f"import 'apps/{__app.lower()}/{model[1].lower()}/provider.dart';\n"
-                    __register_provider += f"ChangeNotifierProvider<{model[1].title()}Provider>(create: (_) => {model[1].title()}Provider(),),\n"
+                    __register_provider += f"ChangeNotifierProvider<{model[1].title()}Provider> "
+                    __register_provider += f"(create: (_) => {model[1].title()}Provider(),),\n"
 
             __import_provider += f"import 'apps/auth/provider.dart';\n"
             __register_provider += f"ChangeNotifierProvider<SettingsProvider>(create: (_) => SettingsProvider(),),\n"
             __register_provider += f"ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider(),),\n"
         except Exception as error:
-            self.__message(
-                f"Ocorreu o erro {error} ao chamar o __register_provider", error=True)
+            self.__message(f"Error in __register_provider: {error}", error=True)
         return __import_provider, __register_provider
 
-    def __register_cubit(self):
-        __reegister = ""
+    def __register_cubit(self) -> tuple:
+        """Method for registering Cubit components in the main.dart file when the Cubit state manager has been chosen"""
+        _register = ""
         __import = ""
         try:
             for app in FLUTTER_APPS:
                 __current_app = AppModel(self.flutter_project, app)
                 __app = __current_app.app_name
+
                 for model in __current_app.models:
                     __import += f"import 'apps/{__app.lower()}/{model[1].lower()}/cubit.dart';\n"
-                    __reegister += f"BlocProvider<{model[1].title()}Cubit>(create: (_) => {model[1].title()}Cubit(),),\n"
+                    _register += f"BlocProvider<{model[1].title()}Cubit>(create: (_) => {model[1].title()}Cubit(),),\n"
 
             __import += f"import 'apps/auth/cubit.dart';\n"
-            __reegister += (
-                f"BlocProvider<SettingsCubit>(create: (_) => SettingsCubit(),),\n"
-            )
-            __reegister += f"BlocProvider<AuthCubit>(create: (_) => AuthCubit(),),\n"
+            _register += f"BlocProvider<SettingsCubit>(create: (_) => SettingsCubit(),),\n"
+            _register += f"BlocProvider<AuthCubit>(create: (_) => AuthCubit(),),\n"
         except Exception as error:
-            self.__message(
-                f"Ocorreu o erro {error} ao chamar o __reegister", error=True)
-        return __import, __reegister
+            self.__message(f"Error in __register_cubit: {error}", error=True)
+        return __import, _register
 
     def __mapping_all_application(self):
+        """Method responsible for browsing all Django apps configured in the FLUTTER_APPS tuple in the Django
+           project's settings.py file, which should be used as the basis for generating the Flutter project"""
         try:
             __imports_views = ""
             __imports_controllers = ""
@@ -731,20 +705,21 @@ class Command(BaseCommand):
                     __model = model[1]
                     __imports_views += "import 'apps/{}/{}/pages/list.dart' as {}Views;\n".format(
                         __app, __model.lower(), f"{__app.title()}{__model}")
-                    __list_views += "Itens(title: '{}', icon: FontAwesomeIcons.folderOpen, uri: {}.{}ListPage()),\n".format(
-                        model[0]._meta.verbose_name,
-                        f"{__app.title()}{__model}",
-                        __model, )
-                    __imports_controllers += f"import 'apps/{__app.lower()}/{__model.lower()}/controller.dart' as {__app.title()}{__model.title()}Controller;\n"
-                    __controller_model = (
-                        f"{__app.title()}{__model.title()}Controller.{__model}")
-                    __controllers_models += f"getIt.registerSingleton<{__controller_model}Controller>({__controller_model}Controller(), instanceName: '{__app.title()}{__model.title()}Controller');\n    "
+                    __list_views += f"Itens(title: '{model[0]._meta.verbose_name}', "
+                    __list_views += f"icon: FontAwesomeIcons.folderOpen, uri: {__app.title()}{__model}."
+                    __list_views += f"{__model}ListPage()),\n"
+                    __imports_controllers += f"import 'apps/{__app.lower()}/{__model.lower()}/controller.dart' "
+                    __imports_controllers += f"as {__app.title()}{__model.title()}Controller;\n"
+                    __controller_model = f"{__app.title()}{__model.title()}Controller.{__model}"
+                    __controllers_models += f"getIt.registerSingleton<{__controller_model}Controller>"
+                    __controllers_models += f"({__controller_model}Controller(), instanceName: "
+                    __controllers_models += f"'{__app.title()}{__model.title()}Controller');\n    "
 
-            return (__imports_views, __imports_controllers, __controllers_models, __list_views,)
+            return __imports_views, __imports_controllers, __controllers_models, __list_views
 
         except Exception as error:
             self.__message(
-                f"Ocorreu um erro no Mapping All Application: {error}", error=True)
+                f"Error in __mapping_all_application: {error}", error=True)
 
     def __indexpage_parser(self, app):
         """Método para criar a página index do Model
@@ -1256,7 +1231,7 @@ class Command(BaseCommand):
                 service_file.write(content)
 
         except Exception as error:
-            self.__message(f"Erro no parser do service: {error}", error=True)
+            self.__message(f"Error in parser do service: {error}", error=True)
 
     def __model_parser(self, app):
         """ Método responsável por criar a classe de modelo do Model
