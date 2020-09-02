@@ -214,12 +214,15 @@ class Command(BaseCommand):
         """Method responsible for generating the App / Model list.html template
         """
         try:
+            import pdb;
+            pdb.set_trace()
             Utils.show_message("Trabalhando na configuração do template de Listagem.")
             path = Path(
                 f"{self.path_template_dir}/{self.model_lower}_list.html")
             if self.__check_file_is_locked(path):
                 return
             content = self._snippet_list_template
+            # TODO Verificar por que o _title está retornando em branco
             _title = self.__get_verbose_name(app_name=self.app.lower(), model_name=self.model_lower)
             content = content.replace("$title$", _title)
             content = content.replace("$label_count_item$", self.model)
@@ -229,7 +232,7 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            Utils.show_message(f"Error in __manage_list_template : {error}")
+            Utils.show_message(f"Error in __manage_list_template : {error}", error=True)
 
     def __manage_update_template(self):
         """Method responsible for generating the App / Model update.html template
@@ -947,7 +950,6 @@ class Command(BaseCommand):
             self.__manage_serializer()
             self.__manage_api_view()
             self.__manage_api_url()
-            self.__apply_pep()
             return
         elif options['url']:
             Utils.show_message("Trabalhando apenas as urls.")
@@ -976,7 +978,7 @@ class Command(BaseCommand):
             self.__manage_api_url()
             self.__manage_templates()
             self.__manage_render_html()
-            # self.__apply_pep()
+            self.__apply_pep()
             return
 
     def handle(self, *args, **options):
