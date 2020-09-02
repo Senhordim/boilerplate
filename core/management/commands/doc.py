@@ -126,7 +126,6 @@ class Command(BaseCommand):
                            "{}".format(e))
 
     def handle(self, *args, **options):
-
         if not DOC_APPS:
             self.__message("É obrigatório a configuração no settings do projeto das DOC_APPS")
             return

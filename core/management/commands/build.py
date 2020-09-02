@@ -1,5 +1,4 @@
-"""Manager para mapear os models da app automatizando 
-a criação dos templates customizados, das views, da APIRest e dos Forms.
+"""Manager responsible for creating CRUD boilerplates generating templates, urls, views and creating Rest API using DRF
 """
 
 import fileinput
@@ -15,62 +14,74 @@ from bs4 import BeautifulSoup
 
 
 class Command(BaseCommand):
-    help = "Manager para automatizar a geração dos códigos"
+    help = "Manager responsible for creating CRUD boilerplates generating templates, urls, views and creating " \
+           "Rest API using DRF"
 
-    # Path do diretório onde a app core está instalada
     BASE_DIR = os.path.dirname(os.path.dirname(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
     def __init__(self):
         super().__init__()
+        self.app = ""
+        self.path_app = ""
+        self.app_lower = ""
+        self.app_instance = ""
+        self.path_model = ""
+        self.path_form = ""
+        self.path_views = ""
+        self.model = ""
+        self.model_lower = ""
+        self.path_urls = ""
+        self.path_serializer = ""
+        self.path_template_dir = ""
         self.path_root = os.getcwd()
         self.path_core = os.path.join(self.BASE_DIR, "core")
-        self._snippet_index_view = self._get_snippet(
+        self._snippet_index_view = self.__get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/index_view.txt"))
-        self._snippet_crud_view = self._get_snippet(
+        self._snippet_crud_view = self.__get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/crud_views.txt"))
-        self._snippet_crud_urls = self._get_snippet(
+        self._snippet_crud_urls = self.__get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/crud_urls.txt"))
-        self._snippet_index_template = self._get_snippet(
+        self._snippet_index_template = self.__get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/indextemplate.txt"))
-        self._snippet_detail_template = self._get_snippet(
+        self._snippet_detail_template = self.__get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/detailtemplate.txt"))
-        self._snippet_list_template = self._get_snippet(Path(
+        self._snippet_list_template = self.__get_snippet(Path(
             f"{self.path_core}/management/commands/snippets/django/listtemplate.txt"))
-        self._snippet_update_template = self._get_snippet(Path(
+        self._snippet_update_template = self.__get_snippet(Path(
             f"{self.path_core}/management/commands/snippets/django/updatetemplate.txt"))
-        self._snippet_crud_modal_template = self._get_snippet(
+        self._snippet_crud_modal_template = self.__get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/crud_form_modal.txt"))
-        self._snippet_url = self._get_snippet(
+        self._snippet_url = self.__get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/url.txt"))
-        self._snippet_urls_imports = self._get_snippet(
+        self._snippet_urls_imports = self.__get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/url_imports.txt"))
-        self._snippet_modal_foreign_key = self._get_snippet(
+        self._snippet_modal_foreign_key = self.__get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/modal_form.txt"))
-        self._snippet_api_router = self._get_snippet(
+        self._snippet_api_router = self.__get_snippet(
             Path(
                 f"{self.path_core}/management/commands/snippets/django/api_router.txt"))
-        self._snippet_api_routers = self._get_snippet(
+        self._snippet_api_routers = self.__get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/api_router_urls.txt"))
-        self._snippet_api_view = self._get_snippet(
+        self._snippet_api_view = self.__get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/api_view.txt"))
-        self._snippet_api_urls = self._get_snippet(
+        self._snippet_api_urls = self.__get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/api_urls.txt"))
-        self._snippet_serializer = self._get_snippet(Path(
+        self._snippet_serializer = self.__get_snippet(Path(
             f"{self.path_core}/management/commands/snippets/django/serializer.txt"))
-        self._snippet_serializer_url = self._get_snippet(
+        self._snippet_serializer_url = self.__get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/serializer_urls.txt"))
-        self._snippet_form = self._get_snippet(
+        self._snippet_form = self.__get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/form.txt"))
-        self._snippet_form_url = self._get_snippet(
+        self._snippet_form_url = self.__get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/form_urls.txt"))
-        self._snippet_create_template = self._get_snippet(
+        self._snippet_create_template = self.__get_snippet(
             Path(f"{self.path_core}/management/commands/snippets/django/createtemplate.txt"))
-        self._snippet_delete_template = self._get_snippet(Path(
+        self._snippet_delete_template = self.__get_snippet(Path(
             f"{self.path_core}/management/commands/snippets/django/deletetemplate.txt"))
 
     def add_arguments(self, parser):
-        """Método inicial para informar quais parâmetros serão aceitos
+        """Method for adding positional arguments (required) and optional arguments
         """
 
         parser.add_argument('App', type=str)
@@ -110,7 +121,7 @@ class Command(BaseCommand):
             '--parserhtml',
             action='store_true',
             dest='renderhtml',
-            help='Renderirzar os fields do models para HTML'
+            help='Renderizar os fields do models para HTML'
         )
         parser.add_argument(
             '--format',
@@ -139,70 +150,63 @@ class Command(BaseCommand):
                 __app_config = apps.get_app_config(app_name.lower())
                 return __app_config.verbose_name.title() or app_name
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar _get_verbose_name o :{error}")
+            self.__message(f"Error in _get_verbose_name o :{error}", error=True)
             return model_name.title()
 
-    def _contain_number(self, text):
+    def __contain_number(self, text) -> bool:
+        """Method to check the text passed as a parameter has numeric characters
+
+        Arguments:
+            text {String} -- Text to be validated
+
+        Returns:
+            bool -- True if there is any number in the text parameter
+        """
         try:
             return any(character.isdigit() for character in text)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __contain_number: {error}", error=True)
             return False
 
-    def _get_size(self, path):
-        """Método para verificar o tamanho de um determinado arquivo.
+    def __check_dir(self, path) -> bool:
+        """Method to check if the directory exists
 
         Arguments:
-            path {str} -- Caminho absoluto para o arquivo
+            path {str} -- Directory path
 
         Returns:
-            Tamanho do arquivo
-        """
-
-        try:
-            return os.path.getsize(path)
-        except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
-            return False
-
-    def _check_dir(self, path):
-        """Método para verificar se o diretório existe
-
-        Arguments:
-            path {str} -- Caminho do diretório
-
-        Returns:
-            Boolean -- Verdadeiro se existir o diretório e Falso se não.
+            bool -- True if the directory exists and False if not.
         """
 
         try:
             return os.path.isdir(path)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __check_dir: {error}", error=True)
             return False
 
-    def _check_file(self, path):
-        """Método para verificar se o arquivo existe
+    def __check_file(self, path):
+        """Method to check if the file passed as a parameter exists
 
-        Arguments:
-            path {str} -- Caminho para o arquivo
+         Arguments:
+             path {str} - Path to the file
 
-        Returns:
-            Boolean -- Verdadeiro se existir o arquivo e False se não.
+         Returns:
+             bool - True if the file exists and False if not.
         """
 
         try:
             return os.path.isfile(path)
-        except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
-            return False
+        except FileNotFoundError as e:
+            self.__message(f"Error in check_file {e}", error=True)
+            sys.exit()
 
     def __message(self, message, error=False):
-        """Método para retornar mensagems ao prompt(Terminal)
+        """Method for displaying friendly messages on the flow of script execution on the terminal.
 
         Arguments:
-            message {str} -- Mensagem a ser exibida
+            message {str} -- Message to be displayed on the terminal
+            error {bool} -- Attribute that determines whether the message is an error,
+                            being an error message the execution of the program is ended
         """
         if error:
             self.stdout.write(self.style.ERROR(message))
@@ -210,206 +214,144 @@ class Command(BaseCommand):
         else:
             self.stdout.write(self.style.SUCCESS(message))
 
-    def _check_content(self, path, text_check):
-        """Método para verificar se determinado texto existe 
-        dentro de determinado arquivo
+    def __check_content(self, path, text_check):
+        """Method to check if the text exists within the file
 
-        Arguments:
-            path {str} -- Caminho absoluto para o arquivo a ser analisado
-            text_check {str} -- Texto a ser pesquisado dentro do arquivo informado
+         Arguments:
+             path {str} - Absolute path to the file to be analyzed
+             text_check {str} - Text to be searched within the given file
 
-        Returns:
-            Boolean -- Verdadeiro se o conteúdo for encontrado e False se não.
+         Returns:
+             bool - True if the content is found and False if not.
         """
 
         try:
-            if self._check_file(path):
-                with open(path, 'r', encoding='utf-8') as arquivo:
+            if self.__check_file(path):
+                with open(path) as arquivo:
                     content = arquivo.read()
                     return text_check in content
             self.__message("Arquivo não encontrado para análise.")
-        except Exception as error:
-            self.__message(f"Ocorreu o erro : {error} no _check_content")
+        except Exception as e:
+            self.__message(e)
             return False
 
     def __check_file_is_locked(self, path):
-        """ Método para verificar se o arquivo está travado
-        evitando assim que seja parseado novamente
+        """ Method to check if the file is locked
+         thus preventing it from being parsed again
 
-        Arguments:
-            path {str} -- Caminho absoluto para o arquivo a ser analisado
+         Arguments:
+             path {str} - Absolute path to the file to be analyzed
 
-        Returns:
-            Boolean -- Verdadeiro se contiver a palavra #FileLocked
+         Returns:
+             bool - True if it contains the word #FileLocked
         """
         try:
-            if self._check_file(path):
-                with open(path, 'r') as arquivo:
+            if self.__check_file(path):
+                with open(path, encoding="utf-8") as arquivo:
                     content = arquivo.read()
-                    if "#FileLocked" in content:
-                        print(
-                            f"{'|' * 100}\nArquivo {path} travado para parser\n{'|' * 100}")
-                        return True
-                    return False
+                    return "#FileLocked" in content
         except Exception as error:
-            self.__message(
-                f"Ocorreu o erro : {error} no __check_fil_is_locked")
+            self.__message(f"Error in __check_file_is_locked: {error}", error=True, )
             return True
 
-    def _get_snippet(self, path):
-        """Método para recuperar o texto a ser utilizado na
-        configuração do novo elemento
+    def __get_snippet(self, path):
+        """Method to retrieve the value of the snippet file to be converted by merging with the values based on models
+           from the Django project
 
         Arguments:
-            path {str} -- Caminho absoluto para o arquivo
+            path {str} - Absolute path to the optional file,
+                         must be passed when the snippet path is in the same flutter directory
+            file_name {str} - Name of the snippet file in xpto.txt format, must be passed together
+                              with state_manager = True to retrieve the correct state manage snippet
+            state_manager {bool} - Value to determine whether the snippet will be retrieved taking into account
+                                   the chosen state_manager
 
         Returns:
-            str -- Texto a ser utilizado para interpolar os dados do models
+            str -- Text to be used to interpolate model data
         """
         try:
-            if self._check_file(path):
+            if self.__check_file(path):
                 with open(path, 'r', encoding='utf-8') as arquivo:
                     return arquivo.read()
             self.__message("Arquivo não encontrado para captura.")
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __get_snippet : {error}")
             return None
 
-    def _get_model(self):
-        """ Método para pegar a instancia 
-        do models
+    def __get_model(self):
+        """Method responsible for retrieving the App model instance
 
         Returns:
-            Instancia do Models or None
+            Models instance or None
         """
         try:
             return apps.get_model(self.app, self.model)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __get_model : {error}", error=True)
             return None
 
-    def __convert_no_ascii_character_html_code(self, text: str):
-        try:
-            __list_uft = ["Á", "á", "Â", "â", "À", "à", "Å", "å",
-                          "Ã", "ã", "Ä", "ä", "Æ", "æ", "É", "é",
-                          "Ê", "ê", "È", "è", "Ë", "ë", "Ð", "ð",
-                          "Í", "í", "Î", "î", "Ì", "ì", "Ï", "ï",
-                          "Õ", "õ", "Ö", "ö", "Ú", "ú", "Û", "û",
-                          "Ó", "ó", "Ô", "ô", "Ò", "ò", "Ø", "ø",
-                          "Ù", "ù", "Ü", "ü", "Ç", "ç", "Ñ", "ñ",
-                          "Ý", "ý", "“", "&lt;", "&gt;", "&", "®", "©"]
-            __list_html = ["&Aacute;", "&aacute;", "&Acirc;", "&acirc;", "&Agrave;", "&agrave;", "&Aring;", "&aring;",
-                           "&Atilde;", "&atilde;", "&Auml;", "&auml;", "&AElig;", "&aelig;", "&Eacute;", "&eacute;",
-                           "&Ecirc;", "&ecirc;", "&Egrave;", "&egrave;", "&Euml;", "&Euml;", "&ETH;", "&eth;",
-                           "&Iacute;", "&iacute;", "&Icirc;", "&icirc;", "&Igrave;", "&igrave;", "&Iuml;", "&iuml;",
-                           "&Oacute;", "&oacute;", "&Ocirc;", "&ocirc;", "&Ograve;", "&ograve;", "&Oslash;", "&oslash;",
-                           "&Otilde;", "&otilde;", "&Ouml;", "&ouml;", "&Uacute;", "&uacute;", "&Ucirc;", "&ucirc;",
-                           "&Ugrave;", "&ugrave;", "&Uuml;", "&uuml;", "&Ccedil;", "&ccedil;", "&Ntilde;", "&ntilde;",
-                           "&Yacute;", "&yacute;", "&quot;", "&lt;", "&gt;", "&amp;", "&reg;", "&copy;"]
-            return text
-        except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao chamar o __convert_no_ascii_character_html_code: {error}")
-        return text
-
-    def _apply_pep(self):
-        """
-        Método para aplicar as configurações da Pep8 ao documento.
+    def __apply_pep(self):
+        """Method responsible for applying the rules of PEP8 in the generated file
         """
         try:
-            os.system(
-                'autopep8 --in-place --aggressive --aggressive {}'
-                .format(self.path_urls))
-            os.system('isort {}'.format(self.path_urls))
-        except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
-            pass
-        try:
-            os.system(
-                'autopep8 --in-place --aggressive --aggressive {}'
-                .format(self.path_form))
-            os.system('isort {}'.format(self.path_form))
-        except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
-            pass
-        try:
-            os.system(
-                'autopep8 --in-place --aggressive --aggressive {}'
-                .format(self.path_views))
-            os.system('isort {}'.format(self.path_views))
-        except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
-            pass
-        try:
-            os.system(
-                'autopep8 --in-place --aggressive --aggressive {}'
-                .format(self.path_serializer))
-            os.system('isort {}'.format(self.path_serializer))
+            __itens_apply_pep8 = [self.path_urls, self.path_form, self.path_views, self.path_serializer]
+            for element in __itens_apply_pep8:
+                os.system(
+                    'autopep8 --in-place --aggressive --aggressive {}'
+                    .format(element))
+                os.system('isort {}'.format(element))
         except Exception as error:
             self.__message(f"Ocorreu o erro : {error}")
             pass
 
-    """
-    #################################################################
-    Área dos templates
-    #################################################################    
-    """
-
-    def _manage_index_template(self):
-        """Método para criar o template Inicial da APP
-        """
+    def __manage_index_template(self):
+        """Method responsible for generating the App / Model index.html template"""
         try:
-            self.__message(
-                "Trabalhando na configuração do template inicial da APP")
+            self.__message("Trabalhando na configuração do template inicial da APP")
             path = Path(f"{self.path_template_dir}/index.html")
             if self.__check_file_is_locked(path):
                 return
             content = self._snippet_index_template
-            _title = self._get_verbose_name(
-                app_name=self.app.lower())
+            _title = self._get_verbose_name(app_name=self.app.lower())
             content = content.replace("$titlepage$", _title)
             content = content.replace("$title$", _title)
             content = content.replace("$app_name$", self.app_lower)
             with open(path, 'w', encoding='utf-8') as template:
                 template.write(content)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __manage_index_template: {error}")
 
-    def _manage_detail_template(self):
-        """Método para criar o template de Detail do model.
+    def __manage_detail_template(self):
+        """Method responsible for generating the App / Model detail.html template
         """
 
         try:
-            self.__message(
-                "Trabalhando na configuração do template de Detalhamento.")
+            self.__message("Trabalhando na configuração do template de Detalhamento.")
             path = Path(
                 f"{self.path_template_dir}/{self.model_lower}_detail.html")
             if self.__check_file_is_locked(path):
                 return
             content = self._snippet_detail_template
-            _title = self._get_verbose_name(
-                app_name=self.app.lower())
+            _title = self._get_verbose_name(app_name=self.app.lower())
             content = content.replace("$title$", _title)
             content = content.replace("$model_name$", self.model_lower)
             content = content.replace("$app_name$", self.app_lower)
             with open(path, 'w', encoding='utf-8') as template:
                 template.write(content)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __manage_detail_template : {error}")
 
-    def _manage_list_template(self):
-        """Método para criar o template de List do model.
+    def __manage_list_template(self):
+        """Method responsible for generating the App / Model list.html template
         """
         try:
-            self.__message(
-                "Trabalhando na configuração do template de Listagem.")
+            self.__message("Trabalhando na configuração do template de Listagem.")
             path = Path(
                 f"{self.path_template_dir}/{self.model_lower}_list.html")
             if self.__check_file_is_locked(path):
                 return
             content = self._snippet_list_template
-            _title = self._get_verbose_name(
-                app_name=self.app.lower(), model_name=self.model_lower)
+            _title = self._get_verbose_name(app_name=self.app.lower(), model_name=self.model_lower)
             content = content.replace("$title$", _title)
             content = content.replace("$label_count_item$", self.model)
             content = content.replace("$model_name$", self.model_lower)
@@ -418,21 +360,19 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __manage_list_template : {error}")
 
-    def _manage_update_template(self):
-        """Método para criar o template de Update do model.
+    def __manage_update_template(self):
+        """Method responsible for generating the App / Model update.html template
         """
         try:
-            self.__message(
-                "Trabalhando na configuração do template de Atualização.")
+            self.__message("Trabalhando na configuração do template de Atualização.")
             path = Path(
                 f"{self.path_template_dir}/{self.model_lower}_update.html")
             if self.__check_file_is_locked(path):
                 return
             content = self._snippet_update_template
-            _title = self._get_verbose_name(
-                app_name=self.app.lower(), model_name=self.model_lower)
+            _title = self._get_verbose_name(app_name=self.app.lower(), model_name=self.model_lower)
             content = content.replace("$title$", _title)
             content = content.replace("$app_name$", self.app_lower)
             content = content.replace("$model_name$", self.model_lower)
@@ -441,42 +381,38 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __manage_update_template: {error}")
 
-    def _manage_create_template(self):
-        """Método para criar o template de Create do model.
+    def __manage_create_template(self):
+        """Method responsible for generating the App / Model create.html template
         """
         try:
-            self.__message(
-                "Trabalhando na configuração do template de Criação.")
+            self.__message("Trabalhando na configuração do template de Criação.")
             path = Path(
                 f"{self.path_template_dir}/{self.model_lower}_create.html")
             if self.__check_file_is_locked(path):
                 return
             content = self._snippet_create_template
-            _title = self._get_verbose_name(
-                app_name=self.app.lower(), model_name=self.model_lower)
+            _title = self._get_verbose_name(app_name=self.app.lower(), model_name=self.model_lower)
             content = content.replace("$title$", _title)
             content = content.replace("$app_name$", self.app_lower)
             with open(path, 'w', encoding='utf-8') as template:
                 template.write(content)
 
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __manage_create_template : {error}")
 
-    def _manage_delete_template(self):
-        """Método para criar o template de Delete do model.
+    def __manage_delete_template(self):
+        """Method responsible for generating the App / Model delete.html template
         """
         try:
-            self.__message(
-                "Trabalhando na configuração do template de Deleção.")
+            self.__message("Trabalhando na configuração do template de Exclusão.")
             path = Path(
                 f"{self.path_template_dir}/{self.model_lower}_delete.html")
             if self.__check_file_is_locked(path):
                 return
             content = self._snippet_delete_template
-            _title = self._get_verbose_name(
-                app_name=self.app.lower(), model_name=self.model_lower)
+            _title = self._get_verbose_name(app_name=self.app.lower(), model_name=self.model_lower)
             content = content.replace("$app_name$", self.app_lower)
             content = content.replace("$model_name$", self.model_lower)
             content = content.replace("$title$", _title)
@@ -484,54 +420,46 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __manage_delete_template : {error}")
 
-    def _manage_templates(self):
-        """Método pai para controlar a criação do templates
+    def __manage_templates(self):
+        """Method responsible for generating the App / Model templates
         """
         try:
-            if self._check_dir(self.path_template_dir) is False:
+            if self.__check_dir(self.path_template_dir) is False:
                 self.__message("Criando o diretório dos Templates")
                 os.makedirs(self.path_template_dir)
-            self._manage_index_template()
-            self._manage_detail_template()
-            self._manage_list_template()
-            self._manage_create_template()
-            self._manage_delete_template()
-            self._manage_update_template()
+            self.__manage_index_template()
+            self.__manage_detail_template()
+            self.__manage_list_template()
+            self.__manage_create_template()
+            self.__manage_delete_template()
+            self.__manage_update_template()
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __manage_templates : {error}", error=True)
 
-    """
-    #################################################################
-    Área da API DRF
-    #################################################################    
-    """
-
-    def _manage_api_url(self):
-        """Método para configuração das URLS da API
+    def __manage_api_url(self):
+        """Method responsible for creating the Rest API urls file for the model
         """
         try:
             import pdb
-            self.__message(
-                "Trabalhando na configuração das Urls API do model {}".format(self.model))
+            self.__message("Trabalhando na configuração das Urls API do model {}".format(self.model))
             content = self._snippet_api_router
             content_urls = self._snippet_api_routers
             content = content.replace("$ModelName$", self.model)
             content = content.replace("$app_name$", self.app_lower)
             content = content.replace("$model_name$", self.model_lower)
             content_urls = content_urls.replace("$ModelName$", self.model)
-            if self._check_file(self.path_urls) is False:
+            if self.__check_file(self.path_urls) is False:
                 with open(self.path_urls, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(content_urls + content)
                 return
 
-            if self._check_content(self.path_urls, " {}ViewAPI".format(self.model)):
-                self.__message(
-                    "O model informado já possui urls da API configuradas.")
+            if self.__check_content(self.path_urls, " {}ViewAPI".format(self.model)):
+                self.__message("O model informado já possui urls da API configuradas.")
                 return
 
-            if self._check_content(self.path_urls, "router = routers.DefaultRouter()"):
+            if self.__check_content(self.path_urls, "router = routers.DefaultRouter()"):
                 content = content.split("\n", 1)[1]
                 content = content.replace(
                     'router = routers.DefaultRouter()', '\n')
@@ -541,14 +469,14 @@ class Command(BaseCommand):
                         print(line.replace(
                             imports, imports + '\n' + content), end='')
 
-            elif self._check_content(self.path_urls, "app_name = \'{}\'".format(self.app)):
+            elif self.__check_content(self.path_urls, "app_name = \'{}\'".format(self.app)):
                 app_name_url = "app_name = \'{}\'".format(self.app_lower)
                 with fileinput.FileInput(self.path_urls, inplace=True) as arquivo:
                     for line in arquivo:
                         print(line.replace(
                             app_name_url, app_name_url + '\n' + content), end='')
 
-            if self._check_content(self.path_urls, "from rest_framework import routers"):
+            if self.__check_content(self.path_urls, "from rest_framework import routers"):
                 content_origin = content_urls.split("\n")
                 content_urls = content_urls.split("\n")[3]
                 arquivo = open(self.path_urls, "r", encoding='utf-8')
@@ -565,7 +493,7 @@ class Command(BaseCommand):
                 arquivo = open(self.path_urls, "w", encoding='utf-8')
                 arquivo.writelines(data)
                 arquivo.close()
-            elif self._check_content(self.path_urls, "from .views import"):
+            elif self.__check_content(self.path_urls, "from .views import"):
                 content_aux = content_urls.split("\n")[1]
                 arquivo = open(self.path_urls, "r")
                 data = []
@@ -581,7 +509,7 @@ class Command(BaseCommand):
                 arquivo = open(self.path_urls, "w")
                 arquivo.writelines(data)
                 arquivo.close()
-                if self._check_content(self.path_urls, "from django.urls import"):
+                if self.__check_content(self.path_urls, "from django.urls import"):
                     imports = 'from django.urls import path, include'
                     with fileinput.FileInput(self.path_urls, inplace=True) as arquivo:
                         for line in arquivo:
@@ -591,7 +519,7 @@ class Command(BaseCommand):
                     with open(self.path_urls, 'a', encoding='utf-8') as views:
                         views.write("\n")
                         views.write(content_urls)
-            elif self._check_content(self.path_urls, "from django.urls import"):
+            elif self.__check_content(self.path_urls, "from django.urls import"):
                 imports = 'from django.urls import path, include'
                 with fileinput.FileInput(self.path_urls, inplace=True) as arquivo:
                     for line in arquivo:
@@ -602,30 +530,28 @@ class Command(BaseCommand):
                     views.write("\n")
                     views.write(content_urls)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error} no _manage_api_url")
+            self.__message(f"Ocorreu o erro : {error} no __manage_api_url")
 
-    def _manage_api_view(self):
-        """Método para configuração das Views da API
+    def __manage_api_view(self):
+        """Method responsible for creating the Rest API VIEWS file for the model
         """
         try:
-            self.__message(
-                "Trabalhando na configuração das Views da API do model {} ".format(self.model))
+            self.__message("Trabalhando na configuração das Views da API do model {} ".format(self.model))
             content = self._snippet_api_view
 
             content_urls = self._snippet_api_urls
             content = content.replace("$ModelName$", self.model)
             content_urls = content_urls.replace("$ModelName$", self.model)
-            if self._check_file(self.path_views) is False:
+            if self.__check_file(self.path_views) is False:
                 with open(self.path_views, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(content_urls + content)
                 return
 
-            if self._check_content(self.path_views, " {}ViewAPI".format(self.model)):
-                self.__message(
-                    "O model informado já possui views da API configurado.")
+            if self.__check_content(self.path_views, " {}ViewAPI".format(self.model)):
+                self.__message("O model informado já possui views da API configurado.")
                 return
 
-            if self._check_content(self.path_views, self.model) is False:
+            if self.__check_content(self.path_views, self.model) is False:
                 content_models = content_urls.split("\n")[5]
                 arquivo = open(self.path_views, "r", encoding='utf-8')
                 data = []
@@ -644,7 +570,7 @@ class Command(BaseCommand):
             else:
                 content_urls = content_urls.rsplit("\n", 1)[0]
 
-            if self._check_content(self.path_views, "from rest_framework.viewsets import ModelViewSet"):
+            if self.__check_content(self.path_views, "from rest_framework.viewsets import ModelViewSet"):
                 content_urls = content_urls.split("\n")[4]
                 arquivo = open(self.path_views, "r", encoding='utf-8')
                 data = []
@@ -660,8 +586,9 @@ class Command(BaseCommand):
                 arquivo = open(self.path_views, "w", encoding='utf-8')
                 arquivo.writelines(data)
                 arquivo.close()
-            elif self._check_content(self.path_views, "from nuvols.core.views"):
-                imports = 'from nuvols.core.views import BaseListView, BaseDeleteView, BaseDetailView, BaseUpdateView, BaseCreateView, BaseTemplateView'
+            elif self.__check_content(self.path_views, "from nuvols.core.views"):
+                imports = 'from nuvols.core.views import BaseListView, BaseDeleteView, BaseDetailView, BaseUpdateView, '
+                imports += 'BaseCreateView, BaseTemplateView'
                 imports_rest = '\n{}\n{}\n{}\n{}\n'.format(content_urls.split("\n")[0], content_urls.split("\n")[1],
                                                            content_urls.split("\n")[2], content_urls.split("\n")[3])
                 with fileinput.FileInput(self.path_views, inplace=True) as arquivo:
@@ -677,20 +604,19 @@ class Command(BaseCommand):
                 api_views.write("\n")
                 api_views.write(content)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __manage_api_view: {error}")
 
-    def _manage_serializer(self):
-        """Método para configurar o serializer do model informado.
+    def __manage_serializer(self):
+        """Method responsible for creating the Rest API Serializer file for the model
         """
         try:
-            self.__message(
-                "Trabalhando na configuração do Serializer do model {}".format(self.model))
+            self.__message("Trabalhando na configuração do Serializer do model {}".format(self.model))
             content = self._snippet_serializer
             content_urls = self._snippet_serializer_url
             content = content.replace("$ModelName$", self.model)
             content = content.replace("$ModelClass$", self.model)
             content_urls = content_urls.replace("$ModelName$", self.model)
-            if self._check_file(self.path_serializer) is False:
+            if self.__check_file(self.path_serializer) is False:
                 with open(self.path_serializer, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(content_urls + '\n\n' + content)
                 return
@@ -698,12 +624,11 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(self.path_serializer) is True:
                 return
 
-            if self._check_content(self.path_serializer, "class {}Serializer".format(self.model)):
-                self.__message(
-                    "O model informado já possui serializer configurado.")
+            if self.__check_content(self.path_serializer, "class {}Serializer".format(self.model)):
+                self.__message("O model informado já possui serializer configurado.")
                 return
 
-            if self._check_content(self.path_serializer, "from rest_framework.serializers import ModelSerializer"):
+            if self.__check_content(self.path_serializer, "from rest_framework.serializers import ModelSerializer"):
                 content_urls = content_urls.split("\n")[1]
                 arquivo = open(self.path_serializer, "r")
                 data = []
@@ -726,26 +651,19 @@ class Command(BaseCommand):
                 urls.write("\n")
                 urls.write(content)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __manage_serializer : {error}")
 
-    """
-    #################################################################
-    Área dos Forms
-    #################################################################    
-    """
-
-    def _manage_form(self):
-        """Método para configurar o Form do model informado.
+    def __manage_form(self):
+        """Method responsible for creating the form class for the model
         """
         try:
-            self.__message(
-                "Trabalhando na configuração do Form do model {}".format(self.model))
+            self.__message("Trabalhando na configuração do Form do model {}".format(self.model))
             content = self._snippet_form
             content_urls = self._snippet_form_url
             content = content.replace("$ModelClass$", self.model)
             content_urls = content_urls.replace("$ModelClass$", self.model)
 
-            if self._check_file(self.path_form) is False:
+            if self.__check_file(self.path_form) is False:
                 with open(self.path_form, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(content_urls + '\n' + content)
                 return
@@ -753,11 +671,11 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(self.path_form) is True:
                 return
 
-            if self._check_content(self.path_form, "class {}Form".format(self.model)):
+            if self.__check_content(self.path_form, "class {}Form".format(self.model)):
                 self.__message("O model informado já possui form configurado.")
                 return
 
-            if self._check_content(self.path_form, "from core.forms import BaseForm"):
+            if self.__check_content(self.path_form, "from core.forms import BaseForm"):
                 content_urls = content_urls.split("\n")[1]
                 arquivo = open(self.path_form, "r", encoding='utf-8')
                 data = []
@@ -780,21 +698,14 @@ class Command(BaseCommand):
                 form.write("\n")
                 form.write(content)
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __manage_form : {error}")
 
-    """
-    #################################################################
-    Área das Views
-    #################################################################    
-    """
-
-    def _manage_views(self):
-        """Método para configurar as Views para o model informado.
+    def __manage_views(self):
+        """Method responsible for creating the ClassBasedViews CRUD file for the model
         """
         try:
             __snnipet_index_template = self._snippet_index_view
-            self.__message(
-                "Trabalhando na configuração das Views do model {}".format(self.model))
+            self.__message("Trabalhando na configuração das Views do model {}".format(self.model))
             content = self._snippet_crud_view
             content_urls = self._snippet_crud_urls
             content = content.replace("$ModelClass$", self.model)
@@ -802,7 +713,7 @@ class Command(BaseCommand):
             content = content.replace("$model_name$", self.model_lower)
             content_urls = content_urls.replace("$ModelClass$", self.model)
             _import_forms_modal = ""
-            _model = self._get_model()
+            _model = self.__get_model()
             try:
                 if hasattr(_model._meta, 'fk_fields_modal') is True:
                     _forms = ""
@@ -836,7 +747,7 @@ class Command(BaseCommand):
                     content = content.replace('$FormsModalCreate$', "")
                     content = content.replace('$FormsModalUpdate$', "")
             except Exception as error:
-                self.__message(f"Ocorreu o erro: {e}")
+                self.__message(f"Error in __manage_views: {error}")
 
             try:
                 if hasattr(_model._meta, 'fields_display') is True:
@@ -846,26 +757,25 @@ class Command(BaseCommand):
                 else:
                     content = content.replace('$ListFields$', "")
             except Exception as error:
-                self.__message(f"Ocorreu o erro {error}")
+                self.__message(f"Error in __manage_views {error}")
 
-            if self._check_content(self.path_views, "{}IndexTemplateView".format(self.app.title())) is False:
+            if self.__check_content(self.path_views, "{}IndexTemplateView".format(self.app.title())) is False:
                 __snnipet_index_template = __snnipet_index_template.replace(
                     "$AppClass$", self.app.title())
                 __snnipet_index_template = __snnipet_index_template.replace(
                     "$app_name$", self.app_lower)
                 content = __snnipet_index_template + content
 
-            if self._check_file(self.path_views) is False:
+            if self.__check_file(self.path_views) is False:
                 with open(self.path_views, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(content_urls + '\n' + content)
                 return
 
-            if self._check_content(self.path_views, "class {}ListView".format(self.model)):
-                self.__message(
-                    "O model informado já possui as views configuradas.")
+            if self.__check_content(self.path_views, "class {}ListView".format(self.model)):
+                self.__message("O model informado já possui as views configuradas.")
                 return
 
-            if self._check_content(self.path_views, "from nuvols.core.views"):
+            if self.__check_content(self.path_views, "from nuvols.core.views"):
                 content_models = content_urls.split("\n")[1]
                 content_forms = content_urls.split("\n")[2]
                 arquivo = open(self.path_views, "r", encoding='utf-8')
@@ -898,20 +808,13 @@ class Command(BaseCommand):
                 views.write(content)
 
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __manage_views : {error}")
 
-    """
-    #################################################################
-    Área das URLS
-    #################################################################    
-    """
-
-    def _manage_url(self):
-        """Método para configurar as URLS do model informado.
+    def __manage_url(self):
+        """Method responsible for creating the urls file for the model
         """
         try:
-            self.__message(
-                "Trabalhando na configuração das Urls do model {}".format(self.model))
+            self.__message("Trabalhando na configuração das Urls do model {}".format(self.model))
             content = self._snippet_url
             content_urls = self._snippet_urls_imports
             content = content.replace("$app_name$", self.app_lower)
@@ -920,12 +823,12 @@ class Command(BaseCommand):
             content = content.replace("$ModelClass$", self.model)
             content_urls = content_urls.replace("$ModelClass$", self.model)
 
-            if self._check_content(self.path_urls, "{}IndexTemplateView".format(self.app.title())):
+            if self.__check_content(self.path_urls, "{}IndexTemplateView".format(self.app.title())):
                 content_urls = content_urls.replace(", $AppIndexTemplate$", "")
             else:
                 content_urls = content_urls.replace(
                     "$AppIndexTemplate$", "{}IndexTemplateView".format(self.app.title()))
-            if self._check_file(self.path_urls) is False:
+            if self.__check_file(self.path_urls) is False:
                 with open(self.path_urls, 'w', encoding='utf-8') as arquivo:
                     arquivo.write(content_urls + '\n' + content)
                 return
@@ -933,11 +836,10 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(self.path_urls) is True:
                 return
 
-            if self._check_content(self.path_urls, " {}ListView".format(self.model)):
-                self.__message(
-                    "O model informado já possui urls configuradas.")
+            if self.__check_content(self.path_urls, " {}ListView".format(self.model)):
+                self.__message("O model informado já possui urls configuradas.")
 
-            if self._check_content(self.path_urls, "from .views import"):
+            if self.__check_content(self.path_urls, "from .views import"):
                 content_urls = content_urls.split("\n")[1]
                 arquivo = open(self.path_urls, "r", encoding='utf-8')
                 data = []
@@ -959,7 +861,7 @@ class Command(BaseCommand):
                 with open(self.path_urls, 'a', encoding='utf-8') as views:
                     views.write(content_urls)
 
-            if self._check_content(self.path_urls, "urlpatterns = ["):
+            if self.__check_content(self.path_urls, "urlpatterns = ["):
                 content = content.replace(
                     "urlpatterns = [", "urlpatterns += [")
                 content = content.replace("path('api/{}/', include(router.urls)),\n    ".format(
@@ -968,7 +870,7 @@ class Command(BaseCommand):
                     self.app_lower, self.app.title(), self.app_lower)
                 content = content.replace(_url_index_page, "")
 
-            if self._check_content(self.path_urls, "app_name = \'{}\'".format(self.app)):
+            if self.__check_content(self.path_urls, "app_name = \'{}\'".format(self.app)):
                 content = content.replace(
                     "app_name = \'{}\'".format(self.app), "")
 
@@ -979,18 +881,19 @@ class Command(BaseCommand):
                 urls.write(content)
 
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error} no _manage_url")
+            self.__message(f"Error in __manage_url : {error}")
 
-    """
-    #################################################################
-    Área do parser do HTML
-    #################################################################    
-    """
+    def __render_modal_foreign_key(self, model, app, model_lower, field_name) -> str:
+        """Method responsible for rendering the HTML code block to manipulate values of a field of type foreignKey
 
-    def _render_modal_foreign_key(self, model, app, model_lower, field_name):
-        """
-        Método para renderizar o Model respectivo da foreign key do model em questão.
-        A possibilidade de adicionar um novo campo para a foreign key no próprio formulário
+        Arguments:
+            model {Django Model} -- Django App model instance
+            app {Django App} -- Django App Instance
+            model_lower {str} -- Model name in lower case
+            field_name {str} -- Field name that references the other model
+
+        Returns:
+            (str) -- HTML code fragment to manipulate attribute data of type foreign key
         """
 
         try:
@@ -1003,7 +906,15 @@ class Command(BaseCommand):
         except Exception as error:
             self.__message(f"Ocorreu o erro : {error}")
 
-    def _render_input(self, field):
+    def __render_input(self, field) -> str:
+        """Method responsible for generating the fields of the HTML form
+
+        Arguments:
+            field {str} -- Model attribute instance
+
+        Returns:
+            (str) -- String containing the HTML code of the model attribute
+        """
         try:
             types = [
                 'AutoField', 'BLANK_CHOICE_DASH', 'BigAutoField',
@@ -1020,7 +931,7 @@ class Command(BaseCommand):
                 'TimeField', 'URLField', 'UUIDField', 'ForeignKey',
                 'OneToOneField', 'ManyToManyField', 'OptimizedImageField'
             ]
-            _model = self._get_model()
+            _model = self.__get_model()
             iten = {}
             iten["app"], iten["model"], iten["name"] = str(field).split('.')
             iten["tipo"] = (str(
@@ -1037,13 +948,8 @@ class Command(BaseCommand):
                     required = ''
                 readonly = getattr(field, 'readonly', '')
                 label = "{{{{ form.{}.label_tag }}}}".format(iten['name'])
-                helptext = getattr(field, 'help_text', '')
-                """ 
-                #####################################################
-                Tratando os tipos de campos
-                #####################################################
-                """
-                if (iten.get("tipo") in ('ForeignKey', 'OneToOneField')):
+                help_text = getattr(field, 'help_text', '')
+                if iten.get("tipo") in ('ForeignKey', 'OneToOneField'):
                     tag_result += label
                     _foreign_key_field = "\n{{{{ form.{} }}}}".format(
                         iten['name'])
@@ -1052,34 +958,31 @@ class Command(BaseCommand):
                             _foreign_key_field = '\n<div class="input-group">'
                             _foreign_key_field += "{{{{ form.{} }}}}\n".format(
                                 iten['name'])
-                            _foreign_key_field += '{{% if form.{}.field.queryset.model|has_add_permission:request %}}<button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#form{}Modal">+</button>{{% endif %}}' \
-                                .format(iten['name'], field.related_model._meta.object_name)
+                            _foreign_key_field += "{{% if form.{0}.field.queryset.model|{1} %}}".format(
+                                iten['name'], "has_add_permission:request"
+                            )
+                            _foreign_key_field += '<button type="button" class="btn btn-outline-secondary"'
+                            _foreign_key_field += ' data-toggle="modal" data-target='
+                            _foreign_key_field += '"#form{}Modal">+</button>{{% endif %}}'.format(
+                                field.related_model._meta.object_name)
                             _foreign_key_field += '</div>'
-                            self.html_modals += self._render_modal_foreign_key(
+                            self.html_modals += self.__render_modal_foreign_key(
                                 field.related_model._meta.object_name, iten['app'],
                                 field.related_model._meta.model_name, iten['name'])
                     tag_result += _foreign_key_field
 
                 elif iten["tipo"] == 'BooleanField':
-                    tag_result += "{{{{ form.{} }}}}\n{}".format(
-                        iten['name'], label)
+                    tag_result += "{{{{ form.{} }}}}\n{}".format(iten['name'], label)
                 elif iten["tipo"] == 'ManyToManyField':
-                    tag_result += "{}\n{{{{ form.{} }}}}".format(
-                        label, iten['name'])
+                    tag_result += "{}\n{{{{ form.{} }}}}".format(label, iten['name'])
                 else:
-                    tag_result += "{}\n{{{{ form.{} }}}}".format(
-                        label, iten['name'])
-                """
-                #####################################################
-                Configurando os atributos do campo
-                #####################################################
-                """
+                    tag_result += "{}\n{{{{ form.{} }}}}".format(label, iten['name'])
                 if readonly != '':
                     tag_result = tag_result.replace(
                         "class='", "class='form-control-plaintext ")
                 if required != '':
                     tag_result += '\n<div class="invalid-feedback">Campo Requerido.</div>'
-                if helptext != '':
+                if help_text != '':
                     tag_result += "\n<small class='form-text text-muted'>{{{{ form.{0}.help_text }}}}</small>\n".format(
                         iten['name'])
                 tag_result += "{{% if form.{0}.errors  %}}{{{{ form.{0}.errors  }}}}{{% endif %}}".format(
@@ -1090,29 +993,21 @@ class Command(BaseCommand):
                 print('Campo {} desconhecido'.format(field))
 
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __render_input : {error}")
 
-    """
-    #################################################################
-    Área dos templates HTML
-    #################################################################    
-    """
-
-    def _manage_render_html(self):
-        """Método para renderizar os campos do models 
-        para tags HTML
-        """
+    def __manage_render_html(self):
+        """Method for rendering models CRUD templates"""
         try:
-            model = self._get_model()
-            if model == None:
+            model = self.__get_model()
+            if model is None:
                 self.__message("Favor declarar a app no settings.", error=True)
-            self._manage_templates()
+            self.__manage_templates()
             html_tag = ""
             self.html_modals = ""
             __fields = model._meta.fields + model._meta.many_to_many
             for field in iter(__fields):
                 if str(field).split('.')[2] not in ('updated_on', 'created_on', 'deleted', 'enabled', 'id'):
-                    html_tag += self._render_input(field)
+                    html_tag += self.__render_input(field)
             if html_tag != '':
                 for temp in ['create', 'update']:
                     list_update_create = Path(
@@ -1160,7 +1055,7 @@ class Command(BaseCommand):
                                 item.replace('__', '.'))
                     list_template = Path(
                         f"{self.path_template_dir}/{self.model_lower}_list.html")
-                    list_template_content = self._get_snippet(list_template)
+                    list_template_content = self.__get_snippet(list_template)
                     list_template_content = list_template_content.replace(
                         "<!--REPLACE_THEAD-->", thead)
                     list_template_content = list_template_content.replace(
@@ -1169,68 +1064,59 @@ class Command(BaseCommand):
                         list_file.write(list_template_content)
 
                 except Exception as error:
-                    self.__message(f"Ocorreu o erro : {error}")
+                    self.__message(f"Error in __manage_render_html : {error}")
         except Exception as error:
-            self.__message(f"Ocorreu o erro : {error}")
+            self.__message(f"Error in __manage_render_html : {error}")
 
     def call_methods(self, options):
-        """
-        Função responsável por verificar as opções passadas por parametro 
-        e chamar os métodos responsáveis.
-
-        A Função foi criada para que não ocorrece a repetição de código
-        """
         if options['templates']:
             self.__message("Trabalhando apenas os templates.")
-            self._manage_templates()
+            self.__manage_templates()
             return
         elif options['api']:
             self.__message("Trabalhando apenas a api.")
-            self._manage_serializer()
-            self._manage_api_view()
-            self._manage_api_url()
-            self._apply_pep()
+            self.__manage_serializer()
+            self.__manage_api_view()
+            self.__manage_api_url()
+            self.__apply_pep()
             return
         elif options['url']:
             self.__message("Trabalhando apenas as urls.")
-            self._manage_url()
-            self._manage_api_url()
-            self._apply_pep()
+            self.__manage_url()
+            self.__manage_api_url()
+            self.__apply_pep()
             return
         elif options['forms']:
             self.__message("Trabalhando apenas os forms.")
-            self._manage_form()
-            self._apply_pep()
+            self.__manage_form()
+            self.__apply_pep()
             return
         elif options['views']:
             self.__message("Trabalhando apenas as views.")
-            self._manage_views()
+            self.__manage_views()
         elif options['renderhtml']:
-            self._manage_render_html()
-            self._apply_pep()
+            self.__manage_render_html()
+            self.__apply_pep()
             return
         elif options['format']:
-            self._apply_pep()
+            self.__apply_pep()
             return
         else:
-            self._manage_form()
-            self._manage_views()
-            self._manage_serializer()
-            self._manage_url()
-            self._manage_api_view()
-            self._manage_api_url()
-            self._manage_templates()
-            self._manage_render_html()
-            self._apply_pep()
+            self.__manage_form()
+            self.__manage_views()
+            self.__manage_serializer()
+            self.__manage_url()
+            self.__manage_api_view()
+            self.__manage_api_url()
+            self.__manage_templates()
+            self.__manage_render_html()
+            self.__apply_pep()
             return
 
     def handle(self, *args, **options):
-        """Método invocado internamente pelo Command logo após a 
-        validação da passagem de parâmetro.
-        """
         self.__message("Gerando os arquivos da app")
         app = options['App'] or None
-        if (self._contain_number(app) is False):
+        if self.__contain_number(app) is False:
             self.app = app.strip()
             self.path_root = os.getcwd()
             self.path_app = Path(f"{self.path_root}/{app}")
@@ -1244,36 +1130,30 @@ class Command(BaseCommand):
                 f"{self.path_app}/templates/{self.app}")
             self.path_app = Path(f"{self.path_root}/{app}")
             self.app_lower = app.lower()
-            if self._check_dir(self.path_app) is False:
+            if self.__check_dir(self.path_app) is False:
                 self.__message("Diretório não encontrado.")
                 return
             if apps.is_installed(self.app_lower) is False:
-                self.__message(
-                    "Você deve colocar sua app no INSTALLED_APPS do settings.")
+                self.__message("Você deve colocar sua app no INSTALLED_APPS do settings.")
                 return
             self.app_instance = apps.get_app_config(self.app_lower)
             if options['Model']:
                 model = options['Model'] or None
-                if self._contain_number(model) is False:
+                if self.__contain_number(model) is False:
                     self.model = model.strip()
-                    if self._check_content(self.path_model, 'class {}'.format(self.model)) is False:
-                        self.__message(
-                            "Model informado não encontrado.")
+                    if self.__check_content(self.path_model, 'class {}'.format(self.model)) is False:
+                        self.__message("Model informado não encontrado.")
                         return
                 try:
-                    # Verifica se o model está na app informada
-                    # Se o model for abstract ela retornará uma exceção LookupError
                     self.app_instance.get_model(self.model)
-                    self.__message(
-                        "Gerando arquivos para o model {}".format(self.model))
+                    self.__message("Gerando arquivos para o model {}".format(self.model))
                     self.model_lower = model.lower()
                     self.call_methods(options)
                 except LookupError as error:
-                    self.__message(f"Ocorreu o erro : {error}")
+                    self.__message(f"Error in handler : {error}")
             else:
                 for model in self.app_instance.get_models():
-                    self.__message(
-                        f"Gerando os arquivos para a app: {self.app}")
+                    self.__message(f"Gerando os arquivos para a app: {self.app}")
                     model = model.__name__
                     self.model = model.strip()
                     self.model_lower = model.lower()

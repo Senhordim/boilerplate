@@ -425,8 +425,7 @@ class Command(BaseCommand):
         try:
             return any(character.isdigit() for character in text)
         except Exception as error:
-            self.__message(
-                f"Error in Contain Number: {error}", error=True)
+            self.__message(f"Error in __contain_number: {error}", error=True)
             return False
 
     def __check_dir(self, path) -> bool:
@@ -442,8 +441,7 @@ class Command(BaseCommand):
         try:
             return os.path.isdir(path)
         except Exception as error:
-            self.__message(
-                f"Error in _-check_dir: {error}", error=True)
+            self.__message(f"Error in __check_dir: {error}", error=True)
             return False
 
     def __ignore_base_fields(self, field) -> bool:
@@ -584,9 +582,7 @@ class Command(BaseCommand):
                     content = arquivo.read()
                     return "#FileLocked" in content
         except Exception as error:
-            self.__message(
-                f"Error in __check_file_is_locked: {error}",
-                error=True, )
+            self.__message(f"Error in __check_file_is_locked: {error}", error=True, )
             return True
 
     def __init_flutter(self):
