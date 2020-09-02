@@ -119,7 +119,7 @@ class Utils(object):
             if Utils.check_file(path):
                 with open(path) as content_file:
                     content = content_file.read()
-                    return text in content
+                    __process_result = text in content
         except Exception as error:
             Utils.show_message(f"Error in Utils.check_content: {error}", error=True)
         finally:

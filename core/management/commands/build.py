@@ -924,7 +924,7 @@ class Command(BaseCommand):
                         list_file.write(list_template_content)
 
                 except Exception as error:
-                    Utils.show_message(f"Error in __manage_render_html : {error}")
+                    Utils.show_message(f"Error in __manage_render_html ao realizar o parser do template : {error}")
         except Exception as error:
             Utils.show_message(f"Error in __manage_render_html : {error}")
 
