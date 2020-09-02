@@ -4,11 +4,9 @@ views and creating Rest API using DRF
 
 import fileinput
 import os
-import sys
 from pathlib import Path
 from nuvols.core.management.commands.utils import Utils
 from django.apps import apps
-from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand
 from django.urls import resolve, reverse
 from bs4 import BeautifulSoup
@@ -375,7 +373,6 @@ class Command(BaseCommand):
                         line = 'from .views import{}\n'.format(models)
                     data.append(line)
                 arquivo.close()
-
                 arquivo = open(self.path_urls, "w")
                 arquivo.writelines(data)
                 arquivo.close()
