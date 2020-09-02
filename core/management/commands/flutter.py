@@ -9,6 +9,7 @@ from pathlib import Path
 from django.apps import apps
 from django.core.management.base import BaseCommand
 
+from nuvols.core.management.commands.utils import Utils
 from nuvols.core.management.commands.parser_content import ParserContent
 from nuvols.core.models import Base
 from nuvols.core.settings import FLUTTER_APPS, SYSTEM_NAME, API_PATH
@@ -51,21 +52,6 @@ class AppModel:
         except Exception as error:
             raise error
 
-    @staticmethod
-    def __message(message, error=False):
-        """Static method responsible for friendly display of messages on the console
-
-        Arguments:
-            message {str} -- Message to be displayed on the terminal
-            error {bool} -- Attribute that determines whether the message is an error,
-                            being an error message the execution of the program is ended
-        """
-        if error:
-            sys.stdout.write(message)
-            sys.exit()
-        else:
-            sys.stdout.write(message)
-
     def get_path_app_dir(self):
         """Method to return the app path in the Flutter project
 
@@ -75,7 +61,7 @@ class AppModel:
         try:
             return Path("{}/lib/apps/{}".format(self.path_flutter, self.app_name_lower))
         except Exception as error:
-            self.__message(f"Error in get_path_app_dir: {error}", error=True)
+            Utils.show_message(f"Error in get_path_app_dir: {error}", error=True)
 
     def get_path_app_model_dir(self):
         """ Method to return the model path in the Flutter project
@@ -87,8 +73,7 @@ class AppModel:
             return Path("{}/lib/apps/{}/{}".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
-            self.__message(
-                f"Error in get_path_app_model_dir {error}", error=True)
+            Utils.show_message(f"Error in get_path_app_model_dir {error}", error=True)
 
     def get_path_views_dir(self):
         """Method to return the views directory path
@@ -100,7 +85,7 @@ class AppModel:
             return Path("{}/lib/apps/{}/{}/pages/".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
-            self.__message(f"Error in get_path_views_dir {error}", error=True)
+            Utils.show_message(f"Error in get_path_views_dir {error}", error=True)
 
     def get_path_files_views(self):
         """Method to return the files of the pages in the Flutter project
@@ -122,7 +107,7 @@ class AppModel:
 
             return __create, __detail, __index, __list, __update
         except Exception as error:
-            self.__message(
+            Utils.show_message(
                 f"Error in get_path_files_views: {error}", error=True)
 
     def get_path_data_file(self):
@@ -135,7 +120,7 @@ class AppModel:
             return Path("{}/lib/apps/{}/{}/data.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
-            self.__message(f"Error in get_path_data_file: {error}", error=True)
+            Utils.show_message(f"Error in get_path_data_file: {error}", error=True)
 
     def get_path_model_file(self):
         """Method to retrieve the model.dart file path
@@ -147,7 +132,7 @@ class AppModel:
             return Path("{}/lib/apps/{}/{}/model.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
-            self.__message(f"Error in get_path_model_file {error}", error=True)
+            Utils.show_message(f"Error in get_path_model_file {error}", error=True)
 
     def get_path_controller_file(self):
         """Method to retrieve the path to the controller.dart file
@@ -159,7 +144,7 @@ class AppModel:
             return Path("{}/lib/apps/{}/{}/controller.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
-            self.__message(
+            Utils.show_message(
                 f"Error in get_path_controller_file {error}", error=True)
 
     def get_path_provider_file(self):
@@ -172,7 +157,7 @@ class AppModel:
             return Path("{}/lib/apps/{}/{}/provider.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
-            self.__message(
+            Utils.show_message(
                 f"Error in get_path_provider_file {error}", error=True)
 
     def get_path_cubit_file(self):
@@ -185,7 +170,7 @@ class AppModel:
             return Path("{}/lib/apps/{}/{}/cubit.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
-            self.__message(
+            Utils.show_message(
                 f"Error in get_path_provider_file {error}", error=True)
 
     def get_path_cubit_state_file(self):
@@ -198,7 +183,7 @@ class AppModel:
             return Path("{}/lib/apps/{}/{}/state.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
-            self.__message(
+            Utils.show_message(
                 f"Error in get_path_provider_file {error}", error=True)
 
     def get_path_service_file(self):
@@ -211,7 +196,7 @@ class AppModel:
             return Path("{}/lib/apps/{}/{}/service.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
         except Exception as error:
-            self.__message(
+            Utils.show_message(
                 f"Error in get_path_service_file {error}", error=True)
 
     def print_string(self):
@@ -255,7 +240,7 @@ class AppModel:
             __model = __instance.get_model(model)
             return issubclass(__model, Base)
         except Exception as error:
-            self.__message(
+            Utils.show_message(
                 f"Error in check_inherited_base: {error}")
             return False
 
@@ -273,7 +258,7 @@ class AppModel:
                 return f"{self.app_name.title()}{self.model_name}"
             return f"{self.app_name}{self.model_name}"
         except Exception as error:
-            self.__message(
+            Utils.show_message(
                 f"Error in get_app_model_name: {error}")
             return None
 
@@ -413,37 +398,6 @@ class Command(BaseCommand):
         parser.add_argument(
             "--clear", action="store_true", dest="clear", help="Limpar projeto flutter.")
 
-    def __contain_number(self, text) -> bool:
-        """Method to check the text passed as a parameter has numeric characters
-
-        Arguments:
-            text {String} -- Text to be validated
-
-        Returns:
-            bool -- True if there is any number in the text parameter
-        """
-        try:
-            return any(character.isdigit() for character in text)
-        except Exception as error:
-            self.__message(f"Error in __contain_number: {error}", error=True)
-            return False
-
-    def __check_dir(self, path) -> bool:
-        """Method to check if the directory exists
-
-        Arguments:
-            path {str} -- Directory path
-
-        Returns:
-            bool -- True if the directory exists and False if not.
-        """
-
-        try:
-            return os.path.isdir(path)
-        except Exception as error:
-            self.__message(f"Error in __check_dir: {error}", error=True)
-            return False
-
     def __ignore_base_fields(self, field) -> bool:
         """Method to check if the model attribute should be ignored in the parser process according to
            tuple __ignore_fields
@@ -459,22 +413,7 @@ class Command(BaseCommand):
                                "created_on", "updatedOn", "updatedOn", ]
             return field in __ignore_fields
         except Exception as error:
-            self.__message(
-                f"Error in __ignore_base_fields: {error}", error=True)
-
-    def __message(self, message, error=False):
-        """Method for displaying friendly messages on the flow of script execution on the terminal.
-
-        Arguments:
-            message {str} -- Message to be displayed on the terminal
-            error {bool} -- Attribute that determines whether the message is an error,
-                            being an error message the execution of the program is ended
-        """
-        if error:
-            self.stdout.write(self.style.ERROR(message))
-            sys.exit()
-        else:
-            self.stdout.write(self.style.SUCCESS(message))
+            Utils.show_message(f"Error in __ignore_base_fields: {error}", error=True)
 
     def __to_camel_case(self, text, flutter=False):
         """Method to convert the text passed in the text parameter from the snake_case format to the camelCase format
@@ -493,7 +432,7 @@ class Command(BaseCommand):
                 return components[0] + "".join(x.title() for x in components[1:])
             return components[0] + "".join(x.title() for x in components[1:])
         except Exception as error:
-            self.__message(f"Error in Camel Case: {error}")
+            Utils.show_message(f"Error in Camel Case: {error}")
             return None
 
     def __get_snippet(self, path=None, file_name=None, state_manager=False):
@@ -526,77 +465,21 @@ class Command(BaseCommand):
                 with open(path, encoding="utf-8") as arquivo:
                     return arquivo.read()
         except Exception as e:
-            self.__message(f"Error in get_snippet {e}", error=True)
+            Utils.show_message(f"Error in get_snippet {e}", error=True)
             sys.exit()
-
-    def __check_file(self, path):
-        """Method to check if the file passed as a parameter exists
-
-         Arguments:
-             path {str} - Path to the file
-
-         Returns:
-             bool - True if the file exists and False if not.
-        """
-
-        try:
-            return os.path.isfile(path)
-        except Exception as e:
-            self.__message(f"Error in check_file {e}", error=True)
-            sys.exit()
-
-    def __check_content(self, path, text_check):
-        """Method to check if the text exists within the file
-
-         Arguments:
-             path {str} - Absolute path to the file to be analyzed
-             text_check {str} - Text to be searched within the given file
-
-         Returns:
-             bool - True if the content is found and False if not.
-        """
-
-        try:
-            if self.__check_file(path):
-                with open(path) as arquivo:
-                    content = arquivo.read()
-                    return text_check in content
-            self.__message("Arquivo não encontrado para análise.")
-        except Exception as e:
-            self.__message(e)
-            return False
-
-    def __check_file_is_locked(self, path: str) -> bool:
-        """ Method to check if the file is locked
-         thus preventing it from being parsed again
-
-         Arguments:
-             path {str} - Absolute path to the file to be analyzed
-
-         Returns:
-             bool - True if it contains the word #FileLocked
-        """
-        try:
-            if self.__check_file(path):
-                with open(path, encoding="utf-8") as arquivo:
-                    content = arquivo.read()
-                    return "#FileLocked" in content
-        except Exception as error:
-            self.__message(f"Error in __check_file_is_locked: {error}", error=True, )
-            return True
 
     def __init_flutter(self):
         """Method responsible for creating the basic structure of the flutter project
         """
         try:
-            if not self.__check_dir(self.flutter_dir):
-                self.__message("Criando o projeto flutter.")
+            if not Utils.check_dir(self.flutter_dir):
+                Utils.show_message("Criando o projeto flutter.")
                 __cmd_flutter_create = "flutter create --androidx {}".format(
                     self.flutter_dir)
                 subprocess.call(__cmd_flutter_create, shell=True)
-                self.__message("Projeto criado com sucesso.")
+                Utils.show_message("Projeto criado com sucesso.")
         except Exception as error:
-            self.__message(
+            Utils.show_message(
                 f"Error in __init_flutter: {error}", error=True)
 
     def __build_flutter(self):
@@ -605,8 +488,8 @@ class Command(BaseCommand):
         and also update the main.dart file based on the corresponding state manager snippet
         """
         try:
-            if self.__check_dir(self.flutter_dir):
-                self.__message("Atualizando o arquivo de dependências.")
+            if Utils.check_dir(self.flutter_dir):
+                Utils.show_message("Atualizando o arquivo de dependências.")
                 self.__add_packages()
                 time.sleep(3)
 
@@ -616,7 +499,7 @@ class Command(BaseCommand):
                 os.chdir(current_path)
                 time.sleep(3)
 
-                self.__message("Atualizando o arquivo main.dart.")
+                Utils.show_message("Atualizando o arquivo main.dart.")
                 self.__replace_main()
                 time.sleep(3)
 
@@ -624,7 +507,7 @@ class Command(BaseCommand):
                     self.__build_mobx()
 
         except Exception as error:
-            self.__message(f"Error in __build_flutter: {error}", error=True)
+            Utils.show_message(f"Error in __build_flutter: {error}", error=True)
 
     def __build_menu_home_page_itens(self):
         """Method responsible for generating the flutter code that creates the navigation component using cards
@@ -641,7 +524,7 @@ class Command(BaseCommand):
                     __itens_menu += f"Views.{__model.title()}ListPage(),),);"
             return __itens_menu
         except Exception as error:
-            self.__message(f"Error in __build_menu_home_page_itens: {error}", error=True)
+            Utils.show_message(f"Error in __build_menu_home_page_itens: {error}", error=True)
 
     def __register_provider(self):
         """Method responsible for registering the Provider's of the classes in the main.dart file when choosing the
@@ -661,7 +544,7 @@ class Command(BaseCommand):
             __register_provider += f"ChangeNotifierProvider<SettingsProvider>(create: (_) => SettingsProvider(),),\n"
             __register_provider += f"ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider(),),\n"
         except Exception as error:
-            self.__message(f"Error in __register_provider: {error}", error=True)
+            Utils.show_message(f"Error in __register_provider: {error}", error=True)
         return __import_provider, __register_provider
 
     def __register_cubit(self) -> tuple:
@@ -681,7 +564,7 @@ class Command(BaseCommand):
             _register += f"BlocProvider<SettingsCubit>(create: (_) => SettingsCubit(),),\n"
             _register += f"BlocProvider<AuthCubit>(create: (_) => AuthCubit(),),\n"
         except Exception as error:
-            self.__message(f"Error in __register_cubit: {error}", error=True)
+            Utils.show_message(f"Error in __register_cubit: {error}", error=True)
         return __import, _register
 
     def __mapping_all_application(self):
@@ -714,7 +597,7 @@ class Command(BaseCommand):
             return __imports_views, __imports_controllers, __controllers_models, __list_views
 
         except Exception as error:
-            self.__message(
+            Utils.show_message(
                 f"Error in __mapping_all_application: {error}", error=True)
 
     def __indexpage_parser(self, app):
@@ -725,7 +608,7 @@ class Command(BaseCommand):
         """
         try:
             __indexpage_file = Path(f"{app.get_path_views_dir()}/index.dart")
-            if self.__check_file_is_locked(__indexpage_file):
+            if Utils.check_file_is_locked(__indexpage_file):
                 return
 
             content = ParserContent(
@@ -738,7 +621,7 @@ class Command(BaseCommand):
                 page.write(content)
 
         except Exception as error:
-            self.__message(f"Error in __indexpage_parser {error}", error=True)
+            Utils.show_message(f"Error in __indexpage_parser {error}", error=True)
 
     def __listpage_parser(self, app):
         """Method for creating the Model listing page
@@ -748,7 +631,7 @@ class Command(BaseCommand):
         """
         try:
             __listpage_file = Path(f"{app.get_path_views_dir()}/list.dart")
-            if self.__check_file_is_locked(__listpage_file):
+            if Utils.check_file_is_locked(__listpage_file):
                 return
 
             content = ParserContent(
@@ -761,7 +644,7 @@ class Command(BaseCommand):
                 page.write(content)
 
         except Exception as error:
-            self.__message(f"Error in __listpage_parser: {error}", error=True)
+            Utils.show_message(f"Error in __listpage_parser: {error}", error=True)
 
     def __get_attributes_data(self, attribute, model_name, name, name_title) -> str:
         """Method for recovering the structure of field attributes to the create and update pages
@@ -801,7 +684,7 @@ class Command(BaseCommand):
                 __attribute = '{0}_{1}.{2} = _{1}Form{3}.text ?? "";\n'.format(
                     " " * 16, self.__to_camel_case(model_name, True), name, name_title)
         except Exception as error:
-            self.__message(f"Error in __get_attributes: {error}", error=True)
+            Utils.show_message(f"Error in __get_attributes: {error}", error=True)
         finally:
             return __attribute
 
@@ -839,7 +722,7 @@ class Command(BaseCommand):
                 __controllers_data = "{0}_{1}.{2} = _{1}Form{3}.text;\n".format(
                     " " * 6, self.__to_camel_case(model_name, True), name, name_title)
         except Exception as error:
-            self.__message(f"Error in __get_controllers_data: {error}", error=True)
+            Utils.show_message(f"Error in __get_controllers_data: {error}", error=True)
         finally:
             return __controllers_data
 
@@ -855,12 +738,12 @@ class Command(BaseCommand):
             if create_page is True:
                 __create_page_file = Path(f"{app.get_path_views_dir()}/create.dart")
                 content = self.__get_snippet(file_name="create_page.txt", state_manager=True)
-                if self.__check_file_is_locked(__create_page_file):
+                if Utils.check_file_is_locked(__create_page_file):
                     return
             else:
                 __create_page_file = Path(f"{app.get_path_views_dir()}/update.dart")
                 content = self.__get_snippet(file_name="update_page.txt", state_manager=True)
-                if self.__check_file_is_locked(__create_page_file):
+                if Utils.check_file_is_locked(__create_page_file):
                     return
 
             content_form = self.__get_snippet(f"{self.snippet_dir}text_field.txt")
@@ -925,7 +808,7 @@ class Command(BaseCommand):
                 page.write(content)
 
         except Exception as error:
-            self.__message(f"Error in __create_update_page_parser: {error}", error=True)
+            Utils.show_message(f"Error in __create_update_page_parser: {error}", error=True)
 
     def __detailpage_parser(self, app):
         """Method for creating the Model detail page
@@ -936,7 +819,7 @@ class Command(BaseCommand):
         try:
             __detail_page_file = Path(f"{app.get_path_views_dir()}/detail.dart")
 
-            if self.__check_file_is_locked(__detail_page_file):
+            if Utils.check_file_is_locked(__detail_page_file):
                 return
 
             content = ParserContent(
@@ -952,7 +835,7 @@ class Command(BaseCommand):
                 page.write(content)
 
         except Exception as error:
-            self.__message(f"Error in __detailpage_parser {error}", error=True)
+            Utils.show_message(f"Error in __detailpage_parser {error}", error=True)
 
     def __widget_parser(self, app):
         """Method responsible for creating the widget.dart file of the app where all the widgets needed to compose
@@ -964,7 +847,7 @@ class Command(BaseCommand):
         try:
             __widget_file = Path(f"{app.get_path_views_dir()}/widget.dart")
 
-            if self.__check_file_is_locked(__widget_file):
+            if Utils.check_file_is_locked(__widget_file):
                 return
 
             content = ParserContent(["$ModelClass$"], [app.model_name],
@@ -974,7 +857,7 @@ class Command(BaseCommand):
                 page.write(content)
 
         except Exception as error:
-            self.__message(f"Error in __widget_parser {error}", error=True)
+            Utils.show_message(f"Error in __widget_parser {error}", error=True)
 
     def __build_auth_app(self):
         """Method responsible for creating the authentication app on the flutter, bringing by default authentication
@@ -988,7 +871,7 @@ class Command(BaseCommand):
                 file_name="auth_model.txt", state_manager=True)
 
             __auth_file = Path(f"{self.flutter_dir}/lib/apps/auth")
-            if self.__check_dir(__auth_file):
+            if Utils.check_dir(__auth_file):
                 return None
 
             os.makedirs(__auth_file)
@@ -1034,7 +917,7 @@ class Command(BaseCommand):
                 service_file.write(__service_snippet)
 
         except Exception as error:
-            self.__message(f"Error in __build_auth_app {error}", error=True)
+            Utils.show_message(f"Error in __build_auth_app {error}", error=True)
 
     def __data_parser(self, app):
         """Method responsible for creating the local data persistence file on the smartphone.
@@ -1044,7 +927,7 @@ class Command(BaseCommand):
         """
         try:
             __data_file = app.get_path_data_file()
-            if self.__check_file_is_locked(__data_file):
+            if Utils.check_file_is_locked(__data_file):
                 return
 
             content = ParserContent(
@@ -1056,7 +939,7 @@ class Command(BaseCommand):
                 data_helper.write(content)
 
         except Exception as error:
-            self.__message(f"Error in __data_parser {error}", error=True)
+            Utils.show_message(f"Error in __data_parser {error}", error=True)
 
     def __build_custom_dio(self):
         """Method responsible for creating the class that manages all access to the API's rest using the
@@ -1071,7 +954,7 @@ class Command(BaseCommand):
             with open(__dio_file, "w", encoding="utf-8") as http_request:
                 http_request.write(content)
         except Exception as error:
-            self.__message(f"Error in __build_custom_dio {error}", error=True)
+            Utils.show_message(f"Error in __build_custom_dio {error}", error=True)
 
     def __controller_parser(self, app):
         """Method responsible for creating the Model controller file
@@ -1084,7 +967,7 @@ class Command(BaseCommand):
                 return
 
             __controller_file = app.get_path_controller_file()
-            if self.__check_file_is_locked(__controller_file):
+            if Utils.check_file_is_locked(__controller_file):
                 return
 
             content = ParserContent(
@@ -1092,14 +975,14 @@ class Command(BaseCommand):
                 [app.model_name, self.__to_camel_case(app.model_name, True)],
                 self.__get_snippet(file_name="controller.txt", state_manager=True)).replace()
 
-            if not self.__check_file(__controller_file):
+            if not Utils.check_file(__controller_file):
                 os.makedirs(__controller_file)
 
             with open(__controller_file, "w", encoding="utf-8") as controller_file:
                 controller_file.write(content)
 
         except Exception as error:
-            self.__message(f"Error in __controller_parser: {error}", error=True)
+            Utils.show_message(f"Error in __controller_parser: {error}", error=True)
 
     def __provider_parser(self, app):
         """Method responsible for creating the Model provider file
@@ -1113,7 +996,7 @@ class Command(BaseCommand):
                 return
             __file = app.get_path_provider_file()
 
-            if self.__check_file_is_locked(__file):
+            if Utils.check_file_is_locked(__file):
                 print("Arquivo travado")
                 return
 
@@ -1126,7 +1009,7 @@ class Command(BaseCommand):
                 fileProvider.write(content)
 
         except Exception as error:
-            self.__message(f"Error in __provider_parser: {error}", error=True)
+            Utils.show_message(f"Error in __provider_parser: {error}", error=True)
 
     def __cubit_parser(self, app):
         """Method responsible for creating the Cubit file based on the Django App passed as a parameter
@@ -1142,7 +1025,7 @@ class Command(BaseCommand):
             __file_cubit = app.get_path_cubit_file()
             __file_cubit_state = app.get_path_cubit_state_file()
 
-            if self.__check_file_is_locked(__file_cubit):
+            if Utils.check_file_is_locked(__file_cubit):
                 print("Arquivo travado")
                 return
 
@@ -1154,7 +1037,7 @@ class Command(BaseCommand):
             with open(__file_cubit, "w", encoding="utf-8") as file_cubit:
                 file_cubit.write(content)
 
-            if self.__check_file_is_locked(__file_cubit_state):
+            if Utils.check_file_is_locked(__file_cubit_state):
                 print("Arquivo travado")
                 return
 
@@ -1167,7 +1050,7 @@ class Command(BaseCommand):
                 file_sate_cubit.write(content)
 
         except Exception as error:
-            self.__message(f"Error in __cubit_parser: {error}", error=True)
+            Utils.show_message(f"Error in __cubit_parser: {error}", error=True)
 
     def __service_parser(self, app):
         """Method responsible for creating the Django App class of service passed by parameter
@@ -1180,7 +1063,7 @@ class Command(BaseCommand):
                 return
 
             __service_file = app.get_path_service_file()
-            if self.__check_file_is_locked(__service_file):
+            if Utils.check_file_is_locked(__service_file):
                 return
 
             content = ParserContent(
@@ -1190,14 +1073,14 @@ class Command(BaseCommand):
                  self.__to_camel_case(app.model_name, True), self.flutter_project],
                 self.__get_snippet(file_name="service.txt", state_manager=True)).replace()
 
-            if not self.__check_file(__service_file):
+            if not Utils.check_file(__service_file):
                 os.makedirs(__service_file)
 
             with open(__service_file, "w", encoding="utf-8") as service_file:
                 service_file.write(content)
 
         except Exception as error:
-            self.__message(f"Error in __service_parser: {error}", error=True)
+            Utils.show_message(f"Error in __service_parser: {error}", error=True)
 
     def __model_parser(self, app):
         """Method responsible for creating the model class based on the Django App passed by parameter.
@@ -1215,7 +1098,7 @@ class Command(BaseCommand):
 
             __model_file = app.get_path_model_file()
 
-            if self.__check_file_is_locked(__model_file):
+            if Utils.check_file_is_locked(__model_file):
                 return
 
             for field in iter(app.model._meta.fields):
@@ -1296,14 +1179,14 @@ class Command(BaseCommand):
                  content_to_map, self.flutter_project, content_constructor],
                 content).replace()
 
-            if not self.__check_file(__model_file):
+            if not Utils.check_file(__model_file):
                 os.makedirs(__model_file)
 
             with open(__model_file, "w", encoding="utf-8") as model_file:
                 model_file.write(content)
 
         except Exception as error:
-            self.__message(f"Error in __parser_model: {error}", error=True)
+            Utils.show_message(f"Error in __parser_model: {error}", error=True)
 
     def __build_mobx(self):
         """Method to be executed when the project was created using MobX as state management,
@@ -1312,21 +1195,21 @@ class Command(BaseCommand):
         try:
             if self.state_manager_provider:
                 return
-            if self.__check_dir(self.flutter_dir):
+            if Utils.check_dir(self.flutter_dir):
                 current_path = os.getcwd()
                 os.chdir(self.flutter_dir)
                 subprocess.run("flutter pub run build_runner build", shell=True)
                 os.chdir(current_path)
                 time.sleep(3)
         except Exception as error:
-            self.__message(f"Error in __build_mobx: {error}", error=True)
+            Utils.show_message(f"Error in __build_mobx: {error}", error=True)
 
     def __build_settings_controller(self):
         """Method responsible for creating the flutter application configuration app, bringing standard
            methods to control the theme of the App.
         """
         try:
-            if not self.__check_dir(self.app_configuration):
+            if not Utils.check_dir(self.app_configuration):
                 os.makedirs(self.app_configuration)
 
                 _content_page = self.__get_snippet(
@@ -1354,14 +1237,14 @@ class Command(BaseCommand):
                     arquivo.write(_content_page)
 
         except Exception as error:
-            self.__message(f"Error in __build_settings_controller: {error}", error=True)
+            Utils.show_message(f"Error in __build_settings_controller: {error}", error=True)
 
     def __get_yaml_file(self):
         """Method responsible for retrieving the snippet from the pubspec.yaml file"""
         try:
             return Path(f"{self.flutter_dir}/pubspec.yaml")
         except Exception as error:
-            self.__message(f"Error in __get_yaml_file:{error}", error=True)
+            Utils.show_message(f"Error in __get_yaml_file:{error}", error=True)
 
     def __add_packages(self):
         """Method responsible for adding the packages (dependencies) of the flutter project according to the chosen
@@ -1380,14 +1263,14 @@ class Command(BaseCommand):
                 yaml_file.write(snippet)
 
         except Exception as error:
-            self.__message(f"Error in __add_packages: {error}", error=True)
+            Utils.show_message(f"Error in __add_packages: {error}", error=True)
 
     def __build_utils(self):
         """Method responsible for creating the utils package containing constants, and general methods used by
            the project's apps
         """
         try:
-            if not self.__check_dir(self.utils_dir):
+            if not Utils.check_dir(self.utils_dir):
                 os.makedirs(self.utils_dir)
 
             __config_snippet = self.__get_snippet(f"{self.snippet_dir}config.txt")
@@ -1396,57 +1279,57 @@ class Command(BaseCommand):
 
             __controller_snippet = self.__get_snippet(file_name="process.txt", state_manager=True)
 
-            if self.__check_file(self.config_file) is False:
+            if Utils.check_file(self.config_file) is False:
                 __config_snippet = ParserContent(["$AppName$", "$DjangoAPIPath$"],
                                                  [SYSTEM_NAME, API_PATH], __config_snippet).replace()
                 with open(self.config_file, "w", encoding="utf-8") as config:
                     config.write(__config_snippet)
             else:
-                if self.__check_file_is_locked(self.config_file) is False:
+                if Utils.check_file_is_locked(self.config_file) is False:
                     __config_snippet = ParserContent(["$AppName$", "$DjangoAPIPath$"],
                                                      [SYSTEM_NAME, API_PATH], __config_snippet).replace()
                     with open(self.config_file, "w", encoding="utf-8") as config:
                         config.write(__config_snippet)
 
-            if self.__check_file(self.util_file) is False:
+            if Utils.check_file(self.util_file) is False:
                 with open(self.util_file, "w", encoding="utf-8") as config:
                     config.write(__util_snippet)
             else:
-                if self.__check_file_is_locked(self.util_file) is False:
+                if Utils.check_file_is_locked(self.util_file) is False:
                     with open(self.util_file, "w", encoding="utf-8") as config:
                         config.write(__util_snippet)
 
             if self.state_manager == StateManager.Provider:
-                if self.__check_file(self.process_provider_file) is False:
+                if Utils.check_file(self.process_provider_file) is False:
                     with open(
                             self.process_provider_file, "w", encoding="utf-8") as process_provider:
                         process_provider.write(__controller_snippet)
                 else:
-                    if self.__check_file_is_locked(self.process_provider_file) is False:
+                    if Utils.check_file_is_locked(self.process_provider_file) is False:
                         with open(
                                 self.process_provider_file, "w", encoding="utf-8") as process_provider:
                             process_provider.write(__controller_snippet)
             elif self.state_manager == StateManager.MobX:
-                if self.__check_file(self.process_controller_file) is False:
+                if Utils.check_file(self.process_controller_file) is False:
                     with open(
                             self.process_controller_file, "w", encoding="utf-8") as process_controller:
                         process_controller.write(__controller_snippet)
                 else:
-                    if self.__check_file_is_locked(self.process_controller_file) is False:
+                    if Utils.check_file_is_locked(self.process_controller_file) is False:
                         with open(self.process_controller_file, "w", encoding="utf-8") as process_controller:
                             process_controller.write(__controller_snippet)
             elif self.state_manager == StateManager.Cubit:
                 pass
 
         except Exception as error:
-            self.__message(f"Error in __build_utils {error}", error=True)
+            Utils.show_message(f"Error in __build_utils {error}", error=True)
 
     def __build_user_interface(self):
         """Method responsible for creating the package containing the project's font settings and also the
            general app widgets
         """
         try:
-            if not self.__check_dir(self.ui_dir):
+            if not Utils.check_dir(self.ui_dir):
                 os.makedirs(self.ui_dir)
 
             for arquivo in ["widget", "font"]:
@@ -1455,35 +1338,35 @@ class Command(BaseCommand):
                     __snippet = self.__get_snippet(Path(f"{self.snippet_dir}ui_{arquivo}.txt"))
                 else:
                     __snippet = self.__get_snippet(file_name="ui_widget.txt", state_manager=True)
-                if self.__check_file(__path) is False:
+                if Utils.check_file(__path) is False:
                     with open(__path, "w", encoding="utf-8") as arq:
                         arq.write(__snippet)
                 else:
-                    if self.__check_file_is_locked(__path) is False:
+                    if Utils.check_file_is_locked(__path) is False:
                         with open(__path, "w", encoding="utf-8") as arq:
                             arq.write(__snippet)
 
         except Exception as error:
-            self.__message(f"Error in __build_user_interface: {error}", error=True)
+            Utils.show_message(f"Error in __build_user_interface: {error}", error=True)
 
     def __create_source_from_model(self):
         """Method for creating apps when App and Model are informed
         """
-        self.__message("Criando as apps baseado na App e no Model")
+        Utils.show_message("Criando as apps baseado na App e no Model")
         try:
             self.__create_source(self.current_app_model.app_name, self.current_app_model.model_name)
         except Exception as error:
-            self.__message(f"Error in __create_source_from_model: {error}", error=True)
+            Utils.show_message(f"Error in __create_source_from_model: {error}", error=True)
 
     def __create_source_from_generators(self):
         """Method for creating apps when only the App is informed
         """
-        self.__message("Criando as apps baseado na App e nos Generators")
+        Utils.show_message("Criando as apps baseado na App e nos Generators")
         try:
             for model in self.current_app_model.models:
                 self.__create_source(self.current_app_model.app_name, model[1])
         except Exception as error:
-            self.__message(
+            Utils.show_message(
                 f"Error in __create_source_from_generators: {error}", error=True)
 
     def __create_source(self, app_name, model_name):
@@ -1491,11 +1374,11 @@ class Command(BaseCommand):
         """
         try:
             if app_name is None:
-                self.__message("É necessário passar a App")
+                Utils.show_message("É necessário passar a App")
                 return
 
             if model_name is None:
-                self.__message(f"É necessário passar o Model")
+                Utils.show_message(f"É necessário passar o Model")
                 return
 
             __source_class = AppModel(self.flutter_dir, app_name, model_name)
@@ -1513,11 +1396,11 @@ class Command(BaseCommand):
             __cubit_state_file = __source_class.get_path_cubit_state_file()
             __views = __source_class.get_path_files_views()
 
-            if not self.__check_dir(__model_dir):
-                self.__message(f"Criando diretório source do {__app_name}.{__model_name}")
+            if not Utils.check_dir(__model_dir):
+                Utils.show_message(f"Criando diretório source do {__app_name}.{__model_name}")
                 os.makedirs(__model_dir)
 
-            if not self.__check_dir(__views_dir):
+            if not Utils.check_dir(__views_dir):
                 os.makedirs(__views_dir)
 
                 if __views is not None:
@@ -1536,33 +1419,33 @@ class Command(BaseCommand):
                     with open(__views[4], "w", encoding="utf-8") as pagina:
                         pagina.write(f"// Update Page {__app_name} {__model_name}")
 
-            if not self.__check_file(__model_file):
+            if not Utils.check_file(__model_file):
                 with open(__model_file, "w", encoding="utf-8") as arquivo:
                     arquivo.write(f"// Modelo do {__model_name}")
 
-            if not self.__check_file(__data_file):
+            if not Utils.check_file(__data_file):
                 with open(__data_file, "w", encoding="utf-8") as arquivo:
                     arquivo.write(f"// Persistência do {__model_name}")
 
-            if not self.__check_file(__service_file):
+            if not Utils.check_file(__service_file):
                 with open(__service_file, "w", encoding="utf-8") as arquivo:
                     arquivo.write(f"// Service do {__model_name}")
 
             if self.state_manager == StateManager.Provider:
-                if not self.__check_file(__provider_file):
+                if not Utils.check_file(__provider_file):
                     with open(__provider_file, "w", encoding="utf-8") as arquivo:
                         arquivo.write(f"// Provider do {__model_name}")
 
             if self.state_manager == StateManager.MobX:
-                if not self.__check_file(__controller_file):
+                if not Utils.check_file(__controller_file):
                     with open(__controller_file, "w", encoding="utf-8") as arquivo:
                         arquivo.write(f"// Controller do {__model_name}")
 
             if self.state_manager == StateManager.Cubit:
-                if not self.__check_file(__cubit_file):
+                if not Utils.check_file(__cubit_file):
                     with open(__cubit_file, "w", encoding="utf-8") as arquivo:
                         arquivo.write(f"// Cubit do {__model_name}")
-                if not self.__check_file(__cubit_state_file):
+                if not Utils.check_file(__cubit_state_file):
                     with open(__cubit_state_file, "w", encoding="utf-8") as arquivo:
                         arquivo.write(f"// State Cubit do {__model_name}")
 
@@ -1584,7 +1467,7 @@ class Command(BaseCommand):
                 self.__cubit_parser(__source_class)
 
         except Exception as error:
-            self.__message(f"Error in __create_source: {error}", error=True)
+            Utils.show_message(f"Error in __create_source: {error}", error=True)
 
     def _build_internationalization(self):
         """Method responsible for configuring the internationalization package in the project
@@ -1595,7 +1478,7 @@ class Command(BaseCommand):
             path_localization = os.path.join(
                 self.utils_dir, "localization.dart")
 
-            if self.__check_file_is_locked(path_localization):
+            if Utils.check_file_is_locked(path_localization):
                 return
 
             with open(path_localization, "w", encoding="utf-8") as localizations:
@@ -1605,21 +1488,21 @@ class Command(BaseCommand):
             __pt_br = Path(f"{self.flutter_dir}/lang/pt.json")
             __en_us = Path(f"{self.flutter_dir}/lang/en.json")
 
-            if not self.__check_dir(__lang_dir):
+            if not Utils.check_dir(__lang_dir):
                 os.makedirs(__lang_dir)
 
-            if not self.__check_file(__pt_br):
+            if not Utils.check_file(__pt_br):
                 snippet = self.__get_snippet(f"{self.snippet_dir}pt_language.txt")
                 with open(__pt_br, "w", encoding="utf-8") as pt_json:
                     pt_json.write(snippet)
 
-            if not self.__check_file(__en_us):
+            if not Utils.check_file(__en_us):
                 snippet = self.__get_snippet(f"{self.snippet_dir}en_language.txt")
                 with open(__en_us, "w", encoding="utf-8") as en_json:
                     en_json.write(snippet)
 
         except Exception as error:
-            self.__message(f"Error in _build_internationalization: {error}", error=True)
+            Utils.show_message(f"Error in _build_internationalization: {error}", error=True)
 
     def __replace_main(self):
         """Method responsible for updating the main.dart file according to the chosen state management
@@ -1630,7 +1513,7 @@ class Command(BaseCommand):
             snippet = self.__get_snippet(file_name="main.txt", state_manager=True)
 
             path_main_dart = Path(f"{self.flutter_dir}/lib/main.dart")
-            if self.__check_file_is_locked(path_main_dart):
+            if Utils.check_file_is_locked(path_main_dart):
                 return
 
             (__import_views, __import_controllers, __register_controller,
@@ -1666,7 +1549,7 @@ class Command(BaseCommand):
                 main_dart.write(snippet)
 
             path_homepage = Path(f"{self.flutter_dir}/lib/home.page.dart")
-            if self.__check_file_is_locked(path_homepage):
+            if Utils.check_file_is_locked(path_homepage):
                 return
             __snippet_page = self.__get_snippet(
                 file_name="home.page.txt", state_manager=True)
@@ -1680,7 +1563,7 @@ class Command(BaseCommand):
                     home_page_dart.write(__snippet_page)
 
         except Exception as error:
-            self.__message(f"Error in __replace_main: {error}", error=True)
+            Utils.show_message(f"Error in __replace_main: {error}", error=True)
 
     def call_methods(self, options):
         """Method that identifies which command was requested by the user to be executed, before calling the method,
@@ -1688,7 +1571,8 @@ class Command(BaseCommand):
            mandatory parameters
         """
         if options["init_provider"] is False and options["init_mobx"] is False and options["init_cubit"] is False:
-            self.__message("É obrigatório informar o state manager que será utilizado no projeto Flutter", error=True)
+            Utils.show_message("É obrigatório informar o state manager que será utilizado no projeto Flutter",
+                               error=True)
         if options["init_provider"]:
             self.state_manager = StateManager.Provider
         elif options["init_mobx"]:
@@ -1721,7 +1605,7 @@ class Command(BaseCommand):
             self.__build_auth_app()
             # self.__build_flutter()
         else:
-            self.__message(
+            Utils.show_message(
                 "É necessário passar pelo menos um dos parâmetros a seguir: --init_provider, --init_mobx, --init_cubit,"
                 " --main, --yaml, --build_mobx",
                 error=True, )
@@ -1732,29 +1616,29 @@ class Command(BaseCommand):
         model = options["Model"] or None
 
         if app is None and model is None and FLUTTER_APPS == []:
-            self.__message(
+            Utils.show_message(
                 f"Você não configurou o FLUTTER_APPS no settings e também não informou uma APP para ser gerada.",
                 error=True)
             return
 
         if app and model:
-            if self.__contain_number(app) or self.__contain_number(model):
-                self.__message(f"Nome da app ou do model contendo números")
+            if Utils.contain_number(app) or Utils.contain_number(model):
+                Utils.show_message(f"Nome da app ou do model contendo números")
                 return
 
             self.current_app_model = AppModel(self.flutter_project, app, model)
             self.call_methods(options)
 
         if app and model is None:
-            if self.__contain_number(app):
-                self.__message(f"Nome da app contendo números", error=True)
+            if Utils.contain_number(app):
+                Utils.show_message(f"Nome da app contendo números", error=True)
                 return
 
             self.current_app_model = AppModel(self.flutter_project, app)
             self.call_methods(options)
 
         if not FLUTTER_APPS:
-            self.__message("Não foram informadas as APPS a serem mapeadas", error=True)
+            Utils.show_message("Não foram informadas as APPS a serem mapeadas", error=True)
             return
         else:
             self.call_methods(options)
@@ -1770,4 +1654,4 @@ class Command(BaseCommand):
 
             shutil.rmtree(__path)
         except Exception as error:
-            self.__message(f"Error in __clear_project: {error}")
+            Utils.show_message(f"Error in __clear_project: {error}")

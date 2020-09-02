@@ -171,14 +171,14 @@ class Utils(object):
         finally:
             return __content
 
-    @staticmethod
-    def XPTO(path):
-        __process_result = False
-        try:
-            if Utils.check_file(path):
-                pass
-            Utils.show_message("Arquivo não encontrado para análise")
-        except Exception as error:
-            Utils.show_message(f"Error in Utils.check_file: {error}", error=True)
-        finally:
-            return __process_result
+    # @staticmethod
+    # def XPTO(path):
+    #     __process_result = False
+    #     try:
+    #         if Utils.check_file(path):
+    #             pass
+    #         Utils.show_message("Arquivo não encontrado para análise")
+    #     except Exception as error:
+    #         Utils.show_message(f"Error in Utils.check_file: {error}", error=True)
+    #     finally:
+    #         return __process_result
