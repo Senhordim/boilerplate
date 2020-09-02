@@ -1,4 +1,5 @@
-"""Manager responsible for creating CRUD boilerplates generating templates, urls, views and creating Rest API using DRF
+"""Manager responsible for creating CRUD boilerplates generating templates, urls,
+views and creating Rest API using DRF
 """
 
 import fileinput
@@ -131,138 +132,22 @@ class Command(BaseCommand):
         )
 
     def __get_verbose_name(self, app_name=None, model_name=None):
-        """Method get verbose name class
-
-        Arguments:
-            app_name String -- App Name lower()
-            model_name String -- Model Name lower()
-
-        Returns:
-            String -- Verbose name model
-        """
-
-        try:
-            if app_name is not None and model_name is not None:
-                _model = ContentType.objects.get(
-                    app_label=app_name.lower(), model=model_name.lower())
-                return _model.model_class()._meta.verbose_name.title()
-            if app_name is not None and model_name is None:
-                __app_config = apps.get_app_config(app_name.lower())
-                return __app_config.verbose_name.title() or app_name
-        except Exception as error:
-            Utils.show_message(f"Error in __get_verbose_name o :{error}", error=True)
-            return model_name.title()
-
-    def __contain_number(self, text) -> bool:
-        """Method to check the text passed as a parameter has numeric characters
-
-        Arguments:
-            text {String} -- Text to be validated
-
-        Returns:
-            bool -- True if there is any number in the text parameter
-        """
-        try:
-            return any(character.isdigit() for character in text)
-        except Exception as error:
-            Utils.show_message(f"Error in __contain_number: {error}", error=True)
-            return False
+        return Utils.get_verbose_name(apps, app_name, model_name)
 
     def __check_dir(self, path) -> bool:
-        """Method to check if the directory exists
-
-        Arguments:
-            path {str} -- Directory path
-
-        Returns:
-            bool -- True if the directory exists and False if not.
-        """
-
-        try:
-            return os.path.isdir(path)
-        except Exception as error:
-            Utils.show_message(f"Error in __check_dir: {error}", error=True)
-            return False
+        return Utils.check_dir(path)
 
     def __check_file(self, path):
-        """Method to check if the file passed as a parameter exists
-
-         Arguments:
-             path {str} - Path to the file
-
-         Returns:
-             bool - True if the file exists and False if not.
-        """
-
-        try:
-            return os.path.isfile(path)
-        except FileNotFoundError as e:
-            Utils.show_message(f"Error in check_file {e}", error=True)
-            sys.exit()
+        return Utils.check_file(path)
 
     def __check_content(self, path, text_check):
-        """Method to check if the text exists within the file
-
-         Arguments:
-             path {str} - Absolute path to the file to be analyzed
-             text_check {str} - Text to be searched within the given file
-
-         Returns:
-             bool - True if the content is found and False if not.
-        """
-
-        try:
-            if self.__check_file(path):
-                with open(path) as arquivo:
-                    content = arquivo.read()
-                    return text_check in content
-            Utils.show_message("Arquivo não encontrado para análise.")
-        except Exception as e:
-            Utils.show_message(e)
-            return False
+        return Utils.check_content(path, text_check)
 
     def __check_file_is_locked(self, path):
-        """ Method to check if the file is locked
-         thus preventing it from being parsed again
-
-         Arguments:
-             path {str} - Absolute path to the file to be analyzed
-
-         Returns:
-             bool - True if it contains the word #FileLocked
-        """
-        try:
-            if self.__check_file(path):
-                with open(path, encoding="utf-8") as arquivo:
-                    content = arquivo.read()
-                    return "#FileLocked" in content
-        except Exception as error:
-            Utils.show_message(f"Error in __check_file_is_locked: {error}", error=True, )
-            return True
+        return Utils.check_file_is_locked(path)
 
     def __get_snippet(self, path):
-        """Method to retrieve the value of the snippet file to be converted by merging with the values based on models
-           from the Django project
-
-        Arguments:
-            path {str} - Absolute path to the optional file,
-                         must be passed when the snippet path is in the same flutter directory
-            file_name {str} - Name of the snippet file in xpto.txt format, must be passed together
-                              with state_manager = True to retrieve the correct state manage snippet
-            state_manager {bool} - Value to determine whether the snippet will be retrieved taking into account
-                                   the chosen state_manager
-
-        Returns:
-            str -- Text to be used to interpolate model data
-        """
-        try:
-            if self.__check_file(path):
-                with open(path, 'r', encoding='utf-8') as arquivo:
-                    return arquivo.read()
-            Utils.show_message("Arquivo não encontrado para captura.")
-        except Exception as error:
-            Utils.show_message(f"Error in __get_snippet : {error}")
-            return None
+        return Utils.get_snippet(path)
 
     def __get_model(self):
         """Method responsible for retrieving the App model instance
@@ -428,7 +313,6 @@ class Command(BaseCommand):
         """Method responsible for creating the Rest API urls file for the model
         """
         try:
-            import pdb
             Utils.show_message("Trabalhando na configuração das Urls API do model {}".format(self.model))
             content = self._snippet_api_router
             content_urls = self._snippet_api_routers
@@ -1101,7 +985,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         Utils.show_message("Gerando os arquivos da app")
         app = options['App'] or None
-        if self.__contain_number(app) is False:
+        if Utils.contain_number(app) is False:
             self.app = app.strip()
             self.path_root = os.getcwd()
             self.path_app = Path(f"{self.path_root}/{app}")
@@ -1124,7 +1008,7 @@ class Command(BaseCommand):
             self.app_instance = apps.get_app_config(self.app_lower)
             if options['Model']:
                 model = options['Model'] or None
-                if self.__contain_number(model) is False:
+                if Utils.contain_number(model) is False:
                     self.model = model.strip()
                     if self.__check_content(self.path_model, 'class {}'.format(self.model)) is False:
                         Utils.show_message("Model informado não encontrado.")
