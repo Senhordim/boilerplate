@@ -118,7 +118,7 @@ class Command(BaseCommand):
         )
 
     def __get_verbose_name(self, app_name=None, model_name=None):
-        return Utils.get_verbose_name(apps, app_name, model_name)
+        return Utils.get_verbose_name(apps, app_name=app_name, model_name=model_name)
 
     def __check_dir(self, path) -> bool:
         return Utils.check_dir(path)
