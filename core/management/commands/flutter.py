@@ -339,26 +339,36 @@ class Command(BaseCommand):
 
     _tipos_originais = [
         "SmallAutoField", "AutoField", "BLANK_CHOICE_DASH", "BigAutoField", "BigIntegerField",
-        "BinaryField", "boolField", "CharField", "CommaSeparatedIntegerField",
+        "BinaryField", "BooleanField", "CharField", "CommaSeparatedIntegerField",
         "DateField", "DateTimeField", "DecimalField", "DurationField",
         "EmailField", "Empty", "FileField", "Field", "FieldDoesNotExist",
         "FilePathField", "FloatField", "GenericIPAddressField", "IPAddressField",
-        "IntegerField", "FieldFile", "NOT_PROVIDED", "NullboolField", "ImageField",
+        "IntegerField", "FieldFile", "NOT_PROVIDED", "NullBooleanField", "ImageField",
         "PositiveIntegerField", "PositiveSmallIntegerField", "SlugField", "SmallIntegerField",
         "TextField", "TimeField", "URLField", "UUIDField", "ForeignKey", "OneToOneField",
     ]
 
-    _tipos_flutter = ["int", "int", "BLANK_CHOICE_DASH",
-                      "int", "int", "String", "bool", "String", "String", "DateTime", "DateTime", "double", "int",
-                      "String", "String", "String", "String", "String", "String", "double", "String", "String",
-                      "int", "String", "String", "bool", "String", "int", "int", "String", "int", "String",
-                      "DateTime", "String", "String", "String", "int", ]
+    _tipos_flutter = [
+        "int", "int", "BLANK_CHOICE_DASH",
+        "int", "int", "String", "bool", "String",
+        "String", "DateTime", "DateTime", "double", "int",
+        "String", "String", "String", "String", "String", "String",
+        "double", "String", "String", "int", "String", "String",
+        "bool", "String", "int", "int", "String", "int",
+        "String", "DateTime", "String", "String", "String", "int",
+    ]
 
-    _tipos_sqlite = ["INT", "INT", "BLANK_CHOICE_DASH", "BIGINT", "BIGINT", "TEXT", "BOOLEAN", "TEXT", "TEXT",
-                     "DATE", "DATETIME", "DOUBLE", "INT", "TEXT", "TEXT", "TEXT", "TEXT",
-                     "TEXT", "TEXT", "FLOAT", "TEXT", "TEXT", "INT", "TEXT", "TEXT",
-                     "BOOLEAN", "TEXT", "INT", "INT", "TEXT", "SMALLINT", "TEXT",
-                     "DATETIME", "TEXT", "TEXT", "TEXT", "INT", ]
+    _tipos_sqlite = [
+        "INT", "INT", "BLANK_CHOICE_DASH",
+        "BIGINT", "BIGINT", "TEXT",
+        "BOOLEAN", "TEXT", "TEXT",
+        "DATE", "DATETIME", "DOUBLE", "INT",
+        "TEXT", "TEXT", "TEXT", "TEXT",
+        "TEXT", "TEXT", "FLOAT",
+        "TEXT", "TEXT", "INT", "TEXT", "TEXT",
+        "BOOLEAN", "TEXT", "INT", "INT", "TEXT",
+        "SMALLINT", "TEXT", "DATETIME", "TEXT", "TEXT", "TEXT", "INT",
+    ]
 
     def add_arguments(self, parser):
         """Method for adding positional arguments (required) and optional arguments
