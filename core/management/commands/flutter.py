@@ -179,7 +179,7 @@ class AppModel:
         """Method to retrieve the path to the cubit.dart file
 
         Returns:
-            String -- Path to file cubti.dart
+            String -- Path to file cubit.dart
         """
         try:
             return Path("{}/lib/apps/{}/{}/cubit.dart".format(
@@ -505,7 +505,7 @@ class Command(BaseCommand):
         Arguments:
             path {str} - Absolute path to the optional file,
                          must be passed when the snippet path is in the same flutter directory
-            file_name {str} - Name of the snippet file in XPTO.txt format, must be passed together
+            file_name {str} - Name of the snippet file in xpto.txt format, must be passed together
                               with state_manager = True to retrieve the correct state manage snippet
             state_manager {bool} - Value to determine whether the snippet will be retrieved taking into account
                                    the chosen state_manager
@@ -722,37 +722,33 @@ class Command(BaseCommand):
                 f"Error in __mapping_all_application: {error}", error=True)
 
     def __indexpage_parser(self, app):
-        """Método para criar a página index do Model
+        """Method for creating the Model index page
 
         Arguments:
-            app {AppModel} -- Instância da classe AppModel
+            app {AppModel} -- AppModel class instance
         """
         try:
             __indexpage_file = Path(f"{app.get_path_views_dir()}/index.dart")
-
             if self.__check_file_is_locked(__indexpage_file):
                 return
 
             content = ParserContent(
                 ["$ModelClass$", "$ModelClassCamelCase$", "$project$"],
                 [app.model_name, self.__to_camel_case(app.model_name, True),
-                 self.flutter_project.lower(), ],
-                self.__get_snippet(
-                    file_name="index_page.txt", state_manager=True),
+                 self.flutter_project.lower(), ], self.__get_snippet(file_name="index_page.txt", state_manager=True),
             ).replace()
 
             with open(__indexpage_file, "w", encoding="utf-8") as page:
                 page.write(content)
 
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao gerar a página da Index {error}", error=True)
+            self.__message(f"Error in __indexpage_parser {error}", error=True)
 
     def __listpage_parser(self, app):
-        """Método para criar a página de listagem do Model
+        """Method for creating the Model listing page
 
-        Arguments:
-            app {AppModel} -- Instância da classe AppModel
+         Arguments:
+             app {AppModel} - AppModel class instance
         """
         try:
             __listpage_file = Path(f"{app.get_path_views_dir()}/list.dart")
@@ -760,8 +756,7 @@ class Command(BaseCommand):
                 return
 
             content = ParserContent(
-                ["$App$", "$Model$", "$ModelClass$",
-                    "$ModelClassCamelCase$", "$project$"],
+                ["$App$", "$Model$", "$ModelClass$", "$ModelClassCamelCase$", "$project$"],
                 [app.app_name, app.model_name_lower, app.model_name, self.__to_camel_case(app.model_name, True),
                  self.flutter_project], self.__get_snippet(file_name="list_page.txt", state_manager=True)
             ).replace()
@@ -770,19 +765,16 @@ class Command(BaseCommand):
                 page.write(content)
 
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao gerar a página da Listagem {error}", error=True)
+            self.__message(f"Error in __listpage_parser: {error}", error=True)
 
-    def __get_attributes_data(self, attribute, model_name, name, name_title):
-        """
-        Método para recuperar a estrutura dos atributos dos field 
-        para as páginas de create e update
+    def __get_attributes_data(self, attribute, model_name, name, name_title) -> str:
+        """Method for recovering the structure of field attributes to the create and update pages
 
-        Arguments:
-            attibute {String} -- String com o tipo de atributo a ser rederizado
+         Arguments:
+             attribute {String} - String with the type of attribute to be render
 
-        Returns:
-            String  -- Estrutura do atribute data
+         Returns:
+             String - Data attribute structure
         """
 
         __attribute = ""
@@ -805,27 +797,27 @@ class Command(BaseCommand):
                     " " * 16, self.__to_camel_case(model_name, True), name, name_title)
 
             elif attribute == "DateTime":
-                __attribute = '{0}_{1}.{2} = _{1}Form{3}.text != "" ?Util.convertDate(_{1}Form{3}.text): null;\n'.format(
-                    " " * 16, self.__to_camel_case(model_name, True), name, name_title)
+                __attribute = '{0}_{1}.{2} = '.format(" " * 16, self.__to_camel_case(model_name, True), name)
+                __attribute += '_{0}Form{1}.text != "" ?Util.convertDate(_{0}Form{1}.text): null;\n'.format(
+                    self.__to_camel_case(model_name, True), name_title)
 
             else:
                 __attribute = '{0}_{1}.{2} = _{1}Form{3}.text ?? "";\n'.format(
                     " " * 16, self.__to_camel_case(model_name, True), name, name_title)
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o __get_attributes: {error}", error=True)
+            self.__message(f"Error in __get_attributes: {error}", error=True)
         finally:
             return __attribute
 
-    def __get_controllers_data(self, attribute, model_name, name, name_title):
-        """Método para construir a linha de comando responsável por recuperar os valores
-        dos controller
+    def __get_controllers_data(self, attribute, model_name, name, name_title) -> str:
+        """Method to build the command line responsible for retrieving values
+         controller
 
-        Arguments:
-            attribute {String} -- String contendo o tipo do atributo que está sendo parseado
+         Arguments:
+             attribute {String} - String containing the type of the attribute being parsed
 
-        Returns:
-            String -- Linha contendo o comando dart para recuperar o valor do controller
+         Returns:
+             String - Line containing the dart command to retrieve the controller value
         """
         __controllers_data = ""
         try:
@@ -843,40 +835,42 @@ class Command(BaseCommand):
                 __controllers_data = "{0}_{1}.{2} = _{1}Form{3}.text ?? true;\n".format(
                     " " * 6, self.__to_camel_case(model_name, True), name, name_title)
             elif attribute == "DateTime":
-                __controllers_data = '{0}_{1}.{2} = _{1}Form{3}.text != ""? Util.convertDate(_{1}Form{3}.text) : null;\n'.format(
+                __controllers_data = '{0}_{1}.{2} = _{1}Form{3}.text != ""?'.format(
                     " " * 6, self.__to_camel_case(model_name, True), name, name_title)
+                __controllers_data += ' Util.convertDate(_{}Form{}.text) : null;\n'.format(
+                    self.__to_camel_case(model_name, True), name_title)
             else:
                 __controllers_data = "{0}_{1}.{2} = _{1}Form{3}.text;\n".format(
                     " " * 6, self.__to_camel_case(model_name, True), name, name_title)
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o __get_controller_data: {error}",
-                error=True)
+            self.__message(f"Error in __get_controllers_data: {error}", error=True)
         finally:
             return __controllers_data
 
-    def __create_update_page_parser(self, app, createpage=True):
+    def __create_update_page_parser(self, app, create_page=True):
+        """Method responsible for creating the app's data persistence page
+
+        Arguments:
+            app {String} -- Django app to be used as a basis for creating registration creation and editing page
+            create_page {bool} -- Boolean used to determine if the insert or update page is to be created
+                                  (default{True})
+        """
         try:
-            if createpage is True:
-                __createpage_file = Path(
-                    f"{app.get_path_views_dir()}/create.dart")
-                content = self.__get_snippet(
-                    file_name="create_page.txt", state_manager=True)
-                if self.__check_file_is_locked(__createpage_file):
+            if create_page is True:
+                __create_page_file = Path(f"{app.get_path_views_dir()}/create.dart")
+                content = self.__get_snippet(file_name="create_page.txt", state_manager=True)
+                if self.__check_file_is_locked(__create_page_file):
                     return
             else:
-                __createpage_file = Path(
-                    f"{app.get_path_views_dir()}/update.dart")
-                content = self.__get_snippet(
-                    file_name="update_page.txt", state_manager=True)
-                if self.__check_file_is_locked(__createpage_file):
+                __create_page_file = Path(f"{app.get_path_views_dir()}/update.dart")
+                content = self.__get_snippet(file_name="update_page.txt", state_manager=True)
+                if self.__check_file_is_locked(__create_page_file):
                     return
 
-            content_form = self.__get_snippet(
-                f"{self.snippet_dir}text_field.txt")
+            content_form = self.__get_snippet(f"{self.snippet_dir}text_field.txt")
 
             content_attributes = ""
-            text_fiels = ""
+            text_fields = ""
             attributes_data = ""
             clear_data = ""
             edited_attributes = ""
@@ -895,17 +889,14 @@ class Command(BaseCommand):
                     .replace('["', "")
                     .replace("'>\"]", ""))
 
-                attribute = self._tipos_flutter[self._tipos_originais.index(
-                    field_type)]
+                attribute = self._tipos_flutter[self._tipos_originais.index(field_type)]
                 content_attributes += "  final _{0}Form{1} = TextEditingController();\n".format(
                     self.__to_camel_case(app.model_name, True), __nameTitle)
                 text_field = content_form
-                controller = "_{}Form{}".format(
-                    self.__to_camel_case(app.model_name, True), __nameTitle)
+                controller = "_{}Form{}".format(self.__to_camel_case(app.model_name, True), __nameTitle)
                 text_field = text_field.replace("$controller$", controller)
-                text_field = text_field.replace(
-                    "$Field$", str(field.verbose_name).replace("R$", "R\$"))
-                text_fiels += text_field
+                text_field = text_field.replace("$Field$", str(field.verbose_name).replace("R$", "R\$"))
+                text_fields += text_field
 
                 attributes_data += self.__get_attributes_data(
                     attribute, app.model_name, __name, __nameTitle)
@@ -927,31 +918,29 @@ class Command(BaseCommand):
                  "$project$", "$Attributes$", "$Form$", "$AttributesData$", "$ClearData$",
                  "$EditedAttributes$", "$GetValuesControllers$", ],
                 [app.app_name_lower, app.app_name_lower,
-                 self.__to_camel_case(
-                     app.model_name, True), app.model_name_lower,
+                 self.__to_camel_case(app.model_name, True), app.model_name_lower,
                  app.model_name, self.__to_camel_case(app.model_name, True),
-                 self.flutter_project, content_attributes, text_fiels, attributes_data,
+                 self.flutter_project, content_attributes, text_fields, attributes_data,
                  clear_data, edited_attributes, get_controllers_data],
                 content,
             ).replace()
 
-            with open(__createpage_file, "w", encoding="utf-8") as page:
+            with open(__create_page_file, "w", encoding="utf-8") as page:
                 page.write(content)
 
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao gerar a página da Create {error}", error=True)
+            self.__message(f"Error in __create_update_page_parser: {error}", error=True)
 
     def __detailpage_parser(self, app):
-        """Método para criar a página de detalhamento do Model
+        """Method for creating the Model detail page
 
-        Arguments:
-            app {AppModel} -- Instância da classe AppModel
+         Arguments:
+             app {AppModel} - AppModel class instance
         """
         try:
-            __detailpage_file = Path(f"{app.get_path_views_dir()}/detail.dart")
+            __detail_page_file = Path(f"{app.get_path_views_dir()}/detail.dart")
 
-            if self.__check_file_is_locked(__detailpage_file):
+            if self.__check_file_is_locked(__detail_page_file):
                 return
 
             content = ParserContent(
@@ -960,22 +949,21 @@ class Command(BaseCommand):
                 [app.app_name, app.app_name_lower, self.__to_camel_case(
                     app.model_name, True), self.__to_camel_case(app.model_name, True),
                  app.model_name_lower, app.model_name, self.flutter_project],
-                self.__get_snippet(
-                    file_name="detail_page.txt", state_manager=True),
+                self.__get_snippet(file_name="detail_page.txt", state_manager=True),
             ).replace()
 
-            with open(__detailpage_file, "w", encoding="utf-8") as page:
+            with open(__detail_page_file, "w", encoding="utf-8") as page:
                 page.write(content)
 
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao gerar a página da Detail {error}", error=True)
+            self.__message(f"Error in __detailpage_parser {error}", error=True)
 
     def __widget_parser(self, app):
-        """Método para criar o widget do Model
+        """Method responsible for creating the widget.dart file of the app where all the widgets needed to compose
+           the pages of the flutter app must be saved
 
-        Arguments:
-            app {AppModel} -- Instância da classe AppModel
+         Arguments:
+             app {AppModel} - AppModel class instance
         """
         try:
             __widget_file = Path(f"{app.get_path_views_dir()}/widget.dart")
@@ -984,24 +972,20 @@ class Command(BaseCommand):
                 return
 
             content = ParserContent(["$ModelClass$"], [app.model_name],
-                                    self.__get_snippet(
-                                        f"{self.snippet_dir}widget.txt"),
-                                    ).replace()
+                                    self.__get_snippet(f"{self.snippet_dir}widget.txt"),).replace()
 
             with open(__widget_file, "w", encoding="utf-8") as page:
                 page.write(content)
 
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao gerar a página da Widget {error}", error=True)
+            self.__message(f"Error in __widget_parser {error}", error=True)
 
     def __build_auth_app(self):
-        """Método responsável por criar a app padrão de autenticação no projeto flutter
-
-        Args:
-            app {AppModel} -- Instância da classe AppModel
+        """Method responsible for creating the authentication app on the flutter, bringing by default authentication
+           using Firebase.
         """
         try:
+            __file = ""
             __data_snippet = self.__get_snippet(
                 file_name="auth_data.txt", state_manager=True)
             __model_snippet = self.__get_snippet(
@@ -1030,24 +1014,19 @@ class Command(BaseCommand):
                 file_name="auth_app.txt", state_manager=True)
 
             if self.state_manager == StateManager.Provider:
-                __file = Path(
-                    "{}/lib/apps/auth/provider.dart".format(self.flutter_dir))
+                __file = Path("{}/lib/apps/auth/provider.dart".format(self.flutter_dir))
 
             if self.state_manager == StateManager.MobX:
-                __file = Path(
-                    "{}/lib/apps/auth/controller.dart".format(self.flutter_dir))
+                __file = Path("{}/lib/apps/auth/controller.dart".format(self.flutter_dir))
 
             if self.state_manager == StateManager.Cubit:
-                __snippet_cubit_state = self.__get_snippet(
-                    file_name="auth_state.txt", state_manager=True)
+                __snippet_cubit_state = self.__get_snippet(file_name="auth_state.txt", state_manager=True)
 
-                __cubit_state_file = Path(
-                    "{}/lib/apps/auth/state.dart".format(self.flutter_dir))
+                __cubit_state_file = Path("{}/lib/apps/auth/state.dart".format(self.flutter_dir))
 
                 with open(__cubit_state_file, "w", encoding="utf-8") as cubit_state_file:
                     cubit_state_file.write(__snippet_cubit_state)
-                __file = Path(
-                    "{}/lib/apps/auth/cubit.dart".format(self.flutter_dir))
+                __file = Path("{}/lib/apps/auth/cubit.dart".format(self.flutter_dir))
 
             with open(__file, "w", encoding="utf-8") as provider_file:
                 provider_file.write(__snippet)
@@ -1059,18 +1038,16 @@ class Command(BaseCommand):
                 service_file.write(__service_snippet)
 
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao gerar a app de autenticação {error}", error=True)
+            self.__message(f"Error in __build_auth_app {error}", error=True)
 
     def __data_parser(self, app):
-        """Método responsável por criar o arquivo de data baseado na App e no Models
+        """Method responsible for creating the local data persistence file on the smartphone.
 
         Arguments:
-            app {AppModel} -- Instância da classe AppModel
+            app {AppModel} -- AppModel class instance
         """
         try:
             __data_file = app.get_path_data_file()
-
             if self.__check_file_is_locked(__data_file):
                 return
 
@@ -1083,38 +1060,34 @@ class Command(BaseCommand):
                 data_helper.write(content)
 
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao criar o DBHelper {error}", error=True)
+            self.__message(f"Error in __data_parser {error}", error=True)
 
     def __build_custom_dio(self):
-        """Método para criar a classe auxiliar de acesso HTTP
+        """Method responsible for creating the class that manages all access to the API's rest using the
+           Dio flutter package as a base.
         """
         try:
             __dio_file = Path(f"{self.flutter_dir}/lib/utils/custom_dio.dart")
 
-            content = ParserContent(
-                ["$project$", ],
-                [self.flutter_project, ],
-                self.__get_snippet(f"{self.snippet_dir}/custom_dio.txt")).replace()
+            content = ParserContent(["$project$", ], [self.flutter_project, ],
+                                    self.__get_snippet(f"{self.snippet_dir}/custom_dio.txt")).replace()
 
             with open(__dio_file, "w", encoding="utf-8") as http_request:
                 http_request.write(content)
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao criar o Dio Request {error}", error=True)
+            self.__message(f"Error in __build_custom_dio {error}", error=True)
 
     def __controller_parser(self, app):
-        """Método responsável por criar o arquivo controller do Model
+        """Method responsible for creating the Model controller file
 
-        Arguments:
-            app {AppModel} -- Instância da classe AppModel
+         Arguments:
+             app {AppModel} - AppModel class instance
         """
         try:
             if app.model is None:
                 return
 
             __controller_file = app.get_path_controller_file()
-
             if self.__check_file_is_locked(__controller_file):
                 return
 
@@ -1130,14 +1103,13 @@ class Command(BaseCommand):
                 controller_file.write(content)
 
         except Exception as error:
-            self.__message(
-                f"Erro ao executar o controller parser {error}", error=True)
+            self.__message(f"Error in __controller_parser: {error}", error=True)
 
     def __provider_parser(self, app):
-        """Método responsável por criar o arquivo provider do Model
+        """Method responsible for creating the Model provider file
 
-        Args:
-            app {AppModel} -- Instância da class AppModel
+         Args:
+             app {AppModel} - AppModel class instance
         """
         try:
             if app.model is None:
@@ -1158,14 +1130,13 @@ class Command(BaseCommand):
                 fileProvider.write(content)
 
         except Exception as error:
-            self.__message(
-                f"Erro ao executar o __provider_parser: {error}", error=True)
+            self.__message(f"Error in __provider_parser: {error}", error=True)
 
     def __cubit_parser(self, app):
-        """Método responsável por criar o arquivo provider do Model
+        """Method responsible for creating the Cubit file based on the Django App passed as a parameter
 
-        Args:
-            app {AppModel} -- Instância da class AppModel
+         Args:
+             app {AppModel} - AppModel class instance
         """
         try:
             if app.model is None:
@@ -1200,14 +1171,13 @@ class Command(BaseCommand):
                 file_sate_cubit.write(content)
 
         except Exception as error:
-            self.__message(
-                f"Erro ao executar o __cubit_parser: {error}", error=True)
+            self.__message(f"Error in __cubit_parser: {error}", error=True)
 
     def __service_parser(self, app):
-        """Método responsável por criar o arquivo de service do Model
+        """Method responsible for creating the Django App class of service passed by parameter
 
         Arguments:
-            app {AppModel} -- Instância da classe AppModel
+            app {AppModel} -- AppModel class instance
         """
         try:
             if app.model is None:
@@ -1231,17 +1201,17 @@ class Command(BaseCommand):
                 service_file.write(content)
 
         except Exception as error:
-            self.__message(f"Error in parser do service: {error}", error=True)
+            self.__message(f"Error in __service_parser: {error}", error=True)
 
     def __model_parser(self, app):
-        """ Método responsável por criar a classe de modelo do Model
+        """Method responsible for creating the model class based on the Django App passed by parameter.
         """
         try:
             if app.model is None:
                 return
 
             content = self.__get_snippet(f"{self.snippet_dir}model.txt")
-            content_atributes = ""
+            content_attributes = ""
             content_string_return = ""
             content_from_json = ""
             content_to_map = ""
@@ -1266,73 +1236,67 @@ class Command(BaseCommand):
                 attribute = self._tipos_flutter[self._tipos_originais.index(
                     field_type)]
 
-                content_atributes += "{} {};\n  ".format(
-                    attribute, __name_dart)
-                content_string_return += "{}: ${}\\n".format(
-                    __name_dart.upper(), __name_dart)
+                content_attributes += "{} {};\n  ".format(attribute, __name_dart)
+                content_string_return += "{}: ${}\\n".format(__name_dart.upper(), __name_dart)
 
                 content_constructor += "this.{},\n".format(__name_dart)
 
                 if str(attribute) == "DateTime":
-                    content_from_json += "{1} = Util.convertDate(json['{2}']) == null ? null:  Util.convertDate(json['{2}']);\n        ".format(
-                        __model.lower(), __name_dart, __name)
+                    content_from_json += "{} = Util.convertDate(json['{}']) == null".format(__name_dart, __name)
+                    content_from_json += "? null:  Util.convertDate(json['{}']);\n".format(__name, " " * 8)
                 elif str(attribute) == "double":
-                    content_from_json += "{1} = json['{2}'] == null ? null : double.parse(json['{2}']) ;\n        ".format(
-                        __model.lower(), __name_dart, __name)
+                    content_from_json += "{} = json['{}'] == null".format(__name_dart, __name)
+                    content_from_json += "? null : double.parse(json['{}']) ;\n{}".format(__name, " " * 8)
                 elif str(attribute) == "bool":
                     if __name_dart.lower() == "enabled":
-                        content_from_json += "{1} = json['{2}'] == null ? true : json['{2}'] ;\n        ".format(
-                            __model.lower(), __name_dart, __name)
+                        content_from_json += "{1} = json['{2}'] == null ? true : json['{2}'] ;\n{0}".format(
+                            " " * 8, __name_dart, __name)
                     elif __name_dart.lower() == "deleted":
-                        content_from_json += "{1} = json['{2}'] == null ? false : json['{2}'];\n        ".format(
-                            __model.lower(), __name_dart, __name)
+                        content_from_json += "{1} = json['{2}'] == null ? false : json['{2}'];\n{0}".format(
+                            " " * 8, __name_dart, __name)
                     else:
-                        content_from_json += "{1} = json['{2}'] == null ? true : json['{2}'];\n        ".format(
-                            __model.lower(), __name_dart, __name)
+                        content_from_json += "{1} = json['{2}'] == null ? true : json['{2}'];\n{0}".format(
+                            " " * 8, __name_dart, __name)
                 else:
                     if __name_dart.startswith("fk"):
-                        content_from_json += "{1} = json['{2}'] == null ? \"\" : json['{2}'];\n        ".format(
-                            __model.lower(), __name_dart, __name
-                        )
+                        content_from_json += "{1} = json['{2}'] == null ? \"\" : json['{2}'];\n{0}".format(
+                            " " * 8, __name_dart, __name)
                     else:
-                        content_from_json += "{1} = json['{2}'] == null ? \"\" : json['{2}'];\n        ".format(
-                            __model.lower(), __name_dart, __name
-                        )
+                        content_from_json += "{1} = json['{2}'] == null ? \"\" : json['{2}'];\n{0}".format(
+                            " " * 8, __name_dart, __name)
 
                 if str(field_type) == "DateTimeField":
                     if __name_dart in ("createdOn", "updatedOn"):
-                        content_to_map += "'{0}': this.{1}.toString(),\n        ".format(
-                            __name, __name_dart)
+                        content_to_map += "'{0}': this.{1}.toString(),\n{2}".format(__name, __name_dart, " " * 8)
                     else:
-                        content_to_map += "'{0}': this.{1} != null? Util.stringDateTimeSplit(this.{1}, returnType: \"dt\"): null, \n".format(
-                            __name, __name_dart)
+                        content_to_map += "'{}': this.{} != null? Util.stringDateTimeSplit".format(__name, __name_dart)
+                        content_to_map += "(this.{}, returnType: \"dt\"): null, \n".format(__name_dart)
                     continue
                 if str(field_type) == "DateField":
-                    content_to_map += "'{0}': this.{1} != null ?Util.stringDateTimeSplit(this.{1}, returnType: \"d\"): null, \n".format(
-                        __name, __name_dart)
+                    content_to_map += "'{}': this.{} != null ?Util.stringDateTimeSplit".format(__name, __name_dart)
+                    content_to_map += "(this.{}, returnType: \"d\"): null, \n".format(__name_dart)
                     continue
                 if str(field_type) == "TimeField":
-                    content_to_map += "'{0}': this.{1} != null ?Util.stringDateTimeSplit(this.{1}, returnType: \"t\"): null, \n".format(
-                        __name, __name_dart)
+                    content_to_map += "'{}': this.{} != null ?Util.stringDateTimeSplit".format(__name, __name_dart)
+                    content_to_map += "(this.{}, returnType: \"t\"): null, \n".format(__name_dart)
                     continue
                 if str(attribute) == "bool":
                     if __name_dart.lower() == "enabled":
-                        content_to_map += "'{0}': this.{1} != null? this.{1}: true,\n        ".format(
-                            __name, __name_dart)
+                        content_to_map += "'{0}': this.{1} != null? this.{1}: true,\n{2}".format(
+                            __name, __name_dart, " " * 8)
                     elif __name_dart.lower() == "deleted":
-                        content_to_map += "'{0}': this.{1} != null? this.{1}: false,\n        ".format(
-                            __name, __name_dart)
+                        content_to_map += "'{0}': this.{1} != null? this.{1}: false,\n{2}".format(
+                            __name, __name_dart, " " * 8)
                     else:
-                        content_to_map += "'{0}': this.{1} != null? this.{1}: true,\n        ".format(
-                            __name, __name_dart)
+                        content_to_map += "'{0}': this.{1} != null? this.{1}: true,\n{2}".format(
+                            __name, __name_dart, " " * 8)
                     continue
-                content_to_map += "'{0}': this.{1} != null? this.{1}: \"\",\n        ".format(
-                    __name, __name_dart)
+                content_to_map += "'{0}': this.{1} != null? this.{1}: \"\",\n{2}".format(__name, __name_dart, " " * 8)
 
             content = ParserContent(
                 ["$ModelClass$", "$AttributeClass$", "$StringReturn$", "$Model$", "$ParserfromMap$", "$ParserToMap$",
                  "$project$", "$ConstructorModelClass$", ],
-                [app.model_name, content_atributes, content_string_return, app.model_name_lower, content_from_json,
+                [app.model_name, content_attributes, content_string_return, app.model_name_lower, content_from_json,
                  content_to_map, self.flutter_project, content_constructor],
                 content).replace()
 
@@ -1343,18 +1307,11 @@ class Command(BaseCommand):
                 model_file.write(content)
 
         except Exception as error:
-            self.__message(
-                f"Erro ao realizar o parser do model: {error}", error=True)
-
-    """
-    #################################################################
-    Área para gerar os códigos do MobX
-    #################################################################
-    """
+            self.__message(f"Error in __parser_model: {error}", error=True)
 
     def __build_mobx(self):
-        """
-        Método para executar o comando de geração dos códigos do MobX
+        """Method to be executed when the project was created using MobX as state management,
+           which executes the build_runner command to generate the xpto.g.dart files
         """
         try:
             if self.state_manager_provider:
@@ -1362,17 +1319,15 @@ class Command(BaseCommand):
             if self.__check_dir(self.flutter_dir):
                 current_path = os.getcwd()
                 os.chdir(self.flutter_dir)
-                subprocess.run(
-                    "flutter pub run build_runner build", shell=True)
+                subprocess.run("flutter pub run build_runner build", shell=True)
                 os.chdir(current_path)
                 time.sleep(3)
         except Exception as error:
-            self.__message(
-                f"Erro ao realizar o build mobx: {error}", error=True)
+            self.__message(f"Error in __build_mobx: {error}", error=True)
 
     def __build_settings_controller(self):
-        """
-        Método para gerar o controller e a página de configuração da APP.
+        """Method responsible for creating the flutter application configuration app, bringing standard
+           methods to control the theme of the App.
         """
         try:
             if not self.__check_dir(self.app_configuration):
@@ -1403,25 +1358,18 @@ class Command(BaseCommand):
                     arquivo.write(_content_page)
 
         except Exception as error:
-            self.__message(
-                f"Erro ao executar o __build_settings_controller: {error}", error=True)
-
-    """
-    #################################################################
-    Área para adicionar os pacotes no puspec.yaml
-    #################################################################
-    """
+            self.__message(f"Error in __build_settings_controller: {error}", error=True)
 
     def __get_yaml_file(self):
+        """Method responsible for retrieving the snippet from the pubspec.yaml file"""
         try:
             return Path(f"{self.flutter_dir}/pubspec.yaml")
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao recuperar o arquivo Yaml:{error}", error=True)
+            self.__message(f"Error in __get_yaml_file:{error}", error=True)
 
     def __add_packages(self):
-        """
-        Método assincrono para alterar os pacotes do projeto
+        """Method responsible for adding the packages (dependencies) of the flutter project according to the chosen
+           state management.
         """
         try:
             __path = self.__get_yaml_file()
@@ -1436,30 +1384,21 @@ class Command(BaseCommand):
                 yaml_file.write(snippet)
 
         except Exception as error:
-            self.__message(
-                f"Erro ao adicionar os pacotes: {error}", error=True)
-
-    """
-    #################################################################
-    Área para Criar os arquivos auxiliares do projeto
-    #################################################################
-    """
+            self.__message(f"Error in __add_packages: {error}", error=True)
 
     def __build_utils(self):
-        """
-        Método para criar os arquivos úteis do projeto
+        """Method responsible for creating the utils package containing constants, and general methods used by
+           the project's apps
         """
         try:
             if not self.__check_dir(self.utils_dir):
                 os.makedirs(self.utils_dir)
 
-            __config_snippet = self.__get_snippet(
-                f"{self.snippet_dir}config.txt")
+            __config_snippet = self.__get_snippet(f"{self.snippet_dir}config.txt")
 
             __util_snippet = self.__get_snippet(f"{self.snippet_dir}util.txt")
 
-            __controller_snippet = self.__get_snippet(
-                file_name="process.txt", state_manager=True)
+            __controller_snippet = self.__get_snippet(file_name="process.txt", state_manager=True)
 
             if self.__check_file(self.config_file) is False:
                 __config_snippet = ParserContent(["$AppName$", "$DjangoAPIPath$"],
@@ -1504,17 +1443,11 @@ class Command(BaseCommand):
                 pass
 
         except Exception as error:
-            self.__message(
-                f"Erro ao criar o arquivo utils {error}", error=True)
-
-    """
-    #################################################################
-    Área para Criar a estrutura de diretórios
-    #################################################################
-    """
+            self.__message(f"Error in __build_utils {error}", error=True)
 
     def __build_user_interface(self):
-        """Método para criar a estrutura de diretórios UI
+        """Method responsible for creating the package containing the project's font settings and also the
+           general app widgets
         """
         try:
             if not self.__check_dir(self.ui_dir):
@@ -1523,11 +1456,9 @@ class Command(BaseCommand):
             for arquivo in ["widget", "font"]:
                 __path = Path(f"{self.ui_dir}{arquivo}.dart")
                 if arquivo == "font":
-                    __snippet = self.__get_snippet(
-                        Path(f"{self.snippet_dir}ui_{arquivo}.txt"))
+                    __snippet = self.__get_snippet(Path(f"{self.snippet_dir}ui_{arquivo}.txt"))
                 else:
-                    __snippet = self.__get_snippet(
-                        file_name="ui_widget.txt", state_manager=True)
+                    __snippet = self.__get_snippet(file_name="ui_widget.txt", state_manager=True)
                 if self.__check_file(__path) is False:
                     with open(__path, "w", encoding="utf-8") as arq:
                         arq.write(__snippet)
@@ -1537,23 +1468,19 @@ class Command(BaseCommand):
                             arq.write(__snippet)
 
         except Exception as error:
-            self.__message(
-                f"Erro ao criar a estrutura de arquivos da UI {error}", error=True)
+            self.__message(f"Error in __build_user_interface: {error}", error=True)
 
     def __create_source_from_model(self):
-        """Método para criar as apps quando a App e Model forem informados
+        """Method for creating apps when App and Model are informed
         """
         self.__message("Criando as apps baseado na App e no Model")
         try:
-            self.__create_source(
-                self.current_app_model.app_name, self.current_app_model.model_name)
+            self.__create_source(self.current_app_model.app_name, self.current_app_model.model_name)
         except Exception as error:
-            self.__message(
-                f"Erro ao executar o Create App From Model: {error}", error=True)
+            self.__message(f"Error in __create_source_from_model: {error}", error=True)
 
     def __create_source_from_generators(self):
-        """
-        Método para criar as apps quando apenas a App for informada
+        """Method for creating apps when only the App is informed
         """
         self.__message("Criando as apps baseado na App e nos Generators")
         try:
@@ -1561,11 +1488,10 @@ class Command(BaseCommand):
                 self.__create_source(self.current_app_model.app_name, model[1])
         except Exception as error:
             self.__message(
-                f"Erro ao executar o Create Apps From Generators: {error}", error=True)
+                f"Error in __create_source_from_generators: {error}", error=True)
 
     def __create_source(self, app_name, model_name):
-        """
-        Método para criar a estrutura de diretórios da App/Models
+        """Method responsible for creating the directory structure based on Django's App / Models
         """
         try:
             if app_name is None:
@@ -1592,8 +1518,7 @@ class Command(BaseCommand):
             __views = __source_class.get_path_files_views()
 
             if not self.__check_dir(__model_dir):
-                self.__message(
-                    f"Criando diretório source do {__app_name}.{__model_name}")
+                self.__message(f"Criando diretório source do {__app_name}.{__model_name}")
                 os.makedirs(__model_dir)
 
             if not self.__check_dir(__views_dir):
@@ -1601,24 +1526,19 @@ class Command(BaseCommand):
 
                 if __views is not None:
                     with open(__views[0], "w", encoding="utf-8") as pagina:
-                        pagina.write(
-                            f"// Create Page {__app_name} {__model_name}")
+                        pagina.write(f"// Create Page {__app_name} {__model_name}")
 
                     with open(__views[1], "w", encoding="utf-8") as pagina:
-                        pagina.write(
-                            f"// Detail Page {__app_name} {__model_name}")
+                        pagina.write(f"// Detail Page {__app_name} {__model_name}")
 
                     with open(__views[2], "w", encoding="utf-8") as pagina:
-                        pagina.write(
-                            f"// Index Page {__app_name} {__model_name}")
+                        pagina.write(f"// Index Page {__app_name} {__model_name}")
 
                     with open(__views[3], "w", encoding="utf-8") as pagina:
-                        pagina.write(
-                            f"// List Page {__app_name} {__model_name}")
+                        pagina.write(f"// List Page {__app_name} {__model_name}")
 
                     with open(__views[4], "w", encoding="utf-8") as pagina:
-                        pagina.write(
-                            f"// Update Page {__app_name} {__model_name}")
+                        pagina.write(f"// Update Page {__app_name} {__model_name}")
 
             if not self.__check_file(__model_file):
                 with open(__model_file, "w", encoding="utf-8") as arquivo:
@@ -1668,16 +1588,11 @@ class Command(BaseCommand):
                 self.__cubit_parser(__source_class)
 
         except Exception as error:
-            self.__message(f"Error ao executar source. \n {error}", error=True)
-
-    """
-    #################################################################
-    Área para criar o localizations.dart, responsável por implementar
-    internacionalização.
-    #################################################################
-    """
+            self.__message(f"Error in __create_source: {error}", error=True)
 
     def _build_internationalization(self):
+        """Method responsible for configuring the internationalization package in the project
+        """
         try:
             snippet = self.__get_snippet(f"{self.snippet_dir}localization.txt")
 
@@ -1698,39 +1613,28 @@ class Command(BaseCommand):
                 os.makedirs(__lang_dir)
 
             if not self.__check_file(__pt_br):
-                snippet = self.__get_snippet(
-                    f"{self.snippet_dir}pt_language.txt")
+                snippet = self.__get_snippet(f"{self.snippet_dir}pt_language.txt")
                 with open(__pt_br, "w", encoding="utf-8") as pt_json:
                     pt_json.write(snippet)
 
             if not self.__check_file(__en_us):
-                snippet = self.__get_snippet(
-                    f"{self.snippet_dir}en_language.txt")
+                snippet = self.__get_snippet(f"{self.snippet_dir}en_language.txt")
                 with open(__en_us, "w", encoding="utf-8") as en_json:
                     en_json.write(snippet)
 
         except Exception as error:
-            self.__message(
-                f"Erro ao executar o localizations app. \n {error}", error=True)
-
-    """
-    #################################################################
-    Área para alterar o Main.dart
-    #################################################################
-    """
+            self.__message(f"Error in _build_internationalization: {error}", error=True)
 
     def __replace_main(self):
-        """
-        Método para atualizar o main conforme o Snippet
+        """Method responsible for updating the main.dart file according to the chosen state management
         """
         __imports = ""
         __list_itens = []
         try:
-            snippet = self.__get_snippet(
-                file_name="main.txt", state_manager=True)
+            snippet = self.__get_snippet(file_name="main.txt", state_manager=True)
 
-            path_maindart = Path(f"{self.flutter_dir}/lib/main.dart")
-            if self.__check_file_is_locked(path_maindart):
+            path_main_dart = Path(f"{self.flutter_dir}/lib/main.dart")
+            if self.__check_file_is_locked(path_main_dart):
                 return
 
             (__import_views, __import_controllers, __register_controller,
@@ -1751,21 +1655,18 @@ class Command(BaseCommand):
                 snippet = snippet.replace("$RegisterProviders$", __register)
             if self.state_manager == StateManager.MobX:
                 snippet = snippet.replace("$ImportViews$", __import_views)
-                snippet = snippet.replace(
-                    "$RegisterControllers$", __register_controller)
-                snippet = snippet.replace(
-                    "$ImportController$", __import_controllers)
+                snippet = snippet.replace("$RegisterControllers$", __register_controller)
+                snippet = snippet.replace("$ImportController$", __import_controllers)
             if self.state_manager == StateManager.Cubit:
                 __import_controllers += f"import 'apps/configuracao/cubit.dart';"
                 __import, __register = self.__register_cubit()
-                snippet = snippet.replace(
-                    "$ImportController$", __import_controllers)
+                snippet = snippet.replace("$ImportController$", __import_controllers)
                 snippet = snippet.replace("$ImportCubit$", __import)
                 snippet = snippet.replace("$RegisterProviders$", __register)
 
             snippet = snippet.replace("$Listviews$", __views)
 
-            with open(path_maindart, "w", encoding="utf-8") as main_dart:
+            with open(path_main_dart, "w", encoding="utf-8") as main_dart:
                 main_dart.write(snippet)
 
             path_homepage = Path(f"{self.flutter_dir}/lib/home.page.dart")
@@ -1776,28 +1677,22 @@ class Command(BaseCommand):
             __menu_home_page_itens = self.__build_menu_home_page_itens()
 
             if self.state_manager == StateManager.Provider or self.state_manager == StateManager.Cubit:
-                __snippet_page = __snippet_page.replace(
-                    "$ImportViews$", __import_views)
-                __snippet_page = __snippet_page.replace(
-                    "$ItenMenu$", __menu_home_page_itens)
+                __snippet_page = __snippet_page.replace("$ImportViews$", __import_views)
+                __snippet_page = __snippet_page.replace("$ItenMenu$", __menu_home_page_itens)
 
                 with open(path_homepage, "w", encoding="utf-8") as home_page_dart:
                     home_page_dart.write(__snippet_page)
 
         except Exception as error:
-            self.__message("Error Replace Main \n{}".format(error), error=True)
-
-    """
-    Função responsável por verificar as opções passadas por parametro
-    e chamar os métodos responsáveis.
-
-    A Função foi criada para que não ocorra repetição de código
-    """
+            self.__message(f"Error in __replace_main: {error}", error=True)
 
     def call_methods(self, options):
+        """Method that identifies which command was requested by the user to be executed, before calling the method,
+           the inputs informed by the user are validated, thus avoiding program execution errors due to the absence of
+           mandatory parameters
+        """
         if options["init_provider"] is False and options["init_mobx"] is False and options["init_cubit"] is False:
-            self.__message("É obrigatório informar o state manager que será utilizado no projeto Flutter",
-                           error=True)
+            self.__message("É obrigatório informar o state manager que será utilizado no projeto Flutter", error=True)
         if options["init_provider"]:
             self.state_manager = StateManager.Provider
         elif options["init_mobx"]:
@@ -1836,9 +1731,6 @@ class Command(BaseCommand):
                 error=True, )
 
     def handle(self, *args, **options):
-        """Método invocado internamente pelo Command logo após a
-        validação da passagem de parâmetro.
-        """
 
         app = options["App"] or None
         model = options["Model"] or None
@@ -1866,8 +1758,7 @@ class Command(BaseCommand):
             self.call_methods(options)
 
         if not FLUTTER_APPS:
-            self.__message(
-                "Não foram informadas as APPS a serem mapeadas", error=True)
+            self.__message("Não foram informadas as APPS a serem mapeadas", error=True)
             return
         else:
             self.call_methods(options)
@@ -1883,5 +1774,4 @@ class Command(BaseCommand):
 
             shutil.rmtree(__path)
         except Exception as error:
-            self.__message(
-                f"Ocorreu um erro ao executar o __clear_project: {error}")
+            self.__message(f"Error in __clear_project: {error}")
