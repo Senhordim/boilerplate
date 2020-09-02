@@ -63,7 +63,8 @@ class Utils(object):
                 __app_config = apps.get_app_config(app_name.lower())
                 return __app_config.verbose_name.title() or app_name
         except Exception as error:
-            Utils.show_message(f"Error in Utils.get_verbose_name: {error}")
+            if str(error).find("ContentType matching query does not exist") == -1:
+                Utils.show_message(f"Error in Utils.get_verbose_name: {error}")
 
     @staticmethod
     def check_dir(path: str) -> bool:
@@ -96,10 +97,6 @@ class Utils(object):
         __process_result = False
         try:
             __process_result = os.path.isfile(path)
-            if __process_result is False:
-                Utils.show_message(f"Arquivo {path} não encontrado no método check_file")
-        except FileNotFoundError as error:
-            Utils.show_message(f"Error in Utils.check_file: {error}", error=True)
         except Exception as error:
             Utils.show_message(f"Error in Utils.check_file: {error}", error=True)
         finally:
@@ -122,7 +119,6 @@ class Utils(object):
                 with open(path) as content_file:
                     content = content_file.read()
                     return text in content
-            Utils.show_message(f"Arquivo {path} não encontrado no método check_content")
         except Exception as error:
             Utils.show_message(f"Error in Utils.check_content: {error}", error=True)
         finally:
@@ -145,8 +141,6 @@ class Utils(object):
                 with open(path, encoding='utf-8') as file:
                     content = file.read()
                     __process_result = "#FileLocked" in content
-                    print(__process_result)
-            Utils.show_message(f"Arquivo {path} não encontrado no método check_file_is_locked")
         except Exception as error:
             Utils.show_message(f"Error in Utils.check_file: {error}", error=True)
         finally:
@@ -169,7 +163,6 @@ class Utils(object):
             if Utils.check_file(path):
                 with open(path, 'r', encoding='utf-8') as file:
                     __content = file.read()
-            Utils.show_message(f"Arquivo {path} não encontrado no método get_snippet")
         except Exception as error:
             Utils.show_message(f"Error in Utils.check_file: {error}", error=True)
         finally:

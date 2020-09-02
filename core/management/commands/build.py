@@ -188,7 +188,7 @@ class Command(BaseCommand):
             with open(path, 'w', encoding='utf-8') as template:
                 template.write(content)
         except Exception as error:
-            Utils.show_message(f"Error in __manage_index_template: {error}")
+            Utils.show_message(f"Error in __manage_index_template: {error}", error=True)
 
     def __manage_detail_template(self):
         """Method responsible for generating the App / Model detail.html template
@@ -425,6 +425,8 @@ class Command(BaseCommand):
                 for line in arquivo:
                     if line.startswith('from .models import'):
                         models = line.split('import')[-1].rstrip()
+                        if len(content_models.split()) == 0:
+                            continue
                         import_model = ', ' + content_models.split()[-1]
                         models += import_model
                         line = 'from .models import{}\n'.format(models)
@@ -454,8 +456,9 @@ class Command(BaseCommand):
                 arquivo.writelines(data)
                 arquivo.close()
             elif self.__check_content(self.path_views, "from nuvols.core.views"):
-                imports = 'from nuvols.core.views import BaseListView, BaseDeleteView, BaseDetailView, BaseUpdateView, '
-                imports += 'BaseCreateView, BaseTemplateView'
+                imports = "\n\n"
+                imports += 'from nuvols.core.views import BaseListView, BaseDeleteView, BaseDetailView, '
+                imports += 'BaseUpdateView, BaseCreateView, BaseTemplateView'
                 imports_rest = '\n{}\n{}\n{}\n{}\n'.format(content_urls.split("\n")[0], content_urls.split("\n")[1],
                                                            content_urls.split("\n")[2], content_urls.split("\n")[3])
                 with fileinput.FileInput(self.path_views, inplace=True) as arquivo:
@@ -471,7 +474,7 @@ class Command(BaseCommand):
                 api_views.write("\n")
                 api_views.write(content)
         except Exception as error:
-            Utils.show_message(f"Error in __manage_api_view: {error}")
+            Utils.show_message(f"Error in __manage_api_view: {error}", error=True)
 
     def __manage_serializer(self):
         """Method responsible for creating the Rest API Serializer file for the model
@@ -950,19 +953,16 @@ class Command(BaseCommand):
             Utils.show_message("Trabalhando apenas as urls.")
             self.__manage_url()
             self.__manage_api_url()
-            self.__apply_pep()
             return
         elif options['forms']:
             Utils.show_message("Trabalhando apenas os forms.")
             self.__manage_form()
-            self.__apply_pep()
             return
         elif options['views']:
             Utils.show_message("Trabalhando apenas as views.")
             self.__manage_views()
         elif options['renderhtml']:
             self.__manage_render_html()
-            self.__apply_pep()
             return
         elif options['format']:
             self.__apply_pep()
@@ -976,7 +976,7 @@ class Command(BaseCommand):
             self.__manage_api_url()
             self.__manage_templates()
             self.__manage_render_html()
-            self.__apply_pep()
+            # self.__apply_pep()
             return
 
     def handle(self, *args, **options):
