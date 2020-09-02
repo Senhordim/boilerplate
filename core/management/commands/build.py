@@ -21,18 +21,6 @@ class Command(BaseCommand):
 
     def __init__(self):
         super().__init__()
-        self.app = ""
-        self.path_app = ""
-        self.app_lower = ""
-        self.app_instance = ""
-        self.path_model = ""
-        self.path_form = ""
-        self.path_views = ""
-        self.model = ""
-        self.model_lower = ""
-        self.path_urls = ""
-        self.path_serializer = ""
-        self.path_template_dir = ""
         self.path_root = os.getcwd()
         self.path_core = os.path.join(self.BASE_DIR, "core")
         self._snippet_index_view = self.__get_snippet(
@@ -181,7 +169,7 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(path):
                 return
             content = self._snippet_index_template
-            _title = self.__get_verbose_name(app_name=self.app.lower())
+            _title = self.__get_verbose_name(app_name=self.app.lower()) or self.app.lower()
             content = content.replace("$titlepage$", _title)
             content = content.replace("$title$", _title)
             content = content.replace("$app_name$", self.app_lower)
@@ -201,7 +189,7 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(path):
                 return
             content = self._snippet_detail_template
-            _title = self.__get_verbose_name(app_name=self.app.lower())
+            _title = self.__get_verbose_name(app_name=self.app.lower()) or self.app.lower()
             content = content.replace("$title$", _title)
             content = content.replace("$model_name$", self.model_lower)
             content = content.replace("$app_name$", self.app_lower)
@@ -214,16 +202,14 @@ class Command(BaseCommand):
         """Method responsible for generating the App / Model list.html template
         """
         try:
-            import pdb;
-            pdb.set_trace()
             Utils.show_message("Trabalhando na configuração do template de Listagem.")
             path = Path(
                 f"{self.path_template_dir}/{self.model_lower}_list.html")
             if self.__check_file_is_locked(path):
                 return
             content = self._snippet_list_template
-            # TODO Verificar por que o _title está retornando em branco
-            _title = self.__get_verbose_name(app_name=self.app.lower(), model_name=self.model_lower)
+            _title = self.__get_verbose_name(app_name=self.app.lower(), model_name=self.model_lower) or self.app.lower()
+            # TODO Verificar por que o _title está vindo sem a Model
             content = content.replace("$title$", _title)
             content = content.replace("$label_count_item$", self.model)
             content = content.replace("$model_name$", self.model_lower)
@@ -232,7 +218,7 @@ class Command(BaseCommand):
                 template.write(content)
 
         except Exception as error:
-            Utils.show_message(f"Error in __manage_list_template : {error}", error=True)
+            Utils.show_message(f"Error in __manage_list_template : {error}")
 
     def __manage_update_template(self):
         """Method responsible for generating the App / Model update.html template
@@ -244,7 +230,7 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(path):
                 return
             content = self._snippet_update_template
-            _title = self.__get_verbose_name(app_name=self.app.lower(), model_name=self.model_lower)
+            _title = self.__get_verbose_name(app_name=self.app.lower(), model_name=self.model_lower) or self.app.lower()
             content = content.replace("$title$", _title)
             content = content.replace("$app_name$", self.app_lower)
             content = content.replace("$model_name$", self.model_lower)
@@ -265,7 +251,7 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(path):
                 return
             content = self._snippet_create_template
-            _title = self.__get_verbose_name(app_name=self.app.lower(), model_name=self.model_lower)
+            _title = self.__get_verbose_name(app_name=self.app.lower(), model_name=self.model_lower) or self.app.lower()
             content = content.replace("$title$", _title)
             content = content.replace("$app_name$", self.app_lower)
             with open(path, 'w', encoding='utf-8') as template:
@@ -284,7 +270,7 @@ class Command(BaseCommand):
             if self.__check_file_is_locked(path):
                 return
             content = self._snippet_delete_template
-            _title = self.__get_verbose_name(app_name=self.app.lower(), model_name=self.model_lower)
+            _title = self.__get_verbose_name(app_name=self.app.lower(), model_name=self.model_lower) or self.app.lower()
             content = content.replace("$app_name$", self.app_lower)
             content = content.replace("$model_name$", self.model_lower)
             content = content.replace("$title$", _title)
@@ -870,6 +856,7 @@ class Command(BaseCommand):
 
     def __manage_render_html(self):
         """Method for rendering models CRUD templates"""
+        # TODO Verificar erro nesse método
         try:
             model = self.__get_model()
             if model is None:

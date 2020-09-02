@@ -65,6 +65,7 @@ class Utils(object):
         except Exception as error:
             if str(error).find("ContentType matching query does not exist") == -1:
                 Utils.show_message(f"Error in Utils.get_verbose_name: {error}")
+                return model_name.title()
 
     @staticmethod
     def check_dir(path: str) -> bool:
