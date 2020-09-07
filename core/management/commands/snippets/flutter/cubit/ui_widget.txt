@@ -1,14 +1,16 @@
+/// Arquivo contendo os Widgets componentizados da aplicação
+
 import 'dart:ui';
-
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-import '../apps/configuracao/cubit.dart';
+import '../utils/util.dart';
 import '../utils/config.dart';
 import '../utils/localization.dart';
-import '../utils/util.dart';
+import '../apps/auth/controller.dart';
+import '../apps/configuracao/controller.dart';
 
 // Constante contendo o valor da proporção da tela padrão
 // utilizado para calcular altura do Head da página e da
@@ -16,16 +18,16 @@ import '../utils/util.dart';
 const double _proportionScreenDefault = 0.55;
 
 /// Widget para gerar os "botões" da tela inicial de acesso rápido
-Widget customMainCardButton(IconData icon, String label,
-    {Color iconColor,
-    Color textColor,
-    Color cardBackgroundColorBegin,
-    Color cardBackgroundColorEnd,
-    Color boxShadowColor,
-    Color cardBorderColor,
-    Image image,
+Widget customMainCardButton(icon, label,
+    {iconColor,
+    textColor,
+    cardBackgroundColorBegin,
+    cardBackgroundColorEnd,
+    boxShadowColor,
+    cardBorderColor,
+    image,
     double textSize,
-    FontWeight textWeight = FontWeight.w600}) {
+    textWeight = FontWeight.w600}) {
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
     decoration: BoxDecoration(
@@ -33,14 +35,14 @@ Widget customMainCardButton(IconData icon, String label,
       boxShadow: [
         BoxShadow(
           color: boxShadowColor,
-          offset: const Offset(2.0, 2.0),
+          offset: Offset(2.0, 2.0),
           blurRadius: 3.0,
         )
       ],
       gradient: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        stops: const [0.0, 0.9],
+        stops: [0.0, 0.9],
         colors: [
           cardBackgroundColorBegin,
           cardBackgroundColorEnd,
@@ -61,7 +63,7 @@ Widget customMainCardButton(IconData icon, String label,
         ),
         Center(
           child: Text(
-            label,
+            '$label',
             style: TextStyle(
                 color: textColor,
                 fontWeight: textWeight,
@@ -80,7 +82,7 @@ Widget customAvatarAppBar() {
   return AspectRatio(
     aspectRatio: 1,
     child: Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         shape: BoxShape.circle,
         image: DecorationImage(
           image: CachedNetworkImageProvider('https://picsum.photos/200'),
@@ -123,8 +125,7 @@ Widget customImageCircular(BuildContext context, String path,
       }
     }
   } catch (error, exception) {
-    debugPrint(error.toString());
-    debugPrint(exception.toString());
+    print("Error: $error, Exception: $exception");
     return Container();
   }
 }
@@ -147,35 +148,31 @@ Widget customCard(
     double elevation = 2.0,
     double radius = 4.0,
     double width}) {
+  SettingsController _controller = GetIt.I<SettingsController>();
   try {
-    return BlocConsumer<SettingsCubit, SettingsState>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
-            child: Container(
-              width: width ?? MediaQuery.of(context).size.width,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(radius),
-                ),
-                color: backgroundColor != null
-                    ? backgroundColor
-                    : context.bloc<SettingsCubit>().lightTheme == true
-                        ? CustomTheme.mainCardLightBackgroundColor
-                        : CustomTheme.mainCardDarkBackgroundColor,
-                elevation: elevation,
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: child,
-                ),
-              ),
-            ));
-      },
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+      child: Observer(builder: (BuildContext context) {
+        return Container(
+          width: width ?? MediaQuery.of(context).size.width,
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(radius),
+            ),
+            color: backgroundColor ?? _controller.lightTheme == true
+                ? CustomTheme.mainCardLightBackgroundColor
+                : CustomTheme.mainCardDarkBackgroundColor,
+            elevation: elevation,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: child,
+            ),
+          ),
+        );
+      }),
     );
   } catch (error, exception) {
-    debugPrint(error.toString());
-    debugPrint(exception.toString());
+    print("Error: $error, Exception: $exception");
     return Container();
   }
 }
@@ -208,7 +205,7 @@ Widget customCardWithImage(
     double heightImage}) {
   try {
     Widget _childCard;
-    final List<String> _positionImageValues = ["t", "r", "b", "l", "bg"];
+    List<String> _positionImageValues = ["t", "r", "b", "l", "bg"];
     // Caso o valor passado não seja nenhuma das opções possíveis
     // retorno null
     if (!_positionImageValues.contains(positionImage)) return null;
@@ -227,14 +224,14 @@ Widget customCardWithImage(
                     topLeft: Radius.circular(radius),
                     topRight: Radius.circular(radius),
                   ),
-                  image: const DecorationImage(
+                  image: DecorationImage(
                     image:
                         CachedNetworkImageProvider("https://picsum.photos/600"),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               child
             ]);
         break;
@@ -245,7 +242,7 @@ Widget customCardWithImage(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               child,
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Container(
                 width: width ?? MediaQuery.of(context).size.width * 0.5,
                 height: height ?? 200,
@@ -254,7 +251,7 @@ Widget customCardWithImage(
                     bottomLeft: Radius.circular(radius),
                     bottomRight: Radius.circular(radius),
                   ),
-                  image: const DecorationImage(
+                  image: DecorationImage(
                     image:
                         CachedNetworkImageProvider("https://picsum.photos/600"),
                     fit: BoxFit.cover,
@@ -270,7 +267,7 @@ Widget customCardWithImage(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               child,
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Container(
                 height: heightImage ?? height * 0.5,
                 decoration: BoxDecoration(
@@ -278,7 +275,7 @@ Widget customCardWithImage(
                     bottomLeft: Radius.circular(radius),
                     bottomRight: Radius.circular(radius),
                   ),
-                  image: const DecorationImage(
+                  image: DecorationImage(
                     image:
                         CachedNetworkImageProvider("https://picsum.photos/600"),
                     fit: BoxFit.cover,
@@ -301,14 +298,14 @@ Widget customCardWithImage(
                     topLeft: Radius.circular(radius),
                     bottomLeft: Radius.circular(radius),
                   ),
-                  image: const DecorationImage(
+                  image: DecorationImage(
                     image:
                         CachedNetworkImageProvider("https://picsum.photos/600"),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               child
             ]);
         break;
@@ -320,7 +317,7 @@ Widget customCardWithImage(
             height: height,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(radius),
-              image: const DecorationImage(
+              image: DecorationImage(
                 image: CachedNetworkImageProvider("https://picsum.photos/600"),
                 fit: BoxFit.cover,
               ),
@@ -348,7 +345,7 @@ Widget customCardWithImage(
       child: _childCard,
     );
   } catch (error, exception) {
-    debugPrint("Error: $error, Exception: $exception");
+    print("Error: $error, Exception: $exception");
     return Container();
   }
 }
@@ -375,32 +372,23 @@ Widget customFlatButton(
     Color textColor,
     Icon iconButton}) {
   try {
-    return BlocConsumer<SettingsCubit, SettingsState>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        final Color _color = context.bloc<SettingsCubit>().lightTheme == true
-            ? CustomTheme.mainTextFieldLightColor
-            : CustomTheme.mainTextFieldDarkColor;
-        if (textColor == null) textColor = _color;
-        return FlatButton(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          onPressed: onPress,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              iconButton ?? Container(),
-              const SizedBox(width: 4.0),
-              Text(
-                label,
-                style: TextStyle(color: textColor),
-              ),
-            ],
+    return FlatButton(
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      onPressed: onPress,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          iconButton ?? Container(),
+          SizedBox(width: 4.0),
+          Text(
+            label,
+            style: TextStyle(color: textColor),
           ),
-        );
-      },
+        ],
+      ),
     );
   } catch (error, exception) {
-    debugPrint("Error: $error, Exception: $exception");
+    print("Error: $error, Exception: $exception");
     return Container();
   }
 }
@@ -431,47 +419,31 @@ Widget customRaisedButton(
     Color textColor,
     Icon iconButton,
     bool rounded = false,
-    double elevation = 2.0}) {
+    double elevation: 2.0}) {
   try {
-    return BlocConsumer<SettingsCubit, SettingsState>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        final Color _color = context.bloc<SettingsCubit>().lightTheme == true
-            ? CustomTheme.mainButtonBgLightColor
-            : CustomTheme.mainButtonBgDarkColor;
-        final Color _colorText =
-            context.bloc<SettingsCubit>().lightTheme == true
-                ? CustomTheme.mainButtonFontLightColor
-                : CustomTheme.mainButtonFontDarkColor;
-        if (textColor == null) textColor = _colorText;
-        if (color == null) color = _color;
-        return RaisedButton(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          shape: rounded
-              ? RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0))
-              : RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0.8)),
-          onPressed: onPress,
-          color: color ?? Theme.of(context).accentColor,
-          elevation: elevation,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              iconButton ?? Container(),
-              const SizedBox(width: 4.0),
-              Text(
-                label,
-                style: TextStyle(
-                    color: textColor ?? Theme.of(context).primaryColor),
-              ),
-            ],
+    return RaisedButton(
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      shape: rounded
+          ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0))
+          : RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.8)),
+      onPressed: onPress,
+      color: color ?? Theme.of(context).accentColor,
+      elevation: elevation,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          iconButton ?? Container(),
+          SizedBox(width: 4.0),
+          Text(
+            label,
+            style:
+                TextStyle(color: textColor ?? Theme.of(context).primaryColor),
           ),
-        );
-      },
+        ],
+      ),
     );
   } catch (error, exception) {
-    debugPrint("Error: $error, Exception: ${exception.toString()}");
+    print("Error: $error, Exception: $exception");
     return Container();
   }
 }
@@ -519,19 +491,20 @@ Widget customButtonOutline(
           width: borderSize,
           color: borderColor ?? Theme.of(context).primaryColor,
         ),
-        onPressed: onPress,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            iconButton ?? Container(),
-            const SizedBox(width: 4.0),
-            processing == true
+            iconButton != null ? iconButton : Container(),
+            SizedBox(
+              width: 4.0,
+            ),
+            processing
                 ? Container(
                     height: circularProgressIndicatorSize,
                     width: circularProgressIndicatorSize,
                     child: CircularProgressIndicator(
                       strokeWidth: circularProgressIndicatorStrokeWidth,
-                      valueColor: AlwaysStoppedAnimation<Color>(
+                      valueColor: new AlwaysStoppedAnimation<Color>(
                           circularProgressIndicatorBgColor),
                     ))
                 : Text(
@@ -541,10 +514,11 @@ Widget customButtonOutline(
                   ),
           ],
         ),
+        onPressed: onPress,
       ),
     );
   } catch (error, exception) {
-    debugPrint("Error: $error, Exception: $exception");
+    print("Error: $error, Exception: $exception");
     return Container();
   }
 }
@@ -574,61 +548,20 @@ Widget customTextFormField(
     @required TextEditingController controller,
     @required BuildContext context,
     Function validator,
-    bool outline = false,
-    TextInputType keyboardType = TextInputType.text,
-    bool obscureText = false,
-    int maxLenght}) {
-  
-  
+    bool outline = false}) {
   try {
-    return BlocConsumer<SettingsCubit, SettingsState>(
-      listener: (context, state) {
-      },
-      builder: (context, state) {
-      final Color _color = context.bloc<SettingsCubit>().lightTheme == true
-      ? CustomTheme.mainTextFieldLightColor
-      : CustomTheme.mainTextFieldDarkColor;
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: TextFormField(
-              controller: controller,
-              keyboardType: keyboardType,
-              obscureText: obscureText,
-              maxLength: maxLenght,
-              decoration: InputDecoration(
-                labelText: labelText,
-                hintText: hintText,
-                fillColor: _color,
-                hoverColor: _color,
-                border: outline == true
-                    ? OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: _color,
-                        ),
-                      )
-                    : UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: _color,
-                        ),
-                      ),
-                enabledBorder: outline == true
-                    ? OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: _color,
-                        ),
-                      )
-                    : UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: _color,
-                        ),
-                      ),
-              ),
-              validator: validator != null ? validator : null),
-        );
-      },
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+          controller: controller,
+          decoration: InputDecoration(
+              labelText: labelText,
+              hintText: hintText,
+              border: outline == true ? OutlineInputBorder() : null),
+          validator: validator != null ? validator : null),
     );
   } catch (error, exception) {
-    debugPrint("Error: $error, Exception: $exception");
+    print("Error: $error, Exception: $exception");
     return Container();
   }
 }
@@ -640,54 +573,28 @@ Widget customTextFormField(
 ///
 ///      context -> BuildContext contendo o contexto do App
 Widget customProcessingCardModal(BuildContext context) {
-  return Align(
-    alignment: Alignment.center,
-    child: Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8.0),
-        child: Column(
-          children: [
-            const CircularProgressIndicator(),
-            SizedBox(height: 16,),
-            Text(
-              AppLocalizations.of(context)
-                  .translate("custom_processing_card_label"),
-            ),
-          ],
+  return Container(
+    child: Align(
+      alignment: Alignment.center,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8.0),
+          child: Column(
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16,),
+              Text(
+                AppLocalizations.of(context)
+                    .translate("custom_processing_card_label"),
+              ),
+            ],
+          ),
         ),
       ),
     ),
   );
 }
 
-
-/// Componente visual para mostrar um elemento de loading customizado
-///     Parameters: 
-///       context -> BuildContext contendo o contexto do App
-///       isCircularIndicator -> bool indicando se o widget é CircularProgressIndicator
-///       lineHeigth -> double contendo a espesura da linha
-///       lineColor -> Color contendo a cor de foreground
-///       backgroundColor -> Color contendo a cor de background
-Widget customProcessingWidget(
-  BuildContext context, {
-  bool isCircularIndicator = true,
-  double lineHeigth,
-  Color lineColor,
-  Color backgroundColor,
-}) {
-  if (isCircularIndicator == true) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
-      child: CircularProgressIndicator(),
-    );
-  }
-  return Container(
-    padding: const EdgeInsets.symmetric(vertical: 12.0),
-    child: LinearProgressIndicator(
-      backgroundColor: Colors.white,
-    ),
-  );
-}
 
 /// Componente visual para mostrar um card centralizado enquando o usuário aguarda
 /// o processamento da operação.
@@ -719,6 +626,7 @@ Widget customProcessingCardModalCenter(BuildContext context) {
   );
 }
 
+
 /// Componente para mostrar a mensagem de erro para o usuário na UI
 Widget customErrorMessage(BuildContext context,
     {String title, String message}) {
@@ -727,20 +635,20 @@ Widget customErrorMessage(BuildContext context,
 
 /// Componente para mostrar mensagens aos usuário de
 /// ações que retornaram com sucesso
-SnackBar customSuccessSnackbar(String message, {int secondsDuration = 4}) {
+customSuccessSnackbar(String message, {int secondsDuration = 4}) {
   return SnackBar(
     content: Text(message),
-    backgroundColor: const Color(0xFFF799FCB),
+    backgroundColor: Color(0xFFF799FCB),
     duration: Duration(seconds: secondsDuration),
   );
 }
 
 /// Componente para mostrar mensagens aos usuário de
 /// ações que retornaram com sucesso
-SnackBar customErrorSnackbar(String message, {int secondsDuration = 4}) {
+customErrorSnackbar(String message, {int secondsDuration = 4}) {
   return SnackBar(
     content: Text(message),
-    backgroundColor: const Color(0xfffFF6961),
+    backgroundColor: Color(0xfffFF6961),
     duration: Duration(seconds: secondsDuration),
   );
 }
@@ -779,6 +687,10 @@ class _HeadWidgetState extends State<HeadWidget> {
 
   /// String contendo o caminho a ser renderizado como background do cabeçalho
   String _urlPath;
+
+  /// Instanciando o controller da Autenticacao
+  AutenticacaoController _autenticacaoController =
+      GetIt.I<AutenticacaoController>();
 
   @override
   void initState() {
@@ -833,8 +745,7 @@ class _HeadWidgetState extends State<HeadWidget> {
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 Text(
-                  // TODO Refactoring get User from Provider Auth
-                  "Username",
+                  _autenticacaoController.alunoModel.nome,
                   style: Theme.of(context).textTheme.headline5.copyWith(
                       fontWeight: FontWeight.w600,
                       wordSpacing: 0.08,
@@ -866,10 +777,9 @@ class _ContentWidgetState extends State<ContentWidget> {
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.only(
-          top:
-              Util.getProportionScreenWidth(context, _proportionScreenDefault) -
-                  125,
-        ),
+            top: Util.getProportionScreenWidth(
+                    context, _proportionScreenDefault) -
+                125),
         child: widget.widgetChild);
   }
 }
