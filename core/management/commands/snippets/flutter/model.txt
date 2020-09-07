@@ -2,8 +2,8 @@
 /// 
 /// Os Métodos padrões gerados são:
 ///     toString() -> Sobrescreve o toString para trazer todos os atributos da classe.
-///     fromJson() -> Realiza o parser do Json para o Model.
-///     toJson()   -> Realiza o parser do Model para Json.
+///     fromMap() -> Realiza o parser do Json para o Model.
+///     toMap()   -> Realiza o parser do Model para Json.
 ///
 
 /// [Travar o arquivo]
@@ -11,17 +11,13 @@
 /// pelo manage do Django adicione um # antes da palavra abaixo
 /// FileLocked
 
-import 'dart:convert';
-
-
 import '../../../utils/util.dart';
 
 class $ModelClass$Model {  
-  int id;
+  String id;
   String nextUrl;
   String previousUrl;
   $AttributeClass$
-
 
   $ModelClass$Model({
     this.id,
@@ -30,17 +26,21 @@ class $ModelClass$Model {
     $ConstructorModelClass$
   });
 
-  $ModelClass$Model.fromJson(Map<String, dynamic> json) {
-      nextUrl = json["nextUrl"] == null ? null : json["nextUrl"];
-      previousUrl = json["previousUrl"] == null ? null : json["previousUrl"];
-      $ParserFromJson$
+  $ModelClass$Model.fromMap(Map<String, dynamic> json) {
+    try{
+      id = json.containsKey('id') ? json['id'] : "";
+      nextUrl = json.containsKey('nextUrl') ? json['nextUrl'] : "";
+      previousUrl = json.containsKey('previousUrl') ? json['previousUrl'] : "";
+      $ParserfromMap$
+    } catch (e){
+
+    }
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
       "nextUrl": nextUrl == null ? null : nextUrl,
       "previousUrl": previousUrl == null ? null : previousUrl,
       $ParserToMap$
-
   };
  
   /// Sobscrevendo o método toString para retornar todos os atributos da classe.

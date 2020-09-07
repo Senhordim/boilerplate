@@ -1,9 +1,4 @@
-from django.urls import path, reverse_lazy
-
-from django.contrib.auth.views import (
-    PasswordChangeView, PasswordChangeDoneView,
-    PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView,
-)
+from django.urls import path
 
 from nuvols.core.views import (IndexAdminTemplateView, LoginView,
                                LogoutView, ProfileView, ProfileUpdateView, UpdatePassword,

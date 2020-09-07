@@ -5,6 +5,7 @@ import logging
 import secrets
 import string
 from datetime import date, datetime
+from locale import normalize
 
 import pytz
 from django.conf import settings
@@ -34,8 +35,7 @@ from django.urls.base import resolve
 from django.utils.text import camel_case_to_spaces, slugify
 from django.views import View
 from django.views.generic import DetailView, ListView, TemplateView
-from django.views.generic.edit import (CreateView, DeleteView, FormView,
-                                       UpdateView)
+from django.views.generic.edit import (CreateView, DeleteView, UpdateView)
 
 from .forms import BaseForm
 from .models import Base
@@ -237,8 +237,7 @@ class BaseListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
                 except Exception as e:
                     pass
 
-                if hasattr(self.model, field) and field is not '' and (
-                        field in ['pk', 'id'] or (field.split('__')[-1] in ['pk', 'id'])):
+                if hasattr(self.model, field) and field != '' and (field in ['pk', 'id'] or (field.split('__')[-1] in ['pk', 'id'])):
                     # se for um atributo de relacionamento então olha se é numero pois pk só aceita numero.
                     if not param_filter or (param_filter and param_filter.isnumeric()):
                         query_params |= Q(**{field: param_filter})
@@ -438,7 +437,7 @@ class BaseListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
             if '__' in name and name != '__str__' and not has_fk_attr(self.model, name):
                 messages.error(self.request, "%s ou a View não tem nenhum campo chamado '%s'" % (
                     self.model._meta.model_name, name),
-                    extra_tags='danger')
+                               extra_tags='danger')
             elif not '__' in name and not hasattr(self.model, name) and not hasattr(self, name):
                 messages.error(self.request,
                                "%s ou a View não tem nenhum campo chamado '%s'" % (
@@ -618,8 +617,8 @@ class BaseListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
                             # ele ja faz o distinct e ordena de acordo com o nome do campo
                             # add um dicionario com o nome do label, lista do filtro e o tipo de campo
                             filter[field.name] = {'label': label_name, 'list': self.get_queryset().
-                                                  values_list(field.name, flat=True).order_by(
-                                                      field.attname).distinct(field.attname),
+                                values_list(field.name, flat=True).order_by(
+                                field.attname).distinct(field.attname),
                                                   'type_filter': str(type(field))[:-2].split('.')[-1]}
                     object_filters.append(filter)
 
@@ -641,7 +640,7 @@ class BaseListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
             context['breadcrumbs'] = get_breadcrumbs(url_str)
 
             context['model_name'] = '%s' % (
-                self.model._meta.verbose_name_plural or self.model._meta.object_name).title()
+                    self.model._meta.verbose_name_plural or self.model._meta.object_name).title()
             context['apps'] = get_apps(self)
 
             context['has_add_permission'] = self.model(
@@ -717,12 +716,12 @@ class BaseDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
                                                           model=self.model._meta.model_name)
 
         url_str = reverse(context['url_list']) + \
-            ' Detalhe {}'.format(context['object'].pk)
+                  ' Detalhe {}'.format(context['object'].pk)
 
         context['breadcrumbs'] = get_breadcrumbs(url_str)
 
         context['model_name'] = '%s' % (
-            self.model._meta.verbose_name or self.model._meta.object_name or '').title()
+                self.model._meta.verbose_name or self.model._meta.object_name or '').title()
         context['apps'] = get_apps(self)
 
         context['has_add_permission'] = self.model(
@@ -793,12 +792,12 @@ class BaseUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
                                                           model=self.model._meta.model_name)
 
         url_str = reverse(context['url_list']) + \
-            ' Atualizar {}'.format(context['object'].pk)
+                  ' Atualizar {}'.format(context['object'].pk)
 
         context['breadcrumbs'] = get_breadcrumbs(url_str)
 
         context['model_name'] = '%s' % (
-            self.model._meta.verbose_name_plural or self.model._meta.object_name or '').title()
+                self.model._meta.verbose_name_plural or self.model._meta.object_name or '').title()
         context['apps'] = get_apps(self)
 
         context['has_add_permission'] = self.model(
@@ -955,7 +954,7 @@ class BaseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         context['breadcrumbs'] = get_breadcrumbs(url_str)
 
         context['model_name'] = '%s' % (
-            self.model._meta.verbose_name_plural or self.model._meta.object_name or '').title()
+                self.model._meta.verbose_name_plural or self.model._meta.object_name or '').title()
         context['apps'] = get_apps(self)
 
         context['has_add_permission'] = self.model(
@@ -1019,8 +1018,8 @@ class BaseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
             for form_formset in formset_inlines:
                 if not form_formset.is_valid():
                     return self.render_to_response(self.get_context_data(form=form))
-            try:  # Adicionado para corrigir o erro.
-                self.object = form.save()  # TODO Verificar com o Lucas por que o erro nessa linha
+            try:
+                self.object = form.save()  
                 for formset in formset_inlines:
                     formset.instance = self.object
                     formset.save()
@@ -1105,12 +1104,12 @@ class BaseDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
                                                           model=self.model._meta.model_name)
 
         url_str = reverse(context['url_list']) + \
-            ' Apagar {}'.format(context['object'].pk)
+                  ' Apagar {}'.format(context['object'].pk)
 
         context['breadcrumbs'] = get_breadcrumbs(url_str)
 
         context['model_name'] = '%s' % (
-            self.model._meta.verbose_name_plural or self.model._meta.object_name or '').title()
+                self.model._meta.verbose_name_plural or self.model._meta.object_name or '').title()
         context['apps'] = get_apps(self)
 
         context['has_add_permission'] = self.model(

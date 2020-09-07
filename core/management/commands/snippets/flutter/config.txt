@@ -4,19 +4,19 @@ import 'package:flutter/material.dart';
 
 class Config {
   static const uri = "$DjangoAPIPath$";
+  static const uriAuth = "$DjangoAPIPath$";
 
-  //TODO: Setar o valor do Token
   static const DRFToken = "Token 128ad486de8ffb2c8def82e46a71adcacdb45df1";
 
   static const String uri_media = "$DjangoAPIPath$media/";
-
   static const String app_title = "$AppName$";
+  static const bool usingURL = false;
+  static const double marginHead = 0.25;
   
 }
 
 class DebugPrint {
   static const bool debuggingMode = true;
-
   static void imprimir(String texto) {
     if (debuggingMode) {
       developer.log(texto.toLowerCase(), name: 'Debug:');
@@ -36,11 +36,11 @@ class DebugPrint {
 }
 
 class CustomTheme{
-  //Colors for theme
+ //Colors for theme
   static Color defaultColor = Colors.black;
   static Color lightPrimary = const Color(0xfffcfcff);
   static Color lightAccent = Colors.blue;
-  static Color lightBG =  const Color(0xfffcfcff);
+  static Color lightBG = const Color(0xfffcfcff);
   static Color darkPrimary = Colors.black;
   static Color darkAccent = Colors.blueGrey;
   static Color darkBG = Colors.black;
@@ -51,12 +51,18 @@ class CustomTheme{
   static Color mainCardLightTextColor = Colors.black38;
   static Color mainCardLightBackgroundColor = Colors.white;
   static Color mainCardLightShadowColor = Colors.black38;
+  static Color mainTextFieldLightColor = Colors.black45;
+  static Color mainButtonBgLightColor = Colors.black38;
+  static Color mainButtonFontLightColor = Colors.white;
 
   static Color mainCardDarkBorderColor = Colors.grey[700];
   static Color mainCardDarkIconColor = Colors.grey[300];
   static Color mainCardDarkTextColor = Colors.grey[300];
   static Color mainCardDarkBackgroundColor = Colors.grey[850];
   static Color mainCardDarkShadowColor = Colors.grey[900];
+  static Color mainTextFieldDarkColor = Colors.grey[600];
+  static Color mainButtonBgDarkColor = Colors.grey[600];
+  static Color mainButtonFontDarkColor = Colors.black;
 
   static ThemeData lightTheme = ThemeData(
     backgroundColor: lightBG,

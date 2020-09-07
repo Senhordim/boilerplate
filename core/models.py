@@ -1,23 +1,19 @@
 import uuid
-from datetime import datetime
-from django.contrib.auth import get_permission_codename, get_user_model
-from django.contrib.auth.models import User
+
+from django.contrib.auth import get_permission_codename
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRel
-from django.db import models, transaction
+from django.db import models
+from django.db import transaction
 from django.db.models import (AutoField, ManyToManyField,
                               ManyToOneRel, ManyToManyRel,
                               OneToOneRel, BooleanField,
-                              FileField, ImageField )
-from django.db.models.signals import post_save
-from django.db import models
-from django.dispatch import receiver
+                              FileField, ImageField)
+from rest_framework.pagination import PageNumberPagination
 
 from .settings import use_default_manager
 
-from rest_framework.pagination import PageNumberPagination
-import requests
-
 models.options.DEFAULT_NAMES += ('fk_fields_modal', 'fields_display', 'fk_inlines')
+
 
 class PaginacaoCustomizada(PageNumberPagination):
     """Classe para configurar a paginação da API
@@ -44,8 +40,8 @@ class BaseManager(models.Manager):
         """
         queryset = super(BaseManager, self).get_queryset()
 
-        if ((hasattr(self.model,'_meta') and hasattr(self.model._meta,'ordering') and self.model._meta.ordering ) or
-                ((hasattr(self.model,'Meta') and hasattr(self.model.Meta,'ordering') and self.model.Meta.ordering))):
+        if ((hasattr(self.model, '_meta') and hasattr(self.model._meta, 'ordering') and self.model._meta.ordering) or
+                ((hasattr(self.model, 'Meta') and hasattr(self.model.Meta, 'ordering') and self.model.Meta.ordering))):
             queryset = queryset.order_by(*(self.model._meta.ordering or self.model.Meta.ordering))
 
         return queryset.filter(deleted=False)
@@ -65,7 +61,7 @@ class Base(models.Model):
 
     # Verificação se deve ser usado o manager padrão ou o customizado
     if use_default_manager is False:
-        objects = BaseManager() 
+        objects = BaseManager()
     else:
         objects = models.Manager()
 
@@ -124,17 +120,17 @@ class Base(models.Model):
                         pass
                 elif type(field) is BooleanField:
                     object_list.append(((field.verbose_name if hasattr(field, 'verbose_name') else None) or field.name,
-                                        "Sim" if self.__getattribute__(field.name) else "Nâo" ))
+                                        "Sim" if self.__getattribute__(field.name) else "Nâo"))
                 elif type(field) is ImageField or type(field) is FileField:
                     tag = ''
-                    if self.__getattribute__(field.name).name :
+                    if self.__getattribute__(field.name).name:
                         if type(field) is ImageField:
                             tag = '<img width="100px" src="{url}" alt="{nome}" />'
                         elif type(field) is FileField:
                             tag = '<a  href="{url}" > <i class="fas fa-file"></i> {nome}</a>'
                         if tag:
                             tag = tag.format(url=self.__getattribute__(field.name).url,
-                                  nome=self.__getattribute__(field.name).name.split('.')[0])
+                                             nome=self.__getattribute__(field.name).name.split('.')[0])
 
                     object_list.append(((field.verbose_name if hasattr(field, 'verbose_name') else None) or field.name,
                                         tag))
@@ -153,10 +149,10 @@ class Base(models.Model):
         """
         # Verificando se deve ser utilizado o manager costumizado
         if use_default_manager is False:
-            
+
             # Iniciando uma transação para garantir a integridade dos dados
             with transaction.atomic():
-                
+
                 # Recuperando as listas com os campos do objeto
                 object_list, many_fields = self.get_all_related_fields()
 
@@ -170,7 +166,7 @@ class Base(models.Model):
                 self.save(update_fields=['deleted', 'enabled'])
         else:
             super(Base, self).delete()
-    
+
     class Meta:
         """ Configure abstract class """
         abstract = True

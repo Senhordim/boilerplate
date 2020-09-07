@@ -1,13 +1,12 @@
 {% extends 'core/base.html' %} {% block content %}
 
-<div class="row mb-4">
-    <div class="col-3 col-xl-2">
-        <!-- Menu lateral com os models das app -->
-        <div class="card menu-vertical-app">
+<div id="content_list_page_app" class="row mb-4 content-page h-100">
+    <div id="submenu_index_page" class="col-3 col-xl-2 h-100">
+        <div class="card menu-vertical-app h-100">
             <div class="card-header">
                 <h3 class="card-title"><strong>{% block title_modulo %}{% endblock title_modulo %}</strong></h3>
             </div>
-            <table class="table table-borderless">
+            <table class="table table-borderless table-hover table-sm">
                 <tbody>
                     {% block menu_app %}
                     {% endblock menu_app %}
@@ -15,7 +14,7 @@
             </table>
         </div>
     </div>
-    <div class="col-9 col-xl-10">
+    <div id="listview_card" class="col-9 col-xl-10 p-5">
         <!-- Div da listagem e edição -->
         <div class="card listview">
             <div class="card-header m-0 p-0">

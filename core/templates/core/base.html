@@ -47,7 +47,7 @@
     <script src="{% static 'core/plugins/input-mask/js/jquery.mask.min.js' %}"></script>
     <script src="{% static 'core/plugins/input-mask/plugin.js' %}"></script>
 
-    <script src="{% static 'core/plugins//prismjs/js/prism.pack.js' %}"></script>
+    <script src="{% static 'core/plugins/prismjs/js/prism.pack.js' %}"></script>
 
     <!-- Jquery Admin Django -->
     <script src="{% static 'core/js/jquery.formset.js' %}"></script>
@@ -113,37 +113,12 @@
             {% include './block/horizontal_menu.html' %}
             {% endif %}
             <!-- end block show only user is logged -->
-            <div class="my-3">
-                <div class="container-fluid pl-0">
-                    <div class="row">
-                        <div class="col-9 offset-3 col-xl-10 offset-xl-2">
-                            <h1 class="page-title">
-                                {% block page_title %} {% endblock page_title %}
-                            </h1>
-                        </div>
-                    </div>
-                    {% block content %} {% endblock content %}
-                </div>
+            <div class="container-fluid pl-0 h-100 position-fixed" id="body_content">
+                {% block content %} {% endblock content %}
             </div>
+
         </div>
-        <footer class="footer">
-            <div class="container">
-                <div class="row align-items-center flex-row-reverse">
-                    <div class="col-auto ml-lg-auto">
-                        <div class="row align-items-center">
-                            {% if user.last_login %}
-                            Sessão iniciada: {{ user.last_login }}
-                            | {{ user_ip }}
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-auto mt-3 mt-lg-0 text-center">
-                        Copyright © 2018
-                        <a href="http://www.nuvols.com.br">Nuvols Consultoria em TI</a>.
-                    </div>
-                </div>
-            </div>
-        </footer>
+        
     </div>
     {% block extra_js %}{% endblock extra_js %}
     <script>

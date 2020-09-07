@@ -1,11 +1,9 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:get_it/get_it.dart';
 import 'package:dio/native_imp.dart';
 
 import 'config.dart';
-import 'process.controller.dart';
 
 class CustomDio extends DioForNative {
   String _url;
@@ -16,79 +14,107 @@ class CustomDio extends DioForNative {
     _url = "${Config.uri}$url";
   }
 
-  // Método para construir a Autenticação no cabeçalho
   Map<String, String> makeHeadersAuthentication(
       {String token, String contentType = "application/json; charset=utf-8"}) {
     Map<String, String> headersMap;
     try {
-      headersMap = {
-        'Content-Type': contentType,
-        // 'Authorization': 'Bearer ' + token ?? Config.DRFToken,
-      };
+      if (token != null && token.isNotEmpty) {
+        headersMap = {
+          'Content-Type': contentType,
+          'Authorization': token,
+        };
+      } else {
+        headersMap = {
+          'Content-Type': contentType,
+          'Authorization': Config.DRFToken
+        };
+      }
     } catch (e) {
-      
+      debugPrint("Erro ao criar o cabeçalho da requisição ${e.toString()}");
     }
-    this.options.headers = headersMap;
+    options.headers = headersMap;
     return headersMap;
   }
 
-  Future<dynamic> getHttp() async {
+  Future<dynamic> getHttp({String uri}) async {
+    _url = uri ?? _url;
     try {
-      Response _response = await this.get(this._url);
+      Response _response = await this.get(_url);
       if (_response.statusCode == 200) {
         return _response.data;
       }
       return null;
-    } on DioError catch (error) {}
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Get no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
   }
 
-  Future<dynamic> postHttp(data) async {
+  Future<dynamic> postHttp(data, {String uri}) async {
+    _url = uri ?? _url;
     try {
       Response _response = await this.post(_url, data: data);
       if (_response.statusCode == 201) {
         return _response.data;
       }
       return null;
-    } on DioError catch (error) {}
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Post no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
   }
 
-  Future<dynamic> putHttp(data, String id) async {
+  Future<dynamic> putHttp(data, String id, {String uri}) async {
+    _url = uri ?? _url;
     try {
       Response _response = await this.put(_url, data: data);
       if (_response.statusCode == 200) {
         return _response.data;
       }
       return null;
-    } on DioError catch (error) {}
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Put no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
   }
 
-  Future<dynamic> patchHttp(data) async {
+  Future<dynamic> patchHttp(data, {String uri}) async {
+    _url = uri ?? _url;
     try {
       Response _response = await this.put(_url, data: data);
       if (_response.statusCode == 200) {
         return _response.data;
       }
       return null;
-    } on DioError catch (error) {}
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Patch no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
   }
 
-  Future<dynamic> deleteHttp(data, String id) async {
+  Future<dynamic> deleteHttp(data, String id, {String uri}) async {
+    _url = uri ?? _url;
     try {
       Response _response = await this.delete(_url, data: data);
       if (_response.statusCode == 200) {
         return _response.data;
       }
       return null;
-    } on DioError catch (error) {}
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Delete no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
   }
 }
 
 class CustomDioInterceptor extends InterceptorsWrapper {
-  ProcessController _processController = GetIt.I.get<ProcessController>();
-
   @override
   Future onRequest(RequestOptions options) {
-    options.headers = {'Content-Type': 'application/json'};
     options.connectTimeout = 50000;
     options.receiveTimeout = 50000;
     return super.onRequest(options);
@@ -96,24 +122,11 @@ class CustomDioInterceptor extends InterceptorsWrapper {
 
   @override
   Future onResponse(Response response) {
-    // Retorno com Status Code 200 ou 201
-    _processController.withSuccess(
-        message: response.statusMessage,
-        statusCode: response.statusCode,
-        httpData: response.data.toString(),
-        httpHeader: response.headers.toString());
     return super.onResponse(response);
   }
 
   @override
   Future onError(DioError err) {
-    // Retorno com Status diferente de 200 ou 201
-    _processController.withError(
-        message: err.message,
-        statusCode: err.response.statusCode,
-        httpData: err.response.data.toString(),
-        httpHeader: err.response.headers.toString());
-    print(err.toString());
     return super.onError(err);
   }
 }
