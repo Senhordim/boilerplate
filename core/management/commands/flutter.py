@@ -94,8 +94,8 @@ class AppModel:
             List<String> -- Path of each page file in create, detail, index, list and update
         """
         try:
-            __create = Path("{}/lib/apps/{}/{}/pages/create.dart".format(
-                self.path_flutter, self.app_name_lower, self.model_name_lower))
+            __create = Path("{}/lib/apps/{}/{}/pages/create.dart".format(self.path_flutter,
+                                                                         self.app_name_lower, self.model_name_lower))
             __detail = Path("{}/lib/apps/{}/{}/pages/detail.dart".format(
                 self.path_flutter, self.app_name_lower, self.model_name_lower))
             __index = Path("{}/lib/apps/{}/{}/pages/index.dart".format(

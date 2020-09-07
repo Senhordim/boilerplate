@@ -209,7 +209,6 @@ class Command(BaseCommand):
                 return
             content = self._snippet_list_template
             _title = self.__get_verbose_name(app_name=self.app.lower(), model_name=self.model_lower) or self.app.lower()
-            # TODO Verificar por que o _title está vindo sem a Model
             content = content.replace("$title$", _title)
             content = content.replace("$label_count_item$", self.model)
             content = content.replace("$model_name$", self.model_lower)
