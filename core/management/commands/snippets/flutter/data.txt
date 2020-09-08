@@ -57,7 +57,7 @@ class $ModelClass$Data {
       var _store = smbt.intMapStoreFactory.store(_storeName);
       var _data = await _store.find(_db);
       return _data.map((snapshot){
-        final _result = $ModelClass$Model.fromMap(snapshot.value);
+        return $ModelClass$Model.fromMap(snapshot.value);
       }).toList();
     } catch (e) {
       return null;
