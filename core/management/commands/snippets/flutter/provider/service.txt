@@ -43,7 +43,7 @@ class $ModelClass$Service {
         final String _previous = dataResponse.containsKey('previousUrl') ?dataResponse["previous"]: "";
         final _dataItens = dataResponse.containsKey('results')? dataResponse["results"]: dataResponse;
         for (var data in _dataItens) {
-          $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
+          $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
           _$ModelClassCamelCase$.nextUrl = _next;
           _$ModelClassCamelCase$.previousUrl = _previous;
           _$ModelClassCamelCase$List.add(_$ModelClassCamelCase$);
@@ -56,7 +56,7 @@ class $ModelClass$Service {
     return _$ModelClassCamelCase$List;
   }
 
-  Future<List<$ModelClass$Model>> getMore(String uri) async {
+  Future<List<$ModelClass$Model>> getMorel(String uri) async {
     try {
       final CustomDio _dio = CustomDio(uri);
       _dio.makeHeadersAuthentication();
@@ -66,7 +66,7 @@ class $ModelClass$Service {
         final String _previous = dataResponse.containsKey('previousUrl') ?dataResponse["previous"]: "";
         final _dataItens = dataResponse.containsKey('results')? dataResponse["results"]: dataResponse;
         for (var data in _dataItens) {
-          $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
+          $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
           _$ModelClassCamelCase$.nextUrl = _next;
           _$ModelClassCamelCase$.previousUrl = _previous;
           _$ModelClassCamelCase$List.add(_$ModelClassCamelCase$);
@@ -85,7 +85,7 @@ class $ModelClass$Service {
       final CustomDio _dio = CustomDio(_uri);
       final data = await _dio.getHttp();
       if (data != null) {
-        _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
+        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
@@ -96,10 +96,10 @@ class $ModelClass$Service {
   Future<$ModelClass$Model> post($ModelClass$Model $ModelClassCamelCase$) async {
     try {
       final CustomDio _dio = CustomDio(_uri);
-      final _data = FormData.fromMap($ModelClassCamelCase$.toMap());
+      final _data = FormData.fromMap($ModelClassCamelCase$.toJson());
       final data = await _dio.postHttp(_data);
       if (data != null) {
-        _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
+        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
@@ -111,10 +111,10 @@ class $ModelClass$Service {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);
-      final _data = FormData.fromMap($ModelClassCamelCase$.toMap());
+      final _data = FormData.fromMap($ModelClassCamelCase$.toJson());
       final data = await _dio.putHttp(_data, $ModelClassCamelCase$.id.toString());
       if (data != null) {
-        _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
+        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
@@ -126,10 +126,10 @@ class $ModelClass$Service {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);
-      final _data = FormData.fromMap($ModelClassCamelCase$.toMap());
+      final _data = FormData.fromMap($ModelClassCamelCase$.toJson());
       final data = await _dio.patchHttp(_data);
       if (data != null) {
-        _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
+        _$ModelClassCamelCase$ = $ModelClass$Model.fromJson(data);
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
@@ -141,7 +141,7 @@ class $ModelClass$Service {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);
-      final _data = FormData.fromMap($ModelClassCamelCase$.toMap());
+      final _data = FormData.fromMap($ModelClassCamelCase$.toJson());
       final data = await _dio.deleteHttp(_data, $ModelClassCamelCase$.id.toString());
       if (data != null) {
         return true;
